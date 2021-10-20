@@ -26,3 +26,19 @@ https://www.djangoproject.com/weblog/2008/apr/12/spring/
 
 #related_name: 
 use for backward relationship in FK
+class child:
+    parent = .FK(parent,relation = "children")
+class parent:
+    ... 
+child in parent.child_set.all() = child in parent.children
+
+#manager 
+class Person(models.Model):
+    #...
+    people = models.Manager()
+Person.people.all() will provide a list of all Person objects.
+
+#Modifying a manager’s initial QuerySet
+#add both objects and specific_objects 
+#Book.objects.all() will return all books in the database,
+Book.specific_objects.all() will only return the ones written
