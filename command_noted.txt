@@ -1,0 +1,14 @@
+make DB migration 
+python manage.py makemigrations polls
+
+run DB migration 
+python manage.py sqlmigrate polls 0001
+
+#slug 
+A short label for something, containing only letters, numbers, 
+underscores or hyphens. They’re generally used in URLs
+example:
+https://www.djangoproject.com/weblog/2008/apr/12/spring/
+
+#related_name: 
+use for backward relationship in FK
