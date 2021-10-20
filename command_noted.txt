@@ -7,6 +7,17 @@ python manage.py makemigrations polls
 run DB migration 
 python manage.py sqlmigrate polls 0001
 
+API Shell 
+python manage.py shell
+
+Create admin 
+python manage.py createsuperuser
+(noted)
+we need to tell the admin that "..." objects have an admin interface
+
+apply changes to the database.
+python manage.py migrate
+
 #slug 
 A short label for something, containing only letters, numbers, 
 underscores or hyphens. They’re generally used in URLs
