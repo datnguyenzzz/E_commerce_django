@@ -2,10 +2,10 @@ run server
 py manage.py runserver
 
 make DB migration 
-python manage.py makemigrations polls
+python manage.py makemigrations ...
 
 run DB migration 
-python manage.py sqlmigrate polls 0001
+python manage.py sqlmigrate ... 0001
 
 API Shell 
 python manage.py shell
