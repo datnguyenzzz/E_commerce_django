@@ -1,7 +1,16 @@
-{% if products_list %} 
-    <h1> There're products list </h1> 
-    <p> {{products_list}} </p>
+{% load static %} 
+{% block title %} Drug store {% endblock title %} 
+{% block content %}
 
-{% else %} 
-    <p> Product is empty </p> 
-{% endif %}
+<main>
+    <div> 
+        <div> Our products </div> 
+        <div>
+            {% for product in products_list %}
+                {{product}}
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -47,3 +47,6 @@ Book.specific_objects.all() will only return the ones written
 #coverage 
 # coverage run manager.py test = run test 
 # coverage report
+
+#context processor
+#which is gather information from model. And share to all app
