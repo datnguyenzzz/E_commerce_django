@@ -50,3 +50,6 @@ Book.specific_objects.all() will only return the ones written
 
 #context processor
 #which is gather information from model. And share to all app
+
+#template extends 
+load from another template. Sent markup through block
