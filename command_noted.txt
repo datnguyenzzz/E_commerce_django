@@ -14,6 +14,7 @@ Create admin
 python manage.py createsuperuser
 (noted)
 we need to tell the admin that "..." objects have an admin interface
+*admin can create/delete/modify/change accessiable/ .... 
 
 apply changes to the database.
 python manage.py migrate
@@ -42,3 +43,7 @@ Person.people.all() will provide a list of all Person objects.
 #add both objects and specific_objects 
 #Book.objects.all() will return all books in the database,
 Book.specific_objects.all() will only return the ones written
+
+#coverage 
+# coverage run manager.py test = run test 
+# coverage report
