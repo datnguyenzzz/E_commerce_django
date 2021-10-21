@@ -5,11 +5,25 @@
 {% block content %}
 
 <main>
-    <div> 
-        <div> Our products </div> 
-        <div>
+    <div class="container"> 
+        <div class="pb-2 h3"> Our products </div> 
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-2">
             {% for product in products_list %}
-                {{product}}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img class="img-fluid" src="{{product.image.url}}" />
+                        <div class="card-body">
+                            <p class="card-text">
+                                <a class="text-dark text-decoration-none" href="some_link">
+                                    {{product.name}}
+                                </a>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">5min read</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>
