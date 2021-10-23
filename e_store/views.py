@@ -10,7 +10,8 @@ def all_product(request):
     }
     return render(request, 'e_store/home.html', context)
 
-def product_detail(request, slug):
-    return HttpResponse(f"product detail {slug}")
+def product_detail(request, product_slug):
+    product = get_object_or_404(Product, slug=product_slug, in_stock=True)
+    return HttpResponse(f"product detail {product} {product_slug} ")
 
 # Create your views here.
