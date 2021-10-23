@@ -14,4 +14,10 @@ def product_detail(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug, in_stock=True)
     return render(request, 'e_store/product/detail.html', {'product': product})
 
+def category_detail(request, category_slug=None):
+    category = get_object_or_404(Category, slug=category_slug)
+    products = Product.objects.filter(category=category)
+    return render(request, 'e_store/product/category.html', {'category': category, 'products': products})
+
+
 # Create your views here.
