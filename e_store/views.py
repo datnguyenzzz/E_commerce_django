@@ -12,6 +12,6 @@ def all_product(request):
 
 def product_detail(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug, in_stock=True)
-    return HttpResponse(f"product detail {product} {product_slug} ")
+    return render(request, 'e_store/product/detail.html', {'product': product})
 
 # Create your views here.
