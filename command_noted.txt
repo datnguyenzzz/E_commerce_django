@@ -56,3 +56,8 @@ Book.specific_objects.all() will only return the ones written
 
 #template extends 
 load from another template. Sent markup through block
+
+#anounymous session middleware - use sessionmiddleware in this app
+When SessionMiddleware is activated, each HttpRequest object
+ – the first argument to any Django view function –
+  will have a session attribute, which is a dictionary-like object.
