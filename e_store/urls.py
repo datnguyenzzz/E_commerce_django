@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'e_store'
 
+#path name : for retrievel url like : e_store:<name>
 urlpatterns = [
     path('',views.all_product, name='product_list'),
     path('<slug:product_slug>', views.product_detail, name='product_detail'),

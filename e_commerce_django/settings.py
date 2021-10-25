@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'e_store.apps.EStoreConfig',
+    'e_store',
+    'session_basket',
 ]
 
 MIDDLEWARE = [

@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #include urls from app
     path('',include('e_store.urls', namespace='e_store')),
+    path('basket/', include('session_basket.urls', namespace='session_basket')),
 ]
 
 if settings.DEBUG:
