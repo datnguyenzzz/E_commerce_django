@@ -1,11 +1,14 @@
+start app 
+python manage.py startapp polls
+
 run server 
 py manage.py runserver
 
 make DB migration 
-python manage.py makemigrations ...
+python manage.py makemigrations ... 
 
 run DB migration 
-python manage.py sqlmigrate ... 0001
+python manage.py sqlmigrate ... 
 
 API Shell 
 python manage.py shell
