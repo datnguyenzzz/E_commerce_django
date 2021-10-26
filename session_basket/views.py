@@ -12,4 +12,5 @@ def basket_all(request):
 
 def basket_add(request):
     basket = Basket(request) 
+    print("DE",request.POST)
     return HttpResponse("Mew Mew add")

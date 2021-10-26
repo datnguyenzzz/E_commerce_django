@@ -55,7 +55,8 @@
             type: 'POST',
             url: '{% url "session_basket:basket_add" %}',
             data: {
-                mewmew: "FUCK",
+                product_id: $('#add-button').val(),
+                product_qty: $('#select option:selected').text(),
                 csrfmiddlewaretoken: "{{csrf_token}}"
             },
             success: (json) => {
