@@ -44,10 +44,12 @@
                                             <option value="">3</option>
                                             <option value="">4</option>
                                         </select>
-                                        <button type="button" id="update-button" data-index="{{product.id}}" class="btn btn-outline-secondary btn-sm update-button">
+                                        <button type="button" id="update-button{{product.id}}" data-index="{{product.id}}"
+                                                class="btn btn-outline-secondary btn-sm update-button">
                                             Update
                                         </button>
-                                        <button type="button" id="delete-button" data-index="{{product.id}}" class="btn btn-outline-secondary btn-sm delete-button">
+                                        <button type="button" id="delete-button{{product.id}}" data-index="{{product.id}}"
+                                                class="btn btn-outline-secondary btn-sm delete-button">
                                             Delete
                                         </button>
                                     </div>
@@ -55,10 +57,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 text-end">
+                        <div class="h6 fw-bold">
+                            Sub Total: $
+                            <div id="subtotal" class="d-inline-flex">
+                                {{item.total_price}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% endwith %}
         {% endfor %}
 
+        <div class="col-12 text-end border-top">
+            <div class="h3 fw-bold">
+                Total: $
+                <div id="total" class="d-inline-flex">
+                    {{basket.get_total_price}}
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

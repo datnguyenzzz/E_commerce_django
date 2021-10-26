@@ -23,3 +23,11 @@ def basket_add(request):
     response = JsonResponse({'qty': basket_qty})
 
     return response
+
+def basket_delete(request):
+    print("delete", request.POST)  
+    return HttpResponse("deleted")
+
+def basket_update(request):
+    print("update",request.POST)  
+    return HttpResponse("updated")

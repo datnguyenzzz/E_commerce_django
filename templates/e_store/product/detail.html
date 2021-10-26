@@ -60,6 +60,7 @@
                 csrfmiddlewaretoken: "{{csrf_token}}"
             },
             success: (json) => {
+                console.log($(this))
                 document.getElementById("basket-qty").innerHTML = json.qty
             },
             error: (xhr, errmsg, err) => {
