@@ -1,5 +1,7 @@
 from e_store.models import Product
+from decimal import Decimal
 
+# basket = {'product_id' : {'price':..., 'qty':...}}
 class Basket():
     def __init__(self, request):
         self.session = request.session 
@@ -30,9 +32,16 @@ class Basket():
         product_ids = self.basket.keys() 
         #filter throught specific manager filter (is_active)
         products = Product.products.filter(id__in = product_ids)
-        print(products)
-        for item in products:
-            print(item)
+
+        #new reference 
+        curr_basket = self.basket.copy() 
+        for product in products:
+            curr_basket[str(product.id)]['product_info'] = product 
+        
+        for item in curr_basket.values():
+            #{price, qty, product_info}
+            item['price'] = Decimal(item['price']) 
+            item['total_price'] = item['price'] * item['qty'] 
             yield item
 
         
