@@ -2,10 +2,11 @@ class Basket():
     def __init__(self, request):
         self.session = request.session 
 
-        if 'skey' not in self.session:
-            self.basket = {} 
+        if 'session_key' not in self.session:
+            # link session to basket
+            self.basket = self.session['session_key'] = {} 
         else:
-            self.basket = self.session.get('skey')
+            self.basket = self.session.get('session_key')
 
     def save(self):
         self.session.modified = True
@@ -19,4 +20,7 @@ class Basket():
             self.basket[product_id] = {'price':str(product.price), 'qty':qty} 
         
         self.save() 
+    
+    def __len__(self):
+        return sum(item['qty'] for item in self.basket.values()) 
         
