@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.conf import settings
 
 # Create your models here.
 
@@ -36,7 +37,7 @@ class Product(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_creator')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='product_creator')
 
     objects = models.Manager() 
     products = ActiveProductManager()
