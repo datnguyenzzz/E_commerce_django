@@ -1,3 +1,5 @@
+# Break from monolith to microservices 
+
 Proposals: 
 + Crucial functional in Ecommerce application 
 + Buiding model, view and template. Familiarize with MVT pattern in Django framework
