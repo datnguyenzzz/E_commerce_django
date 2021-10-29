@@ -11,9 +11,6 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = 'categories'
-    
-    def get_absolute_url(self):
-        return reverse('my_admin:category_list', args=[self.slug])
 
     def __str__(self):
         return self.name 
@@ -39,9 +36,6 @@ class Products(models.Model):
     class Meta:
         verbose_name_plural = 'products' 
         ordering = ("-date_created",)
-
-    def get_absolute_url(self):
-        return reverse("my_admin:product_detail", args=[self.slug])
     
     def __str__(self):
         return self.name
