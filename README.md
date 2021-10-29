@@ -1,4 +1,4 @@
-# Break from monolith to microservices 
+# Monolith codebase
 
 Proposals: 
 + Crucial functional in Ecommerce application 
