@@ -3,5 +3,7 @@
 + Docker 
 + Django 
 + Celery 
-+ RabbitMQ / pika 
++ RabbitMQ / pika  - Using AWS cloudAMQP
 + Payment gateways - Paypal + Stripe 
++ Flask 
++ MySQL + PostgreSQL
