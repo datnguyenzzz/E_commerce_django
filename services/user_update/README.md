@@ -1,3 +1,8 @@
 * This is user update service
-. Support /user_api /POST | /PUT | /DELETE method 
-. publish every changes to RabbitMQ - FANOUT method
+
++ Support /user_api /POST | /PUT | /DELETE method 
+
++ Publish every changes to RabbitMQ - FANOUT method
+
++ Using Flask for backend
+
