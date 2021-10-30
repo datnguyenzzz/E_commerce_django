@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from .models import Products,User
 from .serializers import ProductSerializer
 
+import random
+
 class ProductViewSet(viewsets.ViewSet):
     def get_all(self, request):
         products = Products.objects.all() 
@@ -24,3 +26,12 @@ class ProductViewSet(viewsets.ViewSet):
 
     def destroy(self, request, id):
         return HttpResponse("destroy") 
+
+
+class UserAPIView(APIView):
+    def get(self, request):
+        users = User.objects.all() 
+        user = random.choice(users) 
+        return Response({
+            'id': user.id
+        })
