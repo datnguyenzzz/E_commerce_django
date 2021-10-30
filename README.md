@@ -12,3 +12,7 @@ Advanced:
 + Monitoring, OLAP (analytic, statistics,...)
 + Live chat with chat bot 
 + Notifications (via email, ...)
+
+Architecture:
+
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/assets/architecture.png)
