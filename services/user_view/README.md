@@ -1,0 +1,1 @@
+. Service provide api endpoint for view product's infomation
