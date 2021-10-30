@@ -2,3 +2,4 @@
 . integrate RabitMQ 
 . Use django + MySQL
 . cloudAMQP AWS
+.
