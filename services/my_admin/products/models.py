@@ -24,4 +24,4 @@ class Products(models.Model):
         return self.name
 
 class User(models.Model):
-    pass
+    is_merchant = models.BooleanField(default=False)
