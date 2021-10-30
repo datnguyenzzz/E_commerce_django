@@ -11,7 +11,7 @@ import random
 
 class ProductViewSet(viewsets.ViewSet):
     def get_all(self, request):
-        products = Products.objects.all() 
+        products = Products.products.all() 
         serializer = ProductSerializer(products, many=True) 
         return Response(serializer.data)
 
@@ -22,7 +22,9 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_wid(self, request, id):
-        return HttpResponse("get_wid") 
+        product = Products.products.get(id=id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
 
     def update(self, request, id):
         return HttpResponse("update")
