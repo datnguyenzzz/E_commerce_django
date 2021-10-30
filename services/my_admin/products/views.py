@@ -34,8 +34,9 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, id):
-        return HttpResponse("destroy") 
-
+        product = Products.products.get(id=id) 
+        product.delete() 
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserAPIView(APIView):
     def get(self, request):
