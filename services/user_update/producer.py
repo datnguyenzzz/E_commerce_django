@@ -1,6 +1,6 @@
 import pika, json
 
-from ..APIKEY import CLOUD_AMQP_KEY
+from APIKEY import CLOUD_AMQP_KEY
 
 params = pika.URLParameters(CLOUD_AMQP_KEY)
 conn = pika.BlockingConnection(params)
