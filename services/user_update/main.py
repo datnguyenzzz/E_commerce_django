@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from dataclasses import dataclass
 from sqlalchemy import UniqueConstraint
 
-from producer import topic_publish
+import json
+
+from producer import fanout_publish
 
 app = Flask(__name__) 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/user_update'
@@ -26,8 +28,8 @@ class Product(db.Model):
 def create():
     data = request.get_json()
     method = "product_create"
-    topic_publish(method, body=data)
-    return f'user try to create with body = {data}' 
+    fanout_publish(method, body=data)
+    return f'user try to create with body = {json.dumps(data)}' 
 
 @app.route('/user_api/products/<int:id>',methods=['PUT'])
 def update(id):
