@@ -18,10 +18,13 @@ class ProductUser(db.Model):
 
     UniqueConstraint('user_id', 'product_id', name='user_product_unique')
 
+@app.route('/user_api/products',methods=['POST']) 
+def create():
+    return 'user try to create' 
 
-@app.route('/') 
-def main():
-    return 'Helu mtf' 
+@app.route('/user_api/products/<int:id>',methods=['PUT'])
+def update(id):
+    return f'user try to update product with {id}'
 
 if __name__=="__main__":
     app.run(debug=True, host='0.0.0.0')
