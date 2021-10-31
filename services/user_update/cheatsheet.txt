@@ -1,3 +1,8 @@
 db init 
 db migrate 
 db upgrade
+
+AMQP: 
+    . default exchange : match exactly with = "binding-key"
+    . Topic exchange: match based on regex : "binding-key" -"agreement.*, ..."
+    . Fanout exchange: publish to all queue
