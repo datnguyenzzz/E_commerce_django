@@ -1,0 +1,3 @@
+db init 
+db migrate 
+db upgrade
