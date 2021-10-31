@@ -4,9 +4,9 @@ services:
     build:
       context: . 
       dockerfile: Dockerfile
-    command: 'python manage.py runserver 0.0.0.0:7000'
+    command: 'python main.py'
     ports:
-      - 7000:7000
+      - 8001:5000
     volumes:
       - .:/app
     depends_on:
