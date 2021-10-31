@@ -10,14 +10,6 @@ CORS(app)
 
 db = SQLAlchemy(app)
 
-@dataclass
-class Products(db.Model):
-    #fetch id from rabbitmq, so DON"T change the id
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    name = db.Column(db.String(200)) 
-    image = db.Column(db.String(200))
-    price = db.Column(db.Integer)
-
 @dataclass 
 class ProductUser(db.Model):
     id = db.Column(db.Integer, primary_key=True) 
