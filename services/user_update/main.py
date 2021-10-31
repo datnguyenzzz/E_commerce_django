@@ -15,14 +15,11 @@ CORS(app)
 db = SQLAlchemy(app)
 
 @dataclass 
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False) 
-    name = db.Column(db.String(255)) 
-    author = db.Column(db.String(255))
-    image = db.Column(db.String(255))
-    likes = db.Column(db.Integer)
-    price = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean, default=True)
+class ProductChangeHistroy(db.Model):
+    id = db.Column(db.Integer, primary_key=True) 
+    user_id = db.Column(db.Integer)
+    product_id = db.Column(db.Integer)
+    action = db.Column(db.String(10)) 
 
 @app.route('/user_api/products',methods=['POST']) 
 def create():
