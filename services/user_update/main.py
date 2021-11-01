@@ -19,16 +19,14 @@ class ProductChangeHistroy(db.Model):
     id = db.Column(db.Integer, primary_key=True) 
     user_id = db.Column(db.Integer)
     product_id = db.Column(db.Integer)
-    action = db.Column(db.String(10)) 
 
 @app.route('/user_api/products',methods=['POST']) 
 def create():
     data = request.get_json()
     method = "product_create"
-    #fanout_publish(method, body=data)
-    
-    routing_key = 'users.product.create'
-    topic_publish(method, body=data, routing_key=routing_key)
+    fanout_publish(method, body=data)
+    #routing_key = 'users.product.create'
+    #topic_publish(method, body=data, routing_key=routing_key)
     return f'user try to create with body = {json.dumps(data)}' 
 
 @app.route('/user_api/products/<int:id>',methods=['PUT'])

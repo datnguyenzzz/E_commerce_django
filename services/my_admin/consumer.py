@@ -14,14 +14,18 @@ channel = conn.channel()
 admin_product_queue = "admin_product_queue"
 channel.queue_declare(queue=admin_product_queue) 
 
+#DEFINE 
+USER_PRODUCT_FANOUT_EXCHANGE = 'user.products.fanout'
+USER_PRODUCT_TOPIC_EXCHANGE = 'user.products.topic'
+
 #fanout
-#channel.exchange_declare(exchange='products', exchange_type='fanout')
-#channel.queue_bind(exchange='products', queue=admin_product_queue)
+channel.exchange_declare(exchange=USER_PRODUCT_FANOUT_EXCHANGE, exchange_type='fanout')
+channel.queue_bind(exchange=USER_PRODUCT_FANOUT_EXCHANGE, queue=admin_product_queue)
 
 #topic 
-channel.exchange_declare(exchange='products', exchange_type='topic')
+channel.exchange_declare(exchange=USER_PRODUCT_TOPIC_EXCHANGE, exchange_type='topic')
 binding_key = 'users.#' 
-channel.queue_bind(exchange='products', queue=admin_product_queue, routing_key=binding_key)
+channel.queue_bind(exchange=USER_PRODUCT_TOPIC_EXCHANGE, queue=admin_product_queue, routing_key=binding_key)
 
 def callback(ch, method, properties, body):
     print('received in my admin')  
