@@ -24,9 +24,14 @@ channel.queue_bind(exchange=ADMIN_PRODUCT_TOPIC_EXCHANGE, queue=user_update_prod
 
 def callback(ch, method, properties, body):
     print('received in user update')  
-    print(body)
-    print(properties)
-    print(method.routing_key)
+    if properties.content_type == 'product_create':
+        pass 
+
+    if properties.content_type == 'product_update':
+        pass
+
+    if properties.content_type == 'product_delete':
+        pass
 
 channel.basic_consume(queue=user_update_product_queue, on_message_callback=callback, auto_ack=True)
 

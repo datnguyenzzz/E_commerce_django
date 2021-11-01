@@ -6,6 +6,7 @@ class ActiveProductManager(models.Manager):
         return super().get_queryset().filter(is_active=True)
 
 class Products(models.Model):
+    id = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=255) 
     author = models.CharField(max_length=255, default='admin') 
     image = models.CharField(max_length=255) 

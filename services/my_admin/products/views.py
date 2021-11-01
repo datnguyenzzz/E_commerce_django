@@ -18,6 +18,7 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
+        print(type(request.data))
         serializer = ProductSerializer(data=request.data) 
         serializer.is_valid(raise_exception=True) 
         serializer.save() 
@@ -47,7 +48,7 @@ class ProductViewSet(viewsets.ViewSet):
         product = Products.products.get(id=id) 
         product.delete() 
 
-        method = "product_create"
+        method = "product_delete"
         fanout_publish(method, id)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
