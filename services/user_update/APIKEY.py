@@ -1,0 +1,1 @@
+CLOUD_AMQP_KEY = 'amqps://cxlkargj:wyHQv2Hib1vFtRQWlWwo9-eHKXG3hfWe@roedeer.rmq.cloudamqp.com/cxlkargj'
