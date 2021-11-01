@@ -11,13 +11,17 @@ params = pika.URLParameters(CLOUD_AMQP_KEY)
 conn = pika.BlockingConnection(params)
 channel = conn.channel()
 
-channel.exchange_declare(exchange='products', exchange_type='fanout')
-
 user_view_product_queue = "user_view_product_queue"
 channel.queue_declare(queue=user_view_product_queue) 
 
-channel.queue_bind(exchange='products', queue=user_view_product_queue)
+#fanout
+#channel.exchange_declare(exchange='products', exchange_type='fanout')
+#channel.queue_bind(exchange='products', queue=user_view_product_queue)
 
+#topic 
+channel.exchange_declare(exchange='products', exchange_type='topic')
+binding_key = '*.product.#' 
+channel.queue_bind(exchange='products', queue=user_view_product_queue, routing_key=binding_key)
 
 def callback(ch, method, properties, body):
     print('received in my user_view')  
