@@ -31,7 +31,13 @@ def create():
 
 @app.route('/user_api/products/<int:id>',methods=['PUT'])
 def update(id):
+    #name, image, price are required
     return f'user try to update product with {id}'
+
+@app.route('/user_api/products/<int:id>',methods=['DELETE'])
+def update(id):
+    #name, image, price are required
+    return f'user try to delete product with {id}'
 
 if __name__=="__main__":
     app.run(debug=True, host='0.0.0.0')

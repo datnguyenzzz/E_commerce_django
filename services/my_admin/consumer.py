@@ -29,9 +29,14 @@ channel.queue_bind(exchange=USER_PRODUCT_TOPIC_EXCHANGE, queue=admin_product_que
 
 def callback(ch, method, properties, body):
     print('received in my admin')  
-    print(body)
-    print(properties)
-    print(method.routing_key)
+    if properties.content_type == 'product_create':
+        pass 
+
+    if properties.content_type == 'product_update':
+        pass
+
+    if properties.content_type == 'product_delete':
+        pass
 
 channel.basic_consume(queue=admin_product_queue, on_message_callback=callback, auto_ack=True)
 
