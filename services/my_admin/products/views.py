@@ -39,6 +39,9 @@ class ProductViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True) 
         serializer.save() 
 
+        data_request = serializer.data
+        data_request['id'] = id
+
         method = "product_update"
         fanout_publish(method, serializer.data)
 

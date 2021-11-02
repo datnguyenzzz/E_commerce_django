@@ -46,10 +46,22 @@ def callback(ch, method, properties, body):
         print('product created')
 
     if properties.content_type == 'product_update':
-        pass
+        data_parse = json.loads(body)
+        id = int(data_parse.pop('id'))
+
+        product = Products.products.get(id=id) 
+        serializer = ProductSerializer(instance=product, data=data_parse)
+        serializer.is_valid(raise_exception=True) 
+        serializer.save() 
+
+        print('product updated')
 
     if properties.content_type == 'product_delete':
-        pass
+        id = int(json.loads(body))
+        product = Products.products.get(id=id) 
+        product.delete() 
+
+        print('product deleted')
 
 channel.basic_consume(queue=user_view_product_queue, on_message_callback=callback, auto_ack=True)
 
