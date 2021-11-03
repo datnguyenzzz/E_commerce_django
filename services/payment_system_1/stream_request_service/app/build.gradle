@@ -37,6 +37,7 @@ dependencies {
     implementation platform("com.typesafe.akka:akka-http-bom_${versions.ScalaBinary}:10.2.7")
     implementation "com.typesafe.akka:akka-actor-typed_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-stream_${versions.ScalaBinary}:${versions.AkkaVersion}"
+    implementation "com.typesafe.akka:akka-http-jackson_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-http_${versions.ScalaBinary}"
 
     // Vavr 

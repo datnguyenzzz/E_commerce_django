@@ -11,9 +11,15 @@ import akka.http.javadsl.ConnectHttp;
 import akka.http.javadsl.Http; 
 import akka.http.javadsl.ServerBinding; 
 import akka.http.javadsl.server.AllDirectives;
+import static akka.http.javadsl.server.Directives.extractRequest;
 import akka.http.javadsl.server.Route;
 import akka.http.javadsl.model.HttpRequest; 
 import akka.http.javadsl.model.HttpResponse;
+
+import akka.http.javadsl.marshallers.jackson.Jackson;
+import akka.http.javadsl.unmarshalling.Unmarshaller;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import akka.stream.ActorMaterializer; 
 import akka.stream.javadsl.Flow;
@@ -21,18 +27,51 @@ import akka.stream.javadsl.Flow;
 import java.util.concurrent.CompletionStage;
 import java.io.IOException;
 
+class PaymentInfo {
+    private int id; 
+    private int amount; 
+
+    @JsonCreator
+    public PaymentInfo(@JsonProperty("id") int id,@JsonProperty("amount") int amount) {
+        this.id = id;
+        this.amount = amount;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public String toString() {
+        return "id = " + this.id + '\n'
+              +"Amount = " + this.amount;
+    }
+}
+
 class HandleBody extends AllDirectives {
 
     public Route createRoute() {
-        return concat(
-            path("api", () -> 
-                get(() -> complete("This is server for api....")))
-        );
+        return concat(getApi(),postApi());
     }
 
-    public HandleBody() {
-
+    private Route getApi() {
+        return get(() -> 
+            path("payment_api", () ->
+                complete("Get Api")));
     }
+
+    private Route postApi() {
+        //return extractRequest(req -> complete(req.method().name() + " " + req.entity()));
+        return post(() ->
+            path("payment_api", () -> 
+                entity(Jackson.unmarshaller(PaymentInfo.class), 
+                       req -> complete(req.toString()))));
+    }
+
+    public HandleBody() {}
 }
 
 public final class App {
