@@ -15,8 +15,8 @@ Advanced:
 
 Overall architecture:
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/assets/overall_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/payment_service/assets/overall_architecture.png)
 
 Payment processor system architecture 
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/assets/payment_service_provider_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/payment_service/assets/payment_service_provider_architecture.png)
