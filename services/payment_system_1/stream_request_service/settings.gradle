@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'stream_request_service'
-include('app', 'list', 'utilities')
+include('app')
