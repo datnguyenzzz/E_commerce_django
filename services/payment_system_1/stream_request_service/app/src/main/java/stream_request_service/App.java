@@ -3,46 +3,65 @@
  */
 package stream_request_service;
 
-import akka.actor.typed.ActorSystem;
-import akka.actor.typed.javadsl.Behaviors;
+import akka.NotUsed;
+
+import akka.actor.ActorSystem;
+
+import akka.http.javadsl.ConnectHttp;
 import akka.http.javadsl.Http; 
 import akka.http.javadsl.ServerBinding; 
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
+import akka.http.javadsl.model.HttpRequest; 
+import akka.http.javadsl.model.HttpResponse;
+
+import akka.stream.ActorMaterializer; 
+import akka.stream.javadsl.Flow;
 
 import java.util.concurrent.CompletionStage;
 import java.io.IOException;
 
-public class App extends AllDirectives{
+class HandleBody extends AllDirectives {
 
-    private Route createRoute() {
+    public Route createRoute() {
         return concat(
             path("api", () -> 
                 get(() -> complete("This is server for api....")))
         );
     }
 
-    public static void main(String[] args) {
-        ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(),"stream-request-server");
-        
-        final Http http = Http.get(system);
-        App app = new App(); 
+    public HandleBody() {
 
-        final CompletionStage<ServerBinding> binding = 
-            http.newServerAt("localhost",8000)
-                .bind(app.createRoute());
+    }
+}
+
+public final class App {
+
+    private static final String domain = "localhost";
+    private static final int port = 8011;
+
+    public static void main(String[] args) throws IOException {
+        final ActorSystem system = ActorSystem.create("stream-request-server");
+        final ActorMaterializer materializer = ActorMaterializer.create(system);
+        final Http http = Http.get(system);
+
+        HandleBody handleBody = new HandleBody();
+
+        final Flow<HttpRequest, HttpResponse,NotUsed> routeFlow = handleBody.createRoute().flow(system, materializer);
+
+        final CompletionStage<ServerBinding> binding = http.bindAndHandle (
+            routeFlow,
+            ConnectHttp.toHost(domain, port),
+            materializer
+        );
 
         System.out.println("Server is online");
-        try {
-            System.in.read();
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        System.in.read();
 
         binding
             .thenCompose(ServerBinding::unbind)
             .thenAccept(unbound -> system.terminate());
 
+        System.out.println("Server is offline");
     }
 }

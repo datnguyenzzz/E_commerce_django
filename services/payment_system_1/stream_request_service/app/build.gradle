@@ -23,7 +23,8 @@ run {
 dependencies {
     def versions = [
         AkkaVersion: "2.6.8",
-        ScalaBinary: "2.13"
+        ScalaBinary: "2.13",
+        Vavr: "0.10.4"
     ]
 
     // Use JUnit test framework.
@@ -34,10 +35,12 @@ dependencies {
 
     // Akka 
     implementation platform("com.typesafe.akka:akka-http-bom_${versions.ScalaBinary}:10.2.7")
-
     implementation "com.typesafe.akka:akka-actor-typed_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-stream_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-http_${versions.ScalaBinary}"
+
+    // Vavr 
+    implementation "io.vavr:vavr:${versions.Vavr}"
 }
 
 application {
