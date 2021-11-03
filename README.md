@@ -13,6 +13,10 @@ Advanced:
 + Live chat with chat bot 
 + Notifications (via email, ...)
 
-Architecture:
+Overall architecture:
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/assets/architecture.png)
+
+Payment processor system architecture 
+
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/develop/assets/payment_service_provider_architecture.png)
