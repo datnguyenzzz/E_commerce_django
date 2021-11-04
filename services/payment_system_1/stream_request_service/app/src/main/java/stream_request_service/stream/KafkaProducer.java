@@ -28,7 +28,9 @@ public class KafkaProducer {
     private ActorMaterializer materializer;
 
     private final static String kafkaProducer = "akka.kafka.producer";
-    private final static String kafkaBroker = "localhost:9092";
+    private final static String kafkaBrokerHost = "localhost:9092";
+    private final static String kafkaTopic = "checkouts";
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private Try<String> toJson(PaymentRequest req) {
@@ -39,7 +41,7 @@ public class KafkaProducer {
     }
 
     private ProducerRecord<String, String> toProducerRecord(String reqJson) {
-        return new ProducerRecord<>("checkouts", reqJson);
+        return new ProducerRecord<>(kafkaTopic, reqJson);
     }
 
     public CompletionStage<Done> produceToKafka(PaymentRequest req) {
@@ -61,6 +63,6 @@ public class KafkaProducer {
             config, 
             new StringSerializer(),
             new StringSerializer()
-        ).withBootstrapServers(kafkaBroker);
+        ).withBootstrapServers(kafkaBrokerHost);
     }
 }
