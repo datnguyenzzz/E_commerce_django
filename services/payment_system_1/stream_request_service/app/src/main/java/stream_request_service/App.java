@@ -31,11 +31,11 @@ public final class App {
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
 
-        ClientApi clientApi = new ClientApi();
+        ClientApi clientApi = new ClientApi(system, materializer);
 
         final Flow<HttpRequest, HttpResponse,NotUsed> routeFlow = clientApi.createRoute().flow(system, materializer);
 
-        final CompletionStage<ServerBinding> binding = http.bindAndHandle (
+        final CompletionStage<ServerBinding> futureBinding = http.bindAndHandle (
             routeFlow,
             ConnectHttp.toHost(domain, port),
             materializer
@@ -44,7 +44,7 @@ public final class App {
         System.out.println("Server is online");
         System.in.read();
 
-        binding
+        futureBinding
             .thenCompose(ServerBinding::unbind)
             .thenAccept(unbound -> system.terminate());
 

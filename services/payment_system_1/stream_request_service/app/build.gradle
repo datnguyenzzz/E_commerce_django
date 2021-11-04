@@ -23,7 +23,7 @@ run {
 dependencies {
     def versions = [
         AkkaVersion: "2.6.8",
-        ScalaBinary: "2.13",
+        ScalaBinary: "2.12",
         Vavr: "0.10.4"
     ]
 
@@ -39,6 +39,7 @@ dependencies {
     implementation "com.typesafe.akka:akka-stream_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-http-jackson_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-http_${versions.ScalaBinary}"
+    implementation "com.typesafe.akka:akka-stream-kafka_${versions.ScalaBinary}:2.0.0"
 
     // Vavr 
     implementation "io.vavr:vavr:${versions.Vavr}"
