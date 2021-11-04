@@ -7,6 +7,7 @@
 + Payment gateways - Paypal + Stripe 
 + Flask 
 + MySQL + PostgreSQL
++ jar: app/build/app-all.jar
 
 # Services list 
 

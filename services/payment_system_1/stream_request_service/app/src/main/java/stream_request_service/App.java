@@ -16,15 +16,18 @@ import akka.http.javadsl.model.HttpResponse;
 import akka.stream.ActorMaterializer; 
 import akka.stream.javadsl.Flow;
 
+import io.vavr.control.Option;
+
 import java.util.concurrent.CompletionStage;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 import stream_request_service.rest.ClientApi;
 
 public final class App {
 
-    private static final String domain = "localhost";
-    private static final int port = 8011;
+    private static final String domain = "0.0.0.0";
+    private static final int port = 8080;
 
     public static void main(String[] args) throws IOException {
         final ActorSystem system = ActorSystem.create("stream-request-server");
@@ -35,19 +38,11 @@ public final class App {
 
         final Flow<HttpRequest, HttpResponse,NotUsed> routeFlow = clientApi.createRoute().flow(system, materializer);
 
+        System.out.println("Server is online !!!!!");
         final CompletionStage<ServerBinding> futureBinding = http.bindAndHandle (
             routeFlow,
             ConnectHttp.toHost(domain, port),
             materializer
         );
-
-        System.out.println("Server is online");
-        System.in.read();
-
-        futureBinding
-            .thenCompose(ServerBinding::unbind)
-            .thenAccept(unbound -> system.terminate());
-
-        System.out.println("Server is offline");
     }
 }
