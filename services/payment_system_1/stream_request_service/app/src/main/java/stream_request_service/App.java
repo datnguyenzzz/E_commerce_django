@@ -10,13 +10,8 @@ import akka.actor.ActorSystem;
 import akka.http.javadsl.ConnectHttp;
 import akka.http.javadsl.Http; 
 import akka.http.javadsl.ServerBinding; 
-import akka.http.javadsl.server.AllDirectives;
-import akka.http.javadsl.server.Route;
 import akka.http.javadsl.model.HttpRequest; 
 import akka.http.javadsl.model.HttpResponse;
-
-import akka.http.javadsl.marshallers.jackson.Jackson;
-import akka.http.javadsl.unmarshalling.Unmarshaller;
 
 import akka.stream.ActorMaterializer; 
 import akka.stream.javadsl.Flow;
@@ -24,30 +19,7 @@ import akka.stream.javadsl.Flow;
 import java.util.concurrent.CompletionStage;
 import java.io.IOException;
 
-import stream_request_service.model.PaymentRequest;
-
-class HandleBody extends AllDirectives {
-
-    public Route createRoute() {
-        return concat(getApi(),postApi());
-    }
-
-    private Route getApi() {
-        return get(() -> 
-            path("payment_api", () ->
-                complete("Get Api")));
-    }
-
-    private Route postApi() {
-        //return extractRequest(req -> complete(req.method().name() + " " + req.entity()));
-        return post(() ->
-            path("payment_api", () -> 
-                entity(Jackson.unmarshaller(PaymentRequest.class), 
-                       req -> complete(req.toString()))));
-    }
-
-    public HandleBody() {}
-}
+import stream_request_service.rest.ClientApi;
 
 public final class App {
 
@@ -59,9 +31,9 @@ public final class App {
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
 
-        HandleBody handleBody = new HandleBody();
+        ClientApi clientApi = new ClientApi();
 
-        final Flow<HttpRequest, HttpResponse,NotUsed> routeFlow = handleBody.createRoute().flow(system, materializer);
+        final Flow<HttpRequest, HttpResponse,NotUsed> routeFlow = clientApi.createRoute().flow(system, materializer);
 
         final CompletionStage<ServerBinding> binding = http.bindAndHandle (
             routeFlow,
