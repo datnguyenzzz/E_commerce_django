@@ -1,5 +1,7 @@
 package stream_request_service.rest;
 
+import akka.Done;
+
 import akka.actor.ActorSystem;
 
 import akka.http.javadsl.server.AllDirectives;
@@ -10,12 +12,14 @@ import akka.stream.ActorMaterializer;
 import akka.http.javadsl.marshallers.jackson.Jackson;
 import akka.http.javadsl.unmarshalling.Unmarshaller;
 
+import java.util.concurrent.CompletionStage;
+
 import stream_request_service.model.PaymentRequest;
-import stream_request_service.stream.Producer;
+import stream_request_service.stream.KafkaProducer;
 
 public class ClientApi extends AllDirectives {
 
-    private Producer producer;
+    private KafkaProducer kafkaProducer;
 
     public Route createRoute() {
         return concat(getApi(),postApi());
@@ -32,14 +36,18 @@ public class ClientApi extends AllDirectives {
         return post(() ->
             path("payment_api", () -> 
                 entity(Jackson.unmarshaller(PaymentRequest.class), 
-                        req -> 
-                            complete(req.toString())
-                        )
+                        req -> { 
+                            CompletionStage<Done> futureSent = this.kafkaProducer.produceToKafka(req);
+
+                            return onSuccess(futureSent, done -> 
+                                complete("Sent request successfully \n" + req.toString())
+                            );
+                        })
                 )
             );
     }
 
     public ClientApi(ActorSystem system, ActorMaterializer materializer) {
-        this.producer = new Producer(system, materializer);
+        this.kafkaProducer = new KafkaProducer(system, materializer);
     }
 }
