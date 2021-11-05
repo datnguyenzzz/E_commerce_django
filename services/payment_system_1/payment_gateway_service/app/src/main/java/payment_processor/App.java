@@ -3,10 +3,12 @@
  */
 package payment_processor;
 
+import akka.Done;
 import akka.actor.ActorSystem;
 
 import akka.stream.ActorMaterializer;
 
+import java.util.concurrent.CompletionStage;
 import payment_processor.stream.KafkaConsumer;
 
 public class App {
@@ -18,6 +20,9 @@ public class App {
 
         System.out.println(kafkaConsumer.getName());
 
-        System.out.println("Payment gateway start !!!");
+        final CompletionStage<Done> gateway = kafkaConsumer.consume();
+
+        gateway.whenComplete((done,ex) -> system.terminate());
+        
     }
 }
