@@ -28,7 +28,7 @@ public class KafkaProducer {
     private ActorMaterializer materializer;
 
     private final static String kafkaProducer = "akka.kafka.producer";
-    private final static String kafkaBrokerHost = "localhost:9092";
+    private final static String kafkaBrokerHost = "localhost:29092";
     private final static String kafkaTopic = "checkouts";
 
     private static final ObjectMapper mapper = new ObjectMapper();
