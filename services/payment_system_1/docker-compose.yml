@@ -19,11 +19,11 @@ services:
     depends_on:
       - zookeeper
     
-  client-request:
-    build: ./stream_request_service
-    command: 'java -jar app/build/libs/app-all.jar'
-    ports:
-      - 8080:8080
-    depends_on:
-      - kafka
-      - zookeeper
+  #client-request:
+  #  build: ./stream_request_service
+  #  command: 'java -jar app/build/libs/app-all.jar'
+  #  ports:
+  #    - 8080:8080
+  #  depends_on:
+  #    - kafka
+  #    - zookeeper

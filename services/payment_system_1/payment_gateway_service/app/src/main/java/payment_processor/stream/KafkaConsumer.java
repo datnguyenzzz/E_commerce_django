@@ -20,14 +20,18 @@ import com.typesafe.config.Config;
 
 public class KafkaConsumer {
     private final static String kafkaConsumerConfig = "akka.kafka.consumer";
+    private final static String kafkaProducerConfig = "akka.kafka.producer";
     private final static String kafkaBrokerHost = "127.0.0.1:9092";
     private final static String groupId = "payment-gateway-1";
     private final static String topicName = "checkouts";
+    private final static int parallelism = 4;
 
     private ConsumerSettings<String, String> consumerSettings;
     private final ActorSystem system;
     private final ActorMaterializer materializer;
     private AutoSubscription subscription;
+
+    private CheckoutSinks checkoutSinks;
 
     public String getName() {
         return "Payment gateway start !!!";
@@ -44,17 +48,21 @@ public class KafkaConsumer {
     public KafkaConsumer(ActorSystem system, ActorMaterializer materializer) {
         this.system = system; 
         this.materializer = materializer;
-
-        Config config = system.settings().config().getConfig(kafkaConsumerConfig);
+        //-------------------------------------------//
+        Config consumerConfig = system.settings().config().getConfig(kafkaConsumerConfig);
+        Config producerConfig = system.settings().config().getConfig(kafkaProducerConfig);
         this.consumerSettings = ConsumerSettings.create(
-            config, 
+            consumerConfig, 
             new StringDeserializer(),
             new StringDeserializer()
         )
         .withBootstrapServers(kafkaBrokerHost)
         .withGroupId(groupId)
         .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
+        //-------------------------------------------//
         this.subscription = Subscriptions.topics(topicName);
+        //-------------------------------------------//
+        this.checkoutSinks = new CheckoutSinks(producerConfig);
+
     }
 }
