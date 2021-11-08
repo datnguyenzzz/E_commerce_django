@@ -34,4 +34,12 @@ public class CheckoutSinks {
         this.errorSink = Producer.plainSink(producerSettings);
         this.validatedSink = Producer.plainSink(producerSettings);
     }
+
+    public Sink<ProcedureRecord<String, String>, CompletionStage<Done>> getErrorSink() {
+        return errorSink;
+    }
+
+    public Sink<ProcedureRecord<String, String>, CompletionStage<Done>> getValidatedSink() {
+        return validatedSink;
+    }
 }
