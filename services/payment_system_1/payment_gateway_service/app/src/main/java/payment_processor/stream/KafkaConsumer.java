@@ -10,6 +10,7 @@ import akka.kafka.ConsumerSettings;
 import akka.kafka.javadsl.Consumer;
 import akka.stream.javadsl.Sink;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -50,20 +51,25 @@ public class KafkaConsumer {
     public CompletionStage<Done> consume() {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
             .map(this::demarshallingMessage) 
-            .map(Either::get)
+            .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
+            .map(Either::get) // Get right or throw left
             .runForeach(
                 event -> System.out.println(event.toString()), this.materializer
             );
     }
 
     //marshall to class for database store purpose
-
     private Either<String, Checkout> demarshallingMessage(ConsumerRecord<String,String> message) {
         try {
             return Either.right(objectMapper.readValue(message.value(), Checkout.class));
         } catch (JsonProcessingException ex) {
-            return Either.left("Error while demarsall message key = " + message.key());
+            return Either.left("Error while demarshall message key = " + message.key());
         }
+    }
+
+    //error demarshalled message
+    private ProducerRecord<String,String> toErrorTopic(Either<String, Checkout> ex) {
+        return new ProducerRecord<>(errorTopic, ex.getLeft());
     }
 
     public KafkaConsumer(ActorSystem system, ActorMaterializer materializer) {
