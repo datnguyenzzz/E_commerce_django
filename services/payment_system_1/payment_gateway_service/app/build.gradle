@@ -37,12 +37,17 @@ dependencies {
     implementation 'com.google.guava:guava:30.1.1-jre'
 
     // Akka 
+    implementation platform("com.typesafe.akka:akka-http-bom_${versions.ScalaBinary}:10.2.7")
+    implementation "com.typesafe.akka:akka-actor-typed_${versions.ScalaBinary}:${versions.AkkaVersion}"
     implementation "com.typesafe.akka:akka-stream_${versions.ScalaBinary}:${versions.AkkaVersion}"
+    implementation "com.typesafe.akka:akka-http-jackson_${versions.ScalaBinary}:${versions.AkkaVersion}"
+    implementation "com.typesafe.akka:akka-http_${versions.ScalaBinary}"
     implementation "com.typesafe.akka:akka-stream-kafka_${versions.ScalaBinary}:2.0.0"
 
     // Vavr 
     implementation "io.vavr:vavr:${versions.Vavr}"
 }
+
 application {
     // Define the main class for the application.
     mainClass = 'payment_processor.App'

@@ -16,7 +16,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import java.util.concurrent.CompletionStage;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
+
+import payment_processor.model.Checkout;
 
 public class KafkaConsumer {
     private final static String kafkaConsumerConfig = "akka.kafka.consumer";
@@ -32,6 +36,7 @@ public class KafkaConsumer {
     private final ActorSystem system;
     private final ActorMaterializer materializer;
     private AutoSubscription subscription;
+    private final ObjectMapper objectMapper;
 
     private CheckoutSinks checkoutSinks;
 
@@ -41,10 +46,21 @@ public class KafkaConsumer {
 
     public CompletionStage<Done> consume() {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
-            .map(ConsumerRecord::value) //json
+            .map(this::marshallingMessage) 
             .runForeach(
                 event -> System.out.println(event.toString()), this.materializer
             );
+    }
+
+    //marshall to class for database store purpose
+
+    private Checkout marshallingMessage(ConsumerRecord<String,String> message) {
+        try {
+            return objectMapper.readValue(message.value(), Checkout.class);
+        } catch (JsonProcessingException ex) {
+            System.out.println(ex);
+            return null;
+        }
     }
 
     public KafkaConsumer(ActorSystem system, ActorMaterializer materializer) {
@@ -65,6 +81,8 @@ public class KafkaConsumer {
         this.subscription = Subscriptions.topics(topicName);
         //-------------------------------------------//
         this.checkoutSinks = new CheckoutSinks(producerConfig);
+        //-------------------------------------------//
+        this.objectMapper = new ObjectMapper();
 
     }
 }
