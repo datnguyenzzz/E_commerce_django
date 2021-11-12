@@ -33,7 +33,8 @@ public class KafkaConsumer {
     private final static String groupId = "payment-gateway-1"; //each consumer has same group_id consume same topic
     private final static String topicName = "checkouts";
     private final static String errorTopic = "error-payment"; 
-    private final static String validTopic = "valid-payment";
+    private final static String thirdPartyPSPTopic = "third-party-psp";
+    private final static String internalPSPTopic = "posession-psp";
     private final static int parallelism = 4;
 
     private ConsumerSettings<String, String> consumerSettings;
@@ -51,7 +52,10 @@ public class KafkaConsumer {
     public CompletionStage<Done> consume() {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
             .map(this::demarshallingMessage) 
-            .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
+            .divertTo(
+                checkoutSinks.getErrorSink().contramap(this::toErrorTopic), //map function before to sink
+                Either::isLeft
+            ) // divert to sink if Either.isLeft()
             .map(Either::get) // Get right or throw left
             .runForeach(
                 event -> System.out.println(event.toString()), this.materializer
@@ -66,6 +70,10 @@ public class KafkaConsumer {
             return Either.left("Error while demarshall message key = " + message.key());
         }
     }
+
+    //Fraud detection
+
+    //check user for distributing to correctsponded topic
 
     //error demarshalled message
     private ProducerRecord<String,String> toErrorTopic(Either<String, Checkout> ex) {

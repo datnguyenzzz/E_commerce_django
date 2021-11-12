@@ -20,7 +20,7 @@ import com.typesafe.config.Config;
 
 public class CheckoutSinks {
     //kafka flow: ProcedureRecord -> CompletionStage
-    private final Sink<ProducerRecord<String, String>, CompletionStage<Done>> errorSink, validatedSink;
+    private final Sink<ProducerRecord<String, String>, CompletionStage<Done>> errorSink, thirdPartySink, internalSink;
     private final static String kafkaBrokerHost = "127.0.0.1:9092";
 
     public CheckoutSinks(Config config) {
@@ -32,14 +32,19 @@ public class CheckoutSinks {
         .withBootstrapServers(kafkaBrokerHost);
 
         this.errorSink = Producer.plainSink(producerSettings);
-        this.validatedSink = Producer.plainSink(producerSettings);
+        this.thirdPartySink = Producer.plainSink(producerSettings);
+        this.internalSink = Producer.plainSink(producerSettings);
     }
 
     public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getErrorSink() {
         return errorSink;
     }
 
-    public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getValidatedSink() {
-        return validatedSink;
+    public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getThirdPartySink() {
+        return thirdPartySink;
+    }
+
+    public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getinternalSink() {
+        return internalSink;
     }
 }
