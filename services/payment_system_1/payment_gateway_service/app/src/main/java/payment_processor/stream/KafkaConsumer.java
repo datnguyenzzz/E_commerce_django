@@ -20,6 +20,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
 
+import io.vavr.control.Either; 
+import io.vavr.Tuple2;
+
 import payment_processor.model.Checkout;
 
 public class KafkaConsumer {
@@ -46,7 +49,8 @@ public class KafkaConsumer {
 
     public CompletionStage<Done> consume() {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
-            .map(this::marshallingMessage) 
+            .map(this::demarshallingMessage) 
+            .map(Either::get)
             .runForeach(
                 event -> System.out.println(event.toString()), this.materializer
             );
@@ -54,12 +58,11 @@ public class KafkaConsumer {
 
     //marshall to class for database store purpose
 
-    private Checkout marshallingMessage(ConsumerRecord<String,String> message) {
+    private Either<String, Checkout> demarshallingMessage(ConsumerRecord<String,String> message) {
         try {
-            return objectMapper.readValue(message.value(), Checkout.class);
+            return Either.right(objectMapper.readValue(message.value(), Checkout.class));
         } catch (JsonProcessingException ex) {
-            System.out.println(ex);
-            return null;
+            return Either.left("Error while demarsall message key = " + message.key());
         }
     }
 
