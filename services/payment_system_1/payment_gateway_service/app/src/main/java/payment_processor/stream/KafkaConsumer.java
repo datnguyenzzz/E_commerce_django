@@ -22,8 +22,10 @@ public class KafkaConsumer {
     private final static String kafkaConsumerConfig = "akka.kafka.consumer";
     private final static String kafkaProducerConfig = "akka.kafka.producer";
     private final static String kafkaBrokerHost = "127.0.0.1:9092";
-    private final static String groupId = "payment-gateway-1";
+    private final static String groupId = "payment-gateway-1"; //each consumer has same group_id consume same topic
     private final static String topicName = "checkouts";
+    private final static String errorTopic = "error-payment"; 
+    private final static String validTopic = "valid-payment";
     private final static int parallelism = 4;
 
     private ConsumerSettings<String, String> consumerSettings;
