@@ -25,6 +25,7 @@ import io.vavr.control.Either;
 import io.vavr.Tuple2;
 
 import payment_processor.model.Checkout;
+import payment_processor.model.UniqueCheckout;
 import payment_processor.fraud.Classification;
 
 public class KafkaConsumer {
@@ -53,37 +54,39 @@ public class KafkaConsumer {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
             .map(this::demarshallingMessage) 
             .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
-            .map(this::fraudDetection)
             .map(Either::get)
+            .map(this::fraudDetection)
             .runForeach(
                 event -> System.out.println(event.toString()), this.materializer
             );
     }
 
     //marshall to class for database store purpose
-    private Either<String, Checkout> demarshallingMessage(ConsumerRecord<String,String> message) {
+    private Either<String, UniqueCheckout> demarshallingMessage(ConsumerRecord<String,String> message) {
         try {
-            return Either.right(objectMapper.readValue(message.value(), Checkout.class));
+            Checkout checkout = objectMapper.readValue(message.value(), Checkout.class);
+            UniqueCheckout uniqueCheckout = new UniqueCheckout(checkout.getId(), checkout.getAmount());
+            return Either.right(uniqueCheckout);
         } catch (JsonProcessingException ex) {
             return Either.left("Error while demarshall message key = " + message.key());
         }
     }
 
     //Fraud detection
-    private Either<String, Checkout> fraudDetection(Either<String, Checkout> message) {
-        Classification cls = new Classification(message.get());
+    private Either<String, UniqueCheckout> fraudDetection(UniqueCheckout checkout) {
+        Classification cls = new Classification(checkout);
         boolean is_fraud = cls.result(); //
         if (is_fraud) {
-            return Either.left("Is fraud UUID = " + message.get().getUUID());
+            return Either.left("Is fraud UUID = " + checkout.getUUID());
         } else {
-            return message;
+            return Either.right(checkout);
         }
     }
 
     //check user for distributing to correctsponded topic
 
     //error demarshalled message
-    private ProducerRecord<String,String> toErrorTopic(Either<String, Checkout> ex) {
+    private ProducerRecord<String,String> toErrorTopic(Either<String, UniqueCheckout> ex) {
         return new ProducerRecord<>(errorTopic, ex.getLeft());
     }
 

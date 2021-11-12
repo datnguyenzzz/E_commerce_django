@@ -1,14 +1,13 @@
 package payment_processor.fraud;
 
-import payment_processor.model.Checkout;
+import payment_processor.model.UniqueCheckout;
 
 public class Classification {
-    private Checkout checkout; 
+    private UniqueCheckout checkout; 
 
-    public Classification(Checkout checkout) {
-        System.out.println(checkout.toString());
+    public Classification(UniqueCheckout checkout) {
         try {
-            this.checkout = (Checkout) checkout.clone();
+            this.checkout = (UniqueCheckout) checkout.clone();
         } catch (CloneNotSupportedException ex) {}
     }
 

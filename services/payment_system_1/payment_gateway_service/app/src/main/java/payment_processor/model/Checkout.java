@@ -1,29 +1,19 @@
 package payment_processor.model;
 
-import java.lang.Cloneable;
-import java.util.UUID;
-
-public final class Checkout implements Cloneable {
+public class Checkout implements Cloneable {
     private int id; 
     private int amount; 
-    private UUID uuid;
 
     public Checkout() {}
 
     public Checkout(int id,int amount) {
-        this.uuid = UUID.randomUUID();
         this.id = id;
         this.amount = amount;
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Checkout cloned = (Checkout)super.clone();
-        return cloned;
-    }
-
-    public String getUUID() {
-        return this.uuid.toString();
+        return super.clone();
     }
 
     public int getId() {
@@ -43,8 +33,7 @@ public final class Checkout implements Cloneable {
     }
 
     public String toString() {
-        return "uuid = " + this.uuid.toString() + '\n' 
-              +"id = " + this.id + '\n'
+        return "id = " + this.id + '\n'
               +"Amount = " + this.amount;
     }
 }
