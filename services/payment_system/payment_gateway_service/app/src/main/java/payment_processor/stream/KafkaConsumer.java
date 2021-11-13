@@ -23,10 +23,12 @@ import com.typesafe.config.Config;
 
 import io.vavr.control.Either; 
 import io.vavr.Tuple2;
+import io.vavr.Tuple;
 
 import payment_processor.model.Checkout;
 import payment_processor.model.UniqueCheckout;
 import payment_processor.fraud.Classification;
+import payment_processor.dispatcher.UserFilter;
 
 public class KafkaConsumer {
     private final static String kafkaConsumerConfig = "akka.kafka.consumer";
@@ -36,7 +38,7 @@ public class KafkaConsumer {
     private final static String topicName = "checkouts";
     private final static String errorTopic = "error-payment"; 
     private final static String thirdPartyPSPTopic = "third-party-psp";
-    private final static String internalPSPTopic = "posession-psp";
+    private final static String internalPSPTopic = "internal-psp";
 
     private ConsumerSettings<String, String> consumerSettings;
     private final ActorSystem system;
@@ -56,8 +58,15 @@ public class KafkaConsumer {
             .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
             .map(Either::get)
             .map(this::fraudDetection)
+            .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft)
+            .map(Either::get)
+            .map(this::clientDispatcher)
+            //.divertTo(checkoutSinks.getThirdPartySink().contramap(this::toProducerRecord), this::isThirdPartyPSPTopic)
+            //.divertTo(checkoutSinks.getInternalSink().contramap(this::toProducerRecord), this::isInternalPSPTopic)
+            //.runWith(checkoutSinks.getErrorSink().contramap(this::toProducerRecord), this.materializer);
             .runForeach(
-                event -> System.out.println(event.toString()), this.materializer
+                event -> System.out.println(event._1.toString() + "\n" + event._2), this.materializer
+                //event -> System.out.print(event.toString()), this.materializer
             );
     }
 
@@ -83,11 +92,37 @@ public class KafkaConsumer {
         }
     }
 
-    //check user for distributing to correctsponded topic
+    //check user for distributing to suitable topic
+    private Tuple2<UniqueCheckout, String> clientDispatcher(UniqueCheckout checkout) {
+        UserFilter dispatcher = new UserFilter(checkout);
+        return Tuple.of(checkout, dispatcher.clientRoute());
+    }
+
+    //To producer topic 
+    private ProducerRecord<String, String> toProducerRecord(Tuple2<UniqueCheckout, String> message) {
+        String topicName = message._2;
+        UniqueCheckout checkout = message._1;
+        return new ProducerRecord<>(topicName, checkout.toString());
+    }
 
     //error demarshalled message
     private ProducerRecord<String,String> toErrorTopic(Either<String, UniqueCheckout> ex) {
         return new ProducerRecord<>(errorTopic, ex.getLeft());
+    }
+
+    public boolean isErrorTopic(Tuple2<UniqueCheckout, String> message) {
+        String topic = message._2;
+        return topic.equals(errorTopic);
+    }
+
+    public boolean isThirdPartyPSPTopic(Tuple2<UniqueCheckout, String> message) {
+        String topic = message._2;
+        return topic.equals(thirdPartyPSPTopic);
+    }
+
+    public boolean isInternalPSPTopic(Tuple2<UniqueCheckout, String> message) {
+        String topic = message._2;
+        return topic.equals(internalPSPTopic);
     }
 
     public KafkaConsumer(ActorSystem system, ActorMaterializer materializer) {
