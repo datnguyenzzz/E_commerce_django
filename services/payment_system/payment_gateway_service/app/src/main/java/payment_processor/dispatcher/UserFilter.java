@@ -19,7 +19,7 @@ public class UserFilter {
         //specific function filter each client to suitable topic 
         int clientId = this.checkout.getId();
 
-        if (clientId > 10000000) {
+        if (clientId > 1000) {
             return errorTopic;
         }
         

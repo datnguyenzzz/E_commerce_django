@@ -26,7 +26,7 @@ public class UniqueCheckout extends Checkout {
     @Override
     public String toString() {
         return "uuid = " + this.uuid.toString() + '\n'
-              + this.getTimeNow() + '\n'
+              + "created at = " + this.getTimeNow() + '\n'
               + super.toString();
     }
 }

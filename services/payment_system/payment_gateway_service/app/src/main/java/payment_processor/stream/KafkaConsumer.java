@@ -35,7 +35,7 @@ public class KafkaConsumer {
     private final static String kafkaProducerConfig = "akka.kafka.producer";
     private final static String kafkaBrokerHost = "127.0.0.1:9092";
     private final static String groupId = "payment-gateway-1"; //each consumer has same group_id consume same topic
-    private final static String topicName = "checkouts";
+    private final static String fromTopicName = "checkouts";
     private final static String errorTopic = "error-payment"; 
     private final static String thirdPartyPSPTopic = "third-party-psp";
     private final static String internalPSPTopic = "internal-psp";
@@ -55,19 +55,20 @@ public class KafkaConsumer {
     public CompletionStage<Done> consume() {
         return Consumer.plainSource(this.consumerSettings, this.subscription)
             .map(this::demarshallingMessage) 
-            .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
+            .divertTo(this.checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft) // divert to sink if Either.isLeft()
             .map(Either::get)
             .map(this::fraudDetection)
-            .divertTo(checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft)
+            .divertTo(this.checkoutSinks.getErrorSink().contramap(this::toErrorTopic), Either::isLeft)
             .map(Either::get)
             .map(this::clientDispatcher)
-            //.divertTo(checkoutSinks.getThirdPartySink().contramap(this::toProducerRecord), this::isThirdPartyPSPTopic)
-            //.divertTo(checkoutSinks.getInternalSink().contramap(this::toProducerRecord), this::isInternalPSPTopic)
-            //.runWith(checkoutSinks.getErrorSink().contramap(this::toProducerRecord), this.materializer);
-            .runForeach(
-                event -> System.out.println(event._1.toString() + "\n" + event._2), this.materializer
+            .divertTo(checkoutSinks.getThirdPartySink().contramap(this::toProducerRecord), this::isThirdPartyPSPTopic)
+            .divertTo(checkoutSinks.getInternalSink().contramap(this::toProducerRecord), this::isInternalPSPTopic)
+            .map(this::toProducerRecord)
+            .runWith(checkoutSinks.getErrorSink(), this.materializer);
+            //.runForeach(
+            //    event -> System.out.println(event._1.toString() + "\n" + event._2), this.materializer
                 //event -> System.out.print(event.toString()), this.materializer
-            );
+            //);
     }
 
     //marshall to class for database store purpose
@@ -100,9 +101,9 @@ public class KafkaConsumer {
 
     //To producer topic 
     private ProducerRecord<String, String> toProducerRecord(Tuple2<UniqueCheckout, String> message) {
-        String topicName = message._2;
+        String topic = message._2;
         UniqueCheckout checkout = message._1;
-        return new ProducerRecord<>(topicName, checkout.toString());
+        return new ProducerRecord<>(topic, checkout.toString());
     }
 
     //error demarshalled message
@@ -140,7 +141,7 @@ public class KafkaConsumer {
         .withGroupId(groupId)
         .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         //-------------------------------------------//
-        this.subscription = Subscriptions.topics(topicName);
+        this.subscription = Subscriptions.topics(fromTopicName);
         //-------------------------------------------//
         this.checkoutSinks = new CheckoutSinks(producerConfig);
         //-------------------------------------------//

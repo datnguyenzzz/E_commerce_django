@@ -37,14 +37,14 @@ public class CheckoutSinks {
     }
 
     public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getErrorSink() {
-        return errorSink;
+        return this.errorSink;
     }
 
     public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getThirdPartySink() {
-        return thirdPartySink;
+        return this.thirdPartySink;
     }
 
     public Sink<ProducerRecord<String, String>, CompletionStage<Done>> getInternalSink() {
-        return internalSink;
+        return this.internalSink;
     }
 }
