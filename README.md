@@ -15,12 +15,12 @@ Advanced:
 
 Overall architecture:
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/assets/overall_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/overall_architecture.png)
 
 Payment processor system architecture 
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/assets/payment_service_provider_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/payment_service_provider_architecture.png)
 
 Autocomplete system architecture 
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/assets/auto_complete.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/auto_complete.png)
