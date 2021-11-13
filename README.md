@@ -20,3 +20,7 @@ Overall architecture:
 Payment processor system architecture 
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/payment_service/assets/payment_service_provider_architecture.png)
+
+Autocomplete system architecture 
+
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/payment_service/assets/auto_complete.png)
