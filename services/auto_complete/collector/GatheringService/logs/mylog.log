@@ -1,0 +1,27 @@
+[2021-11-20T12:23:40.040Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 10952 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-20T12:23:40.040Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-20T12:23:41.041Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-20T12:23:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-20T12:23:42.042Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 1790 ms
+[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-20T12:23:42.042Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-20T12:23:42.042Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 3.686 seconds (JVM running for 4.708)
+[2021-11-20T12:24:09.009Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-20T12:24:09.009Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-20T12:24:09.009Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 1 ms
+[2021-11-20T12:24:10.010Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:10.010Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-5] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-6] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-7] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-8] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-9] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:13.013Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-10] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:13.013Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-1] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
