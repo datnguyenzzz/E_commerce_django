@@ -25,3 +25,18 @@
 [2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
 [2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
 [2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
+[2021-11-20T15:54:32.032Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 1280 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-20T15:54:32.032Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-20T15:54:33.033Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-20T15:54:34.034Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2035 ms
+[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-20T15:54:34.034Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-20T15:54:34.034Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 3.717 seconds (JVM running for 4.494)
+[2021-11-20T15:55:34.034Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-20T15:56:17.017Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-20T15:56:17.017Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [547] [INFO ] Completed initialization in 2 ms
+[2021-11-20T15:56:17.017Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-1] [32] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
