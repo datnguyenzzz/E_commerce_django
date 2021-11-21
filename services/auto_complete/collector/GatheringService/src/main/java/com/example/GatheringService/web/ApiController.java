@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 
 @RestController
-@RequestMapping(value = "/api/v1.0",
-                produces = "application/json")
+@RequestMapping(value = "/api/v1.0")
 public class ApiController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
@@ -25,11 +24,10 @@ public class ApiController {
         return "v1.0";
     }
 
-    @PostMapping(value = "/gather",
-                 produces = "application/json")
+    @PostMapping(value = "/gather")
     @ResponseStatus(HttpStatus.CREATED)
     public String handlePostRequest(@RequestBody GatherRequest request) {
-        logger.info("Gathering request: " + request.toString());
+        logger.info("Gathering request: " + request.getWord() + " " + request.getLang());
         return request.toString();
     }
 }

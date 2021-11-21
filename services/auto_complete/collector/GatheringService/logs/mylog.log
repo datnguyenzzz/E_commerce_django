@@ -1,253 +1,1144 @@
-[2021-11-20T12:23:40.040Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 10952 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-20T12:23:40.040Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-20T12:23:41.041Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
-[2021-11-20T12:23:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
-[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
-[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
-[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
-[2021-11-20T12:23:42.042Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 1790 ms
-[2021-11-20T12:23:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
-[2021-11-20T12:23:42.042Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
-[2021-11-20T12:23:42.042Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 3.686 seconds (JVM running for 4.708)
-[2021-11-20T12:24:09.009Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
-[2021-11-20T12:24:09.009Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
-[2021-11-20T12:24:09.009Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 1 ms
-[2021-11-20T12:24:10.010Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:10.010Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-5] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:11.011Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-6] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-7] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-8] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:12.012Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-9] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:13.013Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-10] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:13.013Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-1] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T12:24:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [29] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-20T15:54:32.032Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 1280 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-20T15:54:32.032Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-20T15:54:33.033Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
-[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
-[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
-[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
-[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
-[2021-11-20T15:54:34.034Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2035 ms
-[2021-11-20T15:54:34.034Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
-[2021-11-20T15:54:34.034Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
-[2021-11-20T15:54:34.034Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 3.717 seconds (JVM running for 4.494)
-[2021-11-20T15:55:34.034Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
-[2021-11-20T15:56:17.017Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
-[2021-11-20T15:56:17.017Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [547] [INFO ] Completed initialization in 2 ms
-[2021-11-20T15:56:17.017Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-1] [32] [INFO ] Gathering request: GatherRequest(word=This is mewmew, lang=en)
-[2021-11-21T16:57:56.056Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T16:57:56.056Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 10812 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T16:57:56.056Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T16:57:57.057Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T16:57:57.057Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T16:57:58.058Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T16:57:58.058Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T16:57:58.058Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T16:57:58.058Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
-[2021-11-21T16:57:58.058Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
-[2021-11-21T16:57:58.058Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
-[2021-11-21T16:57:58.058Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
-[2021-11-21T16:57:59.059Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
-[2021-11-21T16:57:59.059Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2676 ms
-[2021-11-21T16:58:00.000Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T16:58:00.000Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
-[2021-11-21T16:58:00.000Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
-[2021-11-21T16:58:00.000Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
-[2021-11-21T16:58:00.000Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
-[2021-11-21T16:58:00.000Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 5.436 seconds (JVM running for 6.236)
-[2021-11-21T16:58:40.040Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T16:58:40.040Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
-[2021-11-21T16:58:40.040Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:09:48.048Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 15320 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T17:09:48.048Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T17:09:48.048Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T17:09:49.049Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T17:09:49.049Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T17:09:49.049Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:09:50.050Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:09:50.050Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:09:50.050Z] [org.springframework.context.support.AbstractApplicationContext] [main] [591] [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'avroProducer': Unsatisfied dependency expressed through field 'processor'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.cloud.stream.messaging.Processor' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-[2021-11-21T17:09:50.050Z] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener] [main] [136] [INFO ] 
+[2021-11-21T19:24:21.021Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
+[2021-11-21T19:24:21.021Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 13020 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-21T19:24:21.021Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-21T19:24:22.022Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+[2021-11-21T19:24:22.022Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+[2021-11-21T19:24:22.022Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:24:22.022Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:24:22.022Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:24:23.023Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-21T19:24:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-21T19:24:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-21T19:24:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-21T19:24:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-21T19:24:23.023Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2550 ms
+[2021-11-21T19:24:25.025Z] [org.springframework.cloud.stream.function.FunctionConfiguration$FunctionBindingRegistrar] [main] [863] [INFO ] Functional binding is disabled due to the presense of @EnableBinding annotation in your configuration
+[2021-11-21T19:24:25.025Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T19:24:25.025Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
+[2021-11-21T19:24:25.025Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
+[2021-11-21T19:24:25.025Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [251] [INFO ] Creating binder: kafka
+[2021-11-21T19:24:25.025Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [294] [INFO ] Caching the binder: kafka
+[2021-11-21T19:24:25.025Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [298] [INFO ] Retrieving cached binder: kafka
+[2021-11-21T19:24:25.025Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [main] [158] [INFO ] Using kafka topic for outbound: words-gathering
+[2021-11-21T19:24:25.025Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-[2021-11-21T17:09:50.050Z] [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter] [main] [40] [ERROR] 
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [121] [INFO ] Kafka startTimeMs: 1637511866444
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:27.027Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:28.028Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:29.029Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:30.030Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:31.031Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:32.032Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:32.032Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:34.034Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:35.035Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:36.036Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:37.037Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:38.038Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:39.039Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:40.040Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:41.041Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:42.042Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:43.043Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:44.044Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:45.045Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:46.046Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:47.047Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:49.049Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:50.050Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:51.051Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:52.052Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:52.052Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:54.054Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:55.055Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:56.056Z] [org.apache.kafka.clients.admin.internals.AdminMetadataManager] [kafka-admin-client-thread | adminclient-1] [235] [INFO ] [AdminClient clientId=adminclient-1] Metadata update failed
+org.apache.kafka.common.errors.TimeoutException: Call(callName=fetchMetadata, deadlineMs=1637511896459, tries=1, nextAllowedTryMs=1637511896568) timed out at 1637511896468 after 1 attempt(s)
+Caused by: org.apache.kafka.common.errors.TimeoutException: Timed out waiting for a node assignment. Call: fetchMetadata
+[2021-11-21T19:24:57.057Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:58.058Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:24:59.059Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:00.000Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:01.001Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:02.002Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:03.003Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:04.004Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:05.005Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:06.006Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:07.007Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:08.008Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:09.009Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:10.010Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:11.011Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:12.012Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:13.013Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:14.014Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:15.015Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:16.016Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:17.017Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:18.018Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:20.020Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:21.021Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:22.022Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:23.023Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:24.024Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:25.025Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.utils.AppInfoParser] [kafka-admin-client-thread | adminclient-1] [83] [INFO ] App info kafka.admin.client for adminclient-1 unregistered
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.clients.admin.internals.AdminMetadataManager] [kafka-admin-client-thread | adminclient-1] [235] [INFO ] [AdminClient clientId=adminclient-1] Metadata update failed
+org.apache.kafka.common.errors.TimeoutException: Call(callName=fetchMetadata, deadlineMs=1637511926468, tries=1, nextAllowedTryMs=-9223372036854775709) timed out at 9223372036854775807 after 1 attempt(s)
+Caused by: org.apache.kafka.common.errors.TimeoutException: The AdminClient thread has exited. Call: fetchMetadata
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [668] [INFO ] Metrics scheduler closed
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [672] [INFO ] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [678] [INFO ] Metrics reporters closed
+[2021-11-21T19:25:26.026Z] [org.springframework.cloud.stream.binding.BindingService] [main] [337] [ERROR] Failed to create producer binding; retrying in 30 seconds
+org.springframework.cloud.stream.provisioning.ProvisioningException: Provisioning exception encountered for words-gathering; nested exception is java.util.concurrent.TimeoutException
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createTopic(KafkaTopicProvisioner.java:347)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:162)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:223)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindProducer(AbstractBinder.java:152)
+	at org.springframework.cloud.stream.binding.BindingService.doBindProducer(BindingService.java:320)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:285)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:294)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:298)
+	at org.springframework.cloud.stream.binding.AbstractBindableProxyFactory.createAndBindOutputs(AbstractBindableProxyFactory.java:142)
+	at org.springframework.cloud.stream.binding.OutputBindingLifecycle.doStartWithBindable(OutputBindingLifecycle.java:58)
+	at java.base/java.util.LinkedHashMap$LinkedValues.forEach(LinkedHashMap.java:647)
+	at org.springframework.cloud.stream.binding.AbstractBindingLifecycle.start(AbstractBindingLifecycle.java:57)
+	at org.springframework.cloud.stream.binding.OutputBindingLifecycle.start(OutputBindingLifecycle.java:34)
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:178)
+	at org.springframework.context.support.DefaultLifecycleProcessor.access$200(DefaultLifecycleProcessor.java:54)
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:356)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:155)
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:123)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:935)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:338)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.GatheringService.GatheringServiceApplication.main(GatheringServiceApplication.java:15)
+Caused by: java.util.concurrent.TimeoutException: null
+	at org.apache.kafka.common.internals.KafkaFutureImpl$SingleWaiter.await(KafkaFutureImpl.java:108)
+	at org.apache.kafka.common.internals.KafkaFutureImpl.get(KafkaFutureImpl.java:272)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createTopicAndPartitions(KafkaTopicProvisioner.java:383)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createTopicIfNecessary(KafkaTopicProvisioner.java:357)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createTopic(KafkaTopicProvisioner.java:334)
+	... 29 common frames omitted
+[2021-11-21T19:25:26.026Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [298] [INFO ] Retrieving cached binder: kafka
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-***************************
-APPLICATION FAILED TO START
-***************************
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [121] [INFO ] Kafka startTimeMs: 1637511926563
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:26.026Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:27.027Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:27.027Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:28.028Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:29.029Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:30.030Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:31.031Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:32.032Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:33.033Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:34.034Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:35.035Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:36.036Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:37.037Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:38.038Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:39.039Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:40.040Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:41.041Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:43.043Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:44.044Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:45.045Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:46.046Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:47.047Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:48.048Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:49.049Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:51.051Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:52.052Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:53.053Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:54.054Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:55.055Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:56.056Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [scheduling-1] [158] [INFO ] Using kafka topic for outbound: words-gathering
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.common.config.AbstractConfig] [scheduling-1] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-Description:
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [scheduling-1] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [scheduling-1] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [scheduling-1] [121] [INFO ] Kafka startTimeMs: 1637511956523
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.clients.admin.internals.AdminMetadataManager] [kafka-admin-client-thread | adminclient-2] [235] [INFO ] [AdminClient clientId=adminclient-2] Metadata update failed
+org.apache.kafka.common.errors.TimeoutException: Call(callName=fetchMetadata, deadlineMs=1637511956568, tries=1, nextAllowedTryMs=1637511956671) timed out at 1637511956571 after 1 attempt(s)
+Caused by: org.apache.kafka.common.errors.TimeoutException: Timed out waiting for a node assignment. Call: fetchMetadata
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:57.057Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:57.057Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:57.057Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:58.058Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:58.058Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:25:59.059Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:00.000Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:00.000Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:01.001Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:01.001Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:02.002Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:02.002Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:03.003Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:03.003Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:03.003Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:04.004Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:05.005Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:05.005Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:05.005Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:06.006Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-3] [782] [WARN ] [AdminClient clientId=adminclient-3] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:26:06.006Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-2] [782] [WARN ] [AdminClient clientId=adminclient-2] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:30:58.058Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
+[2021-11-21T19:30:58.058Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 17464 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-21T19:30:58.058Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-21T19:30:59.059Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+[2021-11-21T19:30:59.059Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+[2021-11-21T19:30:59.059Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:30:59.059Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:30:59.059Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:31:00.000Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-21T19:31:00.000Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-21T19:31:00.000Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-21T19:31:00.000Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-21T19:31:00.000Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-21T19:31:00.000Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2167 ms
+[2021-11-21T19:31:01.001Z] [org.springframework.cloud.stream.function.FunctionConfiguration$FunctionBindingRegistrar] [main] [863] [INFO ] Functional binding is disabled due to the presense of @EnableBinding annotation in your configuration
+[2021-11-21T19:31:02.002Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T19:31:02.002Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
+[2021-11-21T19:31:02.002Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
+[2021-11-21T19:31:02.002Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [251] [INFO ] Creating binder: kafka
+[2021-11-21T19:31:02.002Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [294] [INFO ] Caching the binder: kafka
+[2021-11-21T19:31:02.002Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [298] [INFO ] Retrieving cached binder: kafka
+[2021-11-21T19:31:02.002Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [main] [158] [INFO ] Using kafka topic for outbound: words-gathering
+[2021-11-21T19:31:02.002Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-Field processor in com.example.GatheringService.producer.AvroProducer required a bean of type 'org.springframework.cloud.stream.messaging.Processor' that could not be found.
+[2021-11-21T19:31:04.004Z] [org.apache.kafka.clients.ClientUtils] [main] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:31:04.004Z] [org.springframework.cloud.stream.binding.BindingService] [main] [337] [ERROR] Failed to create producer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while building outbound endpoint
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:241)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindProducer(AbstractBinder.java:152)
+	at org.springframework.cloud.stream.binding.BindingService.doBindProducer(BindingService.java:320)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:285)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:294)
+	at org.springframework.cloud.stream.binding.BindingService.bindProducer(BindingService.java:298)
+	at org.springframework.cloud.stream.binding.AbstractBindableProxyFactory.createAndBindOutputs(AbstractBindableProxyFactory.java:142)
+	at org.springframework.cloud.stream.binding.OutputBindingLifecycle.doStartWithBindable(OutputBindingLifecycle.java:58)
+	at java.base/java.util.LinkedHashMap$LinkedValues.forEach(LinkedHashMap.java:647)
+	at org.springframework.cloud.stream.binding.AbstractBindingLifecycle.start(AbstractBindingLifecycle.java:57)
+	at org.springframework.cloud.stream.binding.OutputBindingLifecycle.start(OutputBindingLifecycle.java:34)
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:178)
+	at org.springframework.context.support.DefaultLifecycleProcessor.access$200(DefaultLifecycleProcessor.java:54)
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:356)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:155)
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:123)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:935)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:338)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.GatheringService.GatheringServiceApplication.main(GatheringServiceApplication.java:15)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:161)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:223)
+	... 26 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 32 common frames omitted
+[2021-11-21T19:31:04.004Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [298] [INFO ] Retrieving cached binder: kafka
+[2021-11-21T19:31:04.004Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-The injection point has the following annotations:
-	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+[2021-11-21T19:31:04.004Z] [org.apache.kafka.clients.ClientUtils] [main] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:31:04.004Z] [org.springframework.cloud.stream.binding.BindingService] [main] [197] [ERROR] Failed to create consumer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while starting consumer: 
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:462)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindConsumer(AbstractBinder.java:143)
+	at org.springframework.cloud.stream.binding.BindingService.doBindConsumer(BindingService.java:177)
+	at org.springframework.cloud.stream.binding.BindingService.bindConsumer(BindingService.java:134)
+	at org.springframework.cloud.stream.binding.AbstractBindableProxyFactory.createAndBindInputs(AbstractBindableProxyFactory.java:118)
+	at org.springframework.cloud.stream.binding.InputBindingLifecycle.doStartWithBindable(InputBindingLifecycle.java:58)
+	at java.base/java.util.LinkedHashMap$LinkedValues.forEach(LinkedHashMap.java:647)
+	at org.springframework.cloud.stream.binding.AbstractBindingLifecycle.start(AbstractBindingLifecycle.java:57)
+	at org.springframework.cloud.stream.binding.InputBindingLifecycle.start(InputBindingLifecycle.java:34)
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:178)
+	at org.springframework.context.support.DefaultLifecycleProcessor.access$200(DefaultLifecycleProcessor.java:54)
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:356)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:155)
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:123)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:935)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:338)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.GatheringService.GatheringServiceApplication.main(GatheringServiceApplication.java:15)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.doProvisionConsumerDestination(KafkaTopicProvisioner.java:230)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:197)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:403)
+	... 24 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 31 common frames omitted
+[2021-11-21T19:31:04.004Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-21T19:31:04.004Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-21T19:31:04.004Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 7.304 seconds (JVM running for 7.981)
+[2021-11-21T19:31:34.034Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [scheduling-1] [158] [INFO ] Using kafka topic for outbound: words-gathering
+[2021-11-21T19:31:34.034Z] [org.apache.kafka.common.config.AbstractConfig] [scheduling-1] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
+[2021-11-21T19:31:37.037Z] [org.apache.kafka.clients.ClientUtils] [scheduling-1] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:31:37.037Z] [org.springframework.cloud.stream.binding.BindingService] [scheduling-1] [337] [ERROR] Failed to create producer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while building outbound endpoint
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:241)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindProducer(AbstractBinder.java:152)
+	at org.springframework.cloud.stream.binding.BindingService.lambda$rescheduleProducerBinding$4(BindingService.java:343)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:161)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:223)
+	... 10 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 16 common frames omitted
+[2021-11-21T19:31:37.037Z] [org.apache.kafka.common.config.AbstractConfig] [scheduling-1] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-Action:
+[2021-11-21T19:31:37.037Z] [org.apache.kafka.clients.ClientUtils] [scheduling-1] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:31:37.037Z] [org.springframework.cloud.stream.binding.BindingService] [scheduling-1] [197] [ERROR] Failed to create consumer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while starting consumer: 
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:462)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindConsumer(AbstractBinder.java:143)
+	at org.springframework.cloud.stream.binding.BindingService.lambda$rescheduleConsumerBinding$1(BindingService.java:202)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.doProvisionConsumerDestination(KafkaTopicProvisioner.java:230)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:197)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:403)
+	... 10 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 17 common frames omitted
+[2021-11-21T19:31:59.059Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-21T19:31:59.059Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-21T19:31:59.059Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 4 ms
+[2021-11-21T19:31:59.059Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [35] [INFO ] Gathering request: This is mewmew en
+[2021-11-21T19:31:59.059Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [175] [ERROR] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.messaging.MessageDeliveryException: Dispatcher has no subscribers for channel 'application.output'.; nested exception is org.springframework.integration.MessageDispatchingException: Dispatcher has no subscribers, failedMessage=GenericMessage [payload={"context": "This is mewmew", "wordType": "en"}, headers={id=9828d372-aa53-6672-c050-015b49a01f83, timestamp=1637512319976}], failedMessage=GenericMessage [payload={"context": "This is mewmew", "wordType": "en"}, headers={id=9828d372-aa53-6672-c050-015b49a01f83, timestamp=1637512319976}]] with root cause
+org.springframework.integration.MessageDispatchingException: Dispatcher has no subscribers
+	at org.springframework.integration.dispatcher.UnicastingDispatcher.doDispatch(UnicastingDispatcher.java:139)
+	at org.springframework.integration.dispatcher.UnicastingDispatcher.dispatch(UnicastingDispatcher.java:106)
+	at org.springframework.integration.channel.AbstractSubscribableChannel.doSend(AbstractSubscribableChannel.java:72)
+	at org.springframework.integration.channel.AbstractMessageChannel.send(AbstractMessageChannel.java:317)
+	at org.springframework.integration.channel.AbstractMessageChannel.send(AbstractMessageChannel.java:272)
+	at com.example.GatheringService.producer.AvroProducer.produce(AvroProducer.java:24)
+	at com.example.GatheringService.web.ApiController.handlePostRequest(ApiController.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:540)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:382)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:895)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1722)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+[2021-11-21T19:32:07.007Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [scheduling-1] [158] [INFO ] Using kafka topic for outbound: words-gathering
+[2021-11-21T19:32:07.007Z] [org.apache.kafka.common.config.AbstractConfig] [scheduling-1] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-Consider defining a bean of type 'org.springframework.cloud.stream.messaging.Processor' in your configuration.
+[2021-11-21T19:32:09.009Z] [org.apache.kafka.clients.ClientUtils] [scheduling-1] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:32:09.009Z] [org.springframework.cloud.stream.binding.BindingService] [scheduling-1] [337] [ERROR] Failed to create producer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while building outbound endpoint
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:241)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindProducer(AbstractBinder.java:152)
+	at org.springframework.cloud.stream.binding.BindingService.lambda$rescheduleProducerBinding$4(BindingService.java:343)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:161)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionProducerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindProducer(AbstractMessageChannelBinder.java:223)
+	... 10 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 16 common frames omitted
+[2021-11-21T19:32:09.009Z] [org.apache.kafka.common.config.AbstractConfig] [scheduling-1] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [poc-kafka:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
 
-[2021-11-21T17:09:50.050Z] [org.springframework.test.context.TestContextManager] [main] [252] [ERROR] Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@1f010bf0] to prepare test instance [com.example.GatheringService.GatheringServiceApplicationTests@1b7a52dd]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:132)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
-	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$8(ClassBasedTestDescriptor.java:363)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:368)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$9(ClassBasedTestDescriptor.java:363)
-	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
-	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
-	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
-	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
-	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
-	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310)
-	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
-	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
-	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:362)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:283)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:282)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:272)
-	at java.base/java.util.Optional.orElseGet(Optional.java:364)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:271)
-	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:102)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:101)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:66)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:220)
-	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:188)
-	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:202)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:181)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124)
-	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'avroProducer': Unsatisfied dependency expressed through field 'processor'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.cloud.stream.messaging.Processor' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:659)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:639)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:730)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:412)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:302)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:120)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	... 67 common frames omitted
-Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.cloud.stream.messaging.Processor' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1790)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1346)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1300)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:656)
-	... 86 common frames omitted
-[2021-11-21T17:11:16.016Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 5024 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T17:11:16.016Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T17:11:16.016Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T17:11:17.017Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T17:11:17.017Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T17:11:17.017Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:11:17.017Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:11:17.017Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:11:19.019Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:11:19.019Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
-[2021-11-21T17:11:19.019Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:11:20.020Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplicationTests in 4.515 seconds (JVM running for 6.291)
-[2021-11-21T17:11:20.020Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:11:20.020Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
-[2021-11-21T17:11:20.020Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:19:44.044Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 7016 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T17:19:44.044Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T17:19:44.044Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T17:19:46.046Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T17:19:46.046Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T17:19:46.046Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:19:46.046Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:19:46.046Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:19:48.048Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:19:48.048Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
-[2021-11-21T17:19:48.048Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:19:48.048Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplicationTests in 4.516 seconds (JVM running for 6.235)
-[2021-11-21T17:19:49.049Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:19:49.049Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
-[2021-11-21T17:19:49.049Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:22:40.040Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 9240 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T17:22:40.040Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T17:22:40.040Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T17:22:41.041Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T17:22:41.041Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T17:22:42.042Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:22:42.042Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:22:42.042Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:22:44.044Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:22:44.044Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
-[2021-11-21T17:22:44.044Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:22:44.044Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplicationTests in 4.712 seconds (JVM running for 6.476)
-[2021-11-21T17:22:45.045Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:22:45.045Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
-[2021-11-21T17:22:45.045Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:24:44.044Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 15720 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
-[2021-11-21T17:24:44.044Z] [org.springframework.boot.SpringApplication] [main] [635] [INFO ] No active profile set, falling back to default profiles: default
-[2021-11-21T17:24:44.044Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
-[2021-11-21T17:24:45.045Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
-[2021-11-21T17:24:45.045Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
-[2021-11-21T17:24:45.045Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:24:45.045Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:24:45.045Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-[2021-11-21T17:24:47.047Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:24:47.047Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
-[2021-11-21T17:24:47.047Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
-[2021-11-21T17:24:47.047Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplicationTests in 4.431 seconds (JVM running for 6.237)
-[2021-11-21T17:24:48.048Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
-[2021-11-21T17:24:48.048Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
-[2021-11-21T17:24:48.048Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
+[2021-11-21T19:32:09.009Z] [org.apache.kafka.clients.ClientUtils] [scheduling-1] [75] [WARN ] Couldn't resolve server poc-kafka:9092 from bootstrap.servers as DNS resolution failed for poc-kafka
+[2021-11-21T19:32:09.009Z] [org.springframework.cloud.stream.binding.BindingService] [scheduling-1] [197] [ERROR] Failed to create consumer binding; retrying in 30 seconds
+org.springframework.cloud.stream.binder.BinderException: Exception thrown while starting consumer: 
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:462)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:91)
+	at org.springframework.cloud.stream.binder.AbstractBinder.bindConsumer(AbstractBinder.java:143)
+	at org.springframework.cloud.stream.binding.BindingService.lambda$rescheduleConsumerBinding$1(BindingService.java:202)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:75)
+	at org.apache.kafka.clients.admin.AdminClient.create(AdminClient.java:49)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.createAdminClient(KafkaTopicProvisioner.java:260)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.doProvisionConsumerDestination(KafkaTopicProvisioner.java:230)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:197)
+	at org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner.provisionConsumerDestination(KafkaTopicProvisioner.java:86)
+	at org.springframework.cloud.stream.binder.AbstractMessageChannelBinder.doBindConsumer(AbstractMessageChannelBinder.java:403)
+	... 10 common frames omitted
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:89)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:48)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:489)
+	... 17 common frames omitted
+[2021-11-21T19:32:15.015Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T19:32:15.015Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
+[2021-11-21T19:32:15.015Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'
+[2021-11-21T19:35:38.038Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
+[2021-11-21T19:35:38.038Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 18300 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-21T19:35:38.038Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-21T19:35:39.039Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+[2021-11-21T19:35:39.039Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+[2021-11-21T19:35:39.039Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:35:39.039Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:35:39.039Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T19:35:40.040Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-21T19:35:40.040Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-21T19:35:40.040Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-21T19:35:40.040Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-21T19:35:40.040Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-21T19:35:40.040Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2530 ms
+[2021-11-21T19:35:42.042Z] [org.springframework.cloud.stream.function.FunctionConfiguration$FunctionBindingRegistrar] [main] [863] [INFO ] Functional binding is disabled due to the presense of @EnableBinding annotation in your configuration
+[2021-11-21T19:35:42.042Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T19:35:42.042Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
+[2021-11-21T19:35:42.042Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
+[2021-11-21T19:35:42.042Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [251] [INFO ] Creating binder: kafka
+[2021-11-21T19:35:42.042Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [294] [INFO ] Caching the binder: kafka
+[2021-11-21T19:35:42.042Z] [org.springframework.cloud.stream.binder.DefaultBinderFactory] [main] [298] [INFO ] Retrieving cached binder: kafka
+[2021-11-21T19:35:42.042Z] [org.springframework.cloud.stream.binder.kafka.provisioning.KafkaTopicProvisioner] [main] [158] [INFO ] Using kafka topic for outbound: word-gathering
+[2021-11-21T19:35:42.042Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+[2021-11-21T19:35:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-21T19:35:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-21T19:35:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [121] [INFO ] Kafka startTimeMs: 1637512542931
+[2021-11-21T19:35:42.042Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:43.043Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:43.043Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:43.043Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:44.044Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:45.045Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:45.045Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:47.047Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:48.048Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:49.049Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:50.050Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:51.051Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:52.052Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:53.053Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:54.054Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:55.055Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:56.056Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:57.057Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:58.058Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:35:59.059Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:00.000Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:01.001Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:02.002Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:04.004Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:05.005Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:06.006Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:07.007Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:08.008Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:09.009Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:10.010Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T19:36:11.011Z] [org.apache.kafka.clients.NetworkClient] [kafka-admin-client-thread | adminclient-1] [782] [WARN ] [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+[2021-11-21T23:11:23.023Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.2.0.Final
+[2021-11-21T23:11:23.023Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 14000 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-21T23:11:23.023Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-21T23:11:24.024Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+[2021-11-21T23:11:24.024Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+[2021-11-21T23:11:25.025Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T23:11:25.025Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T23:11:25.025Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [376] [INFO ] Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2021-11-21T23:11:26.026Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-21T23:11:26.026Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-21T23:11:26.026Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-21T23:11:26.026Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-21T23:11:26.026Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-21T23:11:26.026Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 3394 ms
+[2021-11-21T23:11:27.027Z] [org.springframework.cloud.function.context.catalog.BeanFactoryAwareFunctionRegistry] [main] [108] [INFO ] Can't determine default function definition. Please use 'spring.cloud.function.definition' property to explicitly define it.
+[2021-11-21T23:11:28.028Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T23:11:28.028Z] [org.springframework.core.log.LogAccessor] [main] [174] [INFO ] Channel 'application.errorChannel' has 1 subscriber(s).
+[2021-11-21T23:11:28.028Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] started bean '_org.springframework.integration.errorLogger'
+[2021-11-21T23:11:28.028Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-21T23:11:28.028Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-21T23:11:28.028Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 6.563 seconds (JVM running for 7.6)
+[2021-11-21T23:11:32.032Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-21T23:11:32.032Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-21T23:11:32.032Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 4 ms
+[2021-11-21T23:11:33.033Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [30] [INFO ] Gathering request: This is mewmew en
+[2021-11-21T23:11:34.034Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [30] [INFO ] Gathering request: This is mewmew en
+[2021-11-21T23:11:35.035Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-4] [30] [INFO ] Gathering request: This is mewmew en
+[2021-11-21T23:11:36.036Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-5] [30] [INFO ] Gathering request: This is mewmew en
+[2021-11-21T23:11:38.038Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+[2021-11-21T23:11:38.038Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [174] [INFO ] Channel 'application.errorChannel' has 0 subscriber(s).
+[2021-11-21T23:11:38.038Z] [org.springframework.core.log.LogAccessor] [SpringApplicationShutdownHook] [292] [INFO ] stopped bean '_org.springframework.integration.errorLogger'

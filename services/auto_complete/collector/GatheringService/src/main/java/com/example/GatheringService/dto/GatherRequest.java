@@ -1,15 +1,25 @@
 package com.example.GatheringService.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
-import lombok.NonNull;
 import lombok.ToString;
 
 @ToString
 @Data
 public class GatherRequest {
-    @NonNull
+    @NotNull
     private String word;
 
-    @NonNull
+    @NotNull
     private String lang;
+
+    public String getWord() {
+        return word;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
 }
