@@ -15,23 +15,8 @@
 	<name>GatheringService</name>
 	<description>Gathering words for Trie builder</description>
 	<properties>
-		<spring-cloud.version>2020.0.4</spring-cloud.version>
-		<kafka-avro-serializer.version>4.0.0</kafka-avro-serializer.version>
-		<avro.version>1.11.0</avro.version>
 		<java.version>17</java.version>
 	</properties>
-
-	<dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-				<scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -51,83 +36,12 @@
 			<!-- <scope>compileOnly</scope> -->
 		</dependency>
 
-		<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-        </dependency>
-
-		<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-schema</artifactId>
-			<version>2.2.1.RELEASE</version>
-        </dependency>
-
-		<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-test-support</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-		<dependency>
-			<groupId>io.confluent</groupId>
-			<artifactId>kafka-avro-serializer</artifactId>
-			<version>${kafka-avro-serializer.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.avro</groupId>
-			<artifactId>avro</artifactId>
-			<version>${avro.version}</version>
-		</dependency>
-
-		<dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro-compiler</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
-
-		<dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro-maven-plugin</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
-
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>confluent</id>
-			<url>https://packages.confluent.io/maven/</url>
-		</repository>
-	</repositories>
-
 	<build>
 			<plugins>
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
-				</plugin>
-
-				<!-- avro classes -->
-				<plugin>
-					<groupId>org.apache.avro</groupId>
-					<artifactId>avro-maven-plugin</artifactId>
-					<version>${avro.version}</version>
-					<executions>
-						<execution>
-							<id>schemas</id>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>schema</goal>
-								<goal>protocol</goal>
-								<goal>idl-protocol</goal>
-							</goals>
-							<configuration>
-								<sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
-								<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
-							</configuration>
-						</execution>
-					</executions>
 				</plugin>
 
 				<plugin>
