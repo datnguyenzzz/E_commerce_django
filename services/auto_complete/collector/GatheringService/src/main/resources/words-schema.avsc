@@ -1,0 +1,15 @@
+{
+    "type": "record",
+    "name": "Words",
+    "namespace": "com.example.GatheringService",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int"
+        },
+        {
+            "name": "context",
+            "type": "string"
+        }
+    ]
+}
