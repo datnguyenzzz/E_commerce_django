@@ -1,0 +1,11 @@
+topic:
+  name: words-from-client 
+  partitions-num: 10 
+  replication-factor: 3
+spring:
+  kafka:
+    bootstrap-servers:
+      - localhost:9092 
+    producer:
+      keySerializer: org.springframework.kafka.support.serializer.JsonSerializer
+      valueSerializer: org.springframework.kafka.support.serializer.JsonSerializer

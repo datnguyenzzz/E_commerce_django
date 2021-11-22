@@ -1156,3 +1156,397 @@ Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstr
 [2021-11-21T23:44:09.009Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplicationTests using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 7944 (started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
 [2021-11-21T23:44:09.009Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
 [2021-11-21T23:44:12.012Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplicationTests in 3.089 seconds (JVM running for 5.422)
+[2021-11-22T11:25:21.021Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 15056 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-22T11:25:21.021Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-22T11:25:23.023Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-22T11:25:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-22T11:25:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-22T11:25:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-22T11:25:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-22T11:25:23.023Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 1640 ms
+[2021-11-22T11:25:23.023Z] [org.springframework.context.support.AbstractApplicationContext] [main] [591] [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'gatheringServiceApplication': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.kafka.bootstrap-servers' in value "${spring.kafka.bootstrap-servers}"
+[2021-11-22T11:25:23.023Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Stopping service [Tomcat]
+[2021-11-22T11:25:23.023Z] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener] [main] [136] [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[2021-11-22T11:25:23.023Z] [org.springframework.boot.SpringApplication] [main] [854] [ERROR] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'gatheringServiceApplication': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.kafka.bootstrap-servers' in value "${spring.kafka.bootstrap-servers}"
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:405)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:338)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.GatheringService.GatheringServiceApplication.main(GatheringServiceApplication.java:47)
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.kafka.bootstrap-servers' in value "${spring.kafka.bootstrap-servers}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:175)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:936)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1300)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:656)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:639)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399)
+	... 17 common frames omitted
+[2021-11-22T11:30:23.023Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 15996 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-22T11:30:23.023Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-22T11:30:25.025Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-22T11:30:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-22T11:30:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-22T11:30:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-22T11:30:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-22T11:30:25.025Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 1589 ms
+[2021-11-22T11:30:25.025Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+[2021-11-22T11:30:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-22T11:30:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-22T11:30:26.026Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [121] [INFO ] Kafka startTimeMs: 1637569826477
+[2021-11-22T11:30:27.027Z] [org.springframework.core.log.LogAccessor] [main] [149] [ERROR] Failed to create topics
+org.apache.kafka.common.errors.InvalidReplicationFactorException: Replication factor: 3 larger than available brokers: 1.
+[2021-11-22T11:30:27.027Z] [org.springframework.core.log.LogAccessor] [main] [149] [ERROR] Could not configure topics
+org.springframework.kafka.KafkaException: Failed to create topics; nested exception is org.apache.kafka.common.errors.InvalidReplicationFactorException: Replication factor: 3 larger than available brokers: 1.
+	at org.springframework.kafka.core.KafkaAdmin.addTopics(KafkaAdmin.java:302)
+	at org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:242)
+	at org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:178)
+	at org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:145)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:963)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:338)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.GatheringService.GatheringServiceApplication.main(GatheringServiceApplication.java:32)
+Caused by: org.apache.kafka.common.errors.InvalidReplicationFactorException: Replication factor: 3 larger than available brokers: 1.
+[2021-11-22T11:30:27.027Z] [org.apache.kafka.common.utils.AppInfoParser] [kafka-admin-client-thread | adminclient-1] [83] [INFO ] App info kafka.admin.client for adminclient-1 unregistered
+[2021-11-22T11:30:27.027Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [668] [INFO ] Metrics scheduler closed
+[2021-11-22T11:30:27.027Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [672] [INFO ] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+[2021-11-22T11:30:27.027Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [678] [INFO ] Metrics reporters closed
+[2021-11-22T11:30:27.027Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-22T11:30:27.027Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-22T11:30:27.027Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 4.452 seconds (JVM running for 4.96)
+[2021-11-22T11:30:45.045Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-22T11:30:45.045Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-22T11:30:45.045Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 2 ms
+[2021-11-22T11:30:45.045Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [35] [INFO ] Gathering request: This is mewmew en
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.common.config.AbstractConfig] [http-nio-8080-exec-2] [361] [INFO ] ProducerConfig values: 
+	acks = 1
+	batch.size = 16384
+	bootstrap.servers = [localhost:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	internal.auto.downgrade.txn.commit = true
+	key.serializer = class org.springframework.kafka.support.serializer.JsonSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.springframework.kafka.support.serializer.JsonSerializer
+
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [121] [INFO ] Kafka startTimeMs: 1637569845732
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [kafka-producer-network-thread | producer-1] [1119] [WARN ] [Producer clientId=producer-1] Error while fetching metadata with correlation id 1 : {words-from-client=LEADER_NOT_AVAILABLE}
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.clients.Metadata] [kafka-producer-network-thread | producer-1] [279] [INFO ] [Producer clientId=producer-1] Cluster ID: FdnvC2WXSQCT9pidHcLlTQ
+[2021-11-22T11:30:45.045Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [kafka-producer-network-thread | producer-1] [1119] [WARN ] [Producer clientId=producer-1] Error while fetching metadata with correlation id 3 : {words-from-client=LEADER_NOT_AVAILABLE}
+[2021-11-22T11:30:46.046Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [kafka-producer-network-thread | producer-1] [1119] [WARN ] [Producer clientId=producer-1] Error while fetching metadata with correlation id 4 : {words-from-client=LEADER_NOT_AVAILABLE}
+[2021-11-22T11:30:46.046Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [kafka-producer-network-thread | producer-1] [1119] [WARN ] [Producer clientId=producer-1] Error while fetching metadata with correlation id 5 : {words-from-client=LEADER_NOT_AVAILABLE}
+[2021-11-22T11:31:32.032Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [35] [INFO ] Gathering request: This is mewmew en
+[2021-11-22T11:34:14.014Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-5] [35] [INFO ] Gathering request: Thi en
+[2021-11-22T11:34:23.023Z] [org.apache.kafka.clients.producer.KafkaProducer] [SpringApplicationShutdownHook] [1205] [INFO ] [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+[2021-11-22T11:34:23.023Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [668] [INFO ] Metrics scheduler closed
+[2021-11-22T11:34:23.023Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [672] [INFO ] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+[2021-11-22T11:34:23.023Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [678] [INFO ] Metrics reporters closed
+[2021-11-22T11:34:23.023Z] [org.apache.kafka.common.utils.AppInfoParser] [SpringApplicationShutdownHook] [83] [INFO ] App info kafka.producer for producer-1 unregistered
+[2021-11-22T11:34:39.039Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting GatheringServiceApplication using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 17456 (D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService\target\classes started by datng in D:\My_Code\e_commerce\services\auto_complete\collector\GatheringService)
+[2021-11-22T11:34:39.039Z] [org.springframework.boot.SpringApplication] [main] [670] [INFO ] No active profile set, falling back to default profiles: default
+[2021-11-22T11:34:40.040Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2021-11-22T11:34:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2021-11-22T11:34:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2021-11-22T11:34:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.55]
+[2021-11-22T11:34:41.041Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2021-11-22T11:34:41.041Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 1761 ms
+[2021-11-22T11:34:41.041Z] [org.apache.kafka.common.config.AbstractConfig] [main] [361] [INFO ] AdminClientConfig values: 
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = 
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [121] [INFO ] Kafka startTimeMs: 1637570082083
+[2021-11-22T11:34:42.042Z] [org.springframework.core.log.LogAccessor] [main] [292] [INFO ] Topic 'words-from-client' exists but has a different partition count: 1 not 10, increasing if the broker supports it
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.utils.AppInfoParser] [kafka-admin-client-thread | adminclient-1] [83] [INFO ] App info kafka.admin.client for adminclient-1 unregistered
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [668] [INFO ] Metrics scheduler closed
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [672] [INFO ] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+[2021-11-22T11:34:42.042Z] [org.apache.kafka.common.metrics.Metrics] [kafka-admin-client-thread | adminclient-1] [678] [INFO ] Metrics reporters closed
+[2021-11-22T11:34:42.042Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2021-11-22T11:34:42.042Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2021-11-22T11:34:42.042Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started GatheringServiceApplication in 4.561 seconds (JVM running for 5.166)
+[2021-11-22T11:34:46.046Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-11-22T11:34:46.046Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2021-11-22T11:34:46.046Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-2] [547] [INFO ] Completed initialization in 1 ms
+[2021-11-22T11:34:46.046Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-2] [35] [INFO ] Gathering request: Thi en
+[2021-11-22T11:34:46.046Z] [org.apache.kafka.common.config.AbstractConfig] [http-nio-8080-exec-2] [361] [INFO ] ProducerConfig values: 
+	acks = 1
+	batch.size = 16384
+	bootstrap.servers = [localhost:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	internal.auto.downgrade.txn.commit = true
+	key.serializer = class org.springframework.kafka.support.serializer.JsonSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 127000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.springframework.kafka.support.serializer.JsonSerializer
+
+[2021-11-22T11:34:46.046Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [119] [INFO ] Kafka version: 2.7.2
+[2021-11-22T11:34:46.046Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [120] [INFO ] Kafka commitId: 37a1cc36bf4d76f3
+[2021-11-22T11:34:46.046Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [http-nio-8080-exec-2] [121] [INFO ] Kafka startTimeMs: 1637570086582
+[2021-11-22T11:34:46.046Z] [org.apache.kafka.clients.Metadata] [kafka-producer-network-thread | producer-1] [279] [INFO ] [Producer clientId=producer-1] Cluster ID: FdnvC2WXSQCT9pidHcLlTQ
+[2021-11-22T11:35:13.013Z] [com.example.GatheringService.web.ApiController] [http-nio-8080-exec-3] [35] [INFO ] Gathering request: Thizz en
+[2021-11-22T11:35:16.016Z] [org.apache.kafka.clients.producer.KafkaProducer] [SpringApplicationShutdownHook] [1205] [INFO ] [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+[2021-11-22T11:35:16.016Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [668] [INFO ] Metrics scheduler closed
+[2021-11-22T11:35:16.016Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [672] [INFO ] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+[2021-11-22T11:35:16.016Z] [org.apache.kafka.common.metrics.Metrics] [SpringApplicationShutdownHook] [678] [INFO ] Metrics reporters closed
+[2021-11-22T11:35:16.016Z] [org.apache.kafka.common.utils.AppInfoParser] [SpringApplicationShutdownHook] [83] [INFO ] App info kafka.producer for producer-1 unregistered
