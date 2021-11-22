@@ -5,8 +5,5 @@ services:
   collector_gathering_service:
     build: 
       context: ./collector/GatheringService
-    volumes:
-      - ./collector/GatheringService/target/GatheringService-0.0.1-SNAPSHOT.jar:/app/GatheringService/server.jar
-    command: java -jar /app/GatheringService/server.jar --server.port=8080
     ports:
       - "8080:8080" 
