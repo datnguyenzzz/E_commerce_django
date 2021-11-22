@@ -5,7 +5,7 @@ topic:
 spring:
   kafka:
     bootstrap-servers:
-      - localhost:9092 
+      - ${BROKER_HOST}:${BROKER_PORT}
     producer:
       keySerializer: org.springframework.kafka.support.serializer.JsonSerializer
       valueSerializer: org.springframework.kafka.support.serializer.JsonSerializer
