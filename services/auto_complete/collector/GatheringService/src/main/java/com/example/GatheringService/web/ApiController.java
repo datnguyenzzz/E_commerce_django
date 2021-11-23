@@ -1,5 +1,6 @@
 package com.example.GatheringService.web;
 
+import com.example.GatheringService.Word;
 import com.example.GatheringService.dto.GatherRequest;
 import com.example.GatheringService.producer.Producer;
 
@@ -33,7 +34,7 @@ public class ApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public String handlePostRequest(@RequestBody GatherRequest request) {
         logger.info("Gathering request: " + request.getWord() + " " + request.getLang());
-        this.producer.sendEvent(request);
+        this.producer.sendEvent(new Word(request.getWord()));
         return request.toString();
     }
 }

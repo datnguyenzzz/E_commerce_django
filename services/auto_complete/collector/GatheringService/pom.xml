@@ -89,6 +89,13 @@
             <version>${avro.version}</version>
         </dependency>
 
+		<dependency>
+            <groupId>io.confluent</groupId>
+
+            <artifactId>kafka-schema-registry-client</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
