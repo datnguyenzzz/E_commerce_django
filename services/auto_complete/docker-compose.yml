@@ -45,6 +45,11 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
 
 ## HADOOP
+  hadoop_base:
+    build: ./hadoop/base
+    hostname: hadoop_base
+    container_name: hadoop_base
+
   hdfs_namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     hostname: hdfs_namenode
