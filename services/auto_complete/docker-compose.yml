@@ -31,89 +31,101 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 
-  schema_registry:
+  schema-registry:
     image: confluentinc/cp-schema-registry:5.5.1
-    container_name: schema_registry
+    container_name: schema-registry
     ports:
       - 8081:8081
     depends_on:
       - zookeeper 
       - kafka
     environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema_registry
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
 
 ## HADOOP
-  hadoop_base:
-    build: ./hadoop/base
-    hostname: hadoop_base
-    container_name: hadoop_base
+  hadoop-base:
+    build: 
+      context: ./hadoop/base
+    hostname: hadoop-base
+    container_name: hadoop-base
 
-  hdfs_namenode:
+  hdfs-namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    hostname: hdfs_namenode
-    container_name: hdfs_namenode
+    hostname: hdfs-namenode
+    container_name: hdfs-namenode
     restart: always
     ports:
       - 9870:9870
       - 9000:9000
+    depends_on:
+      - hadoop-base
     environment:
       - CLUSTER_NAME=test
     env_file:
       - ./hadoop/hadoop.env
 
-  hdfs_datanode:
+  hdfs-datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    hostname: hdfs_datanode
-    container_name: hdfs_datanode
+    hostname: hdfs-datanode
+    container_name: hdfs-datanode
     restart: always 
     ports:
       - 9864:9864
+    depends_on:
+      - hadoop-base
     environment:
-      SERVICE_PRECONDITION: hdfs_namenode:9870
+      SERVICE_PRECONDITION: "hdfs-namenode:9870"
     env_file:
       - ./hadoop/hadoop.env
 
-  yarn_resourcemanager:
+  yarn-resourcemanager:
     image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
-    container_name: yarn_resourcemanager
+    container_name: yarn-resourcemanager
     restart: always
+    depends_on:
+      - hadoop-base
     environment:
-      SERVICE_PRECONDITION: hdfs_namenode:9000 hdfs_namenode:9870 hdfs_datanode:9864
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864"
     env_file:
       - ./hadoop/hadoop.env
 
-  yarn_nodemanager:
+  yarn-nodemanager:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
-    container_name: yarn_nodemanager
+    container_name: yarn-nodemanager
     restart: always
+    depends_on:
+      - hadoop-base
     environment:
-      SERVICE_PRECONDITION: hdfs_namenode:9000 hdfs_namenode:9870 hdfs_datanode:9864 yarn_resourcemanager:8088
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
     env_file:
       - ./hadoop/hadoop.env
 
-  yarn_historyserver:
+  yarn-historyserver:
     image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
-    container_name: yarn_historyserver
+    container_name: yarn-historyserver
     restart: always
+    depends_on:
+      - hadoop-base
     environment:
-      SERVICE_PRECONDITION: hdfs_namenode:9000 hdfs_namenode:9870 hdfs_datanode:9864 yarn_resourcemanager:8088
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
     env_file:
       - ./hadoop/hadoop.env
 
 ## COLLECTOR
-  collector_gathering_service:
+  collector-gathering-service:
+    container_name: gathering-service
     build: 
       context: ./collector/GatheringService
     depends_on:
       - kafka 
       - zookeeper
-      - schema_registry
+      - schema-registry
     environment:
       - BROKER_HOST=kafka
       - BROKER_PORT=9092
-      - SCHEMA_REGISTRY_HOST=schema_registry
+      - SCHEMA_REGISTRY_HOST=schema-registry
       - SCHEMA_REGISTRY_PORT=8081
     ports:
       - 8080:8080
