@@ -1,16 +1,28 @@
+DOCKER_NETWORK = auto_complete_default
+ENV_FILE = hadoop/hadoop.env
+
 test:
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 ls /
+	echo "CHECK ZOOKEEPER NODES"
+	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 stat /autocomplete
+	
 
 init:
 	docker-compose up -d --build --scale collector-gathering-service=1
 
-	"--------------------CONFIGURATION HADOOP ENV----------------------"
+	echo "--------------------CONFIGURATION HADOOP ENV----------------------";
 	docker build -t autocomplete/hbase ./hadoop/base
 
-	"----------------------CREATE ZK NODES-----------------------------"
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /phrases ""
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /phrases/collector ""
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /phrases/collector/last_built_target ""
+	echo "----------------------CREATE ZK NODES-----------------------------";
+	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete ""
+	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/collector ""
+	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/collector/last_built_target ""
+
+	echo "----------------------CREATE HDFS FOLDERS-----------------------------";
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/1_sink/
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/2_with_weight/
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/3_with_weight_merged/
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/4_with_weight_ordered/
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/5_tries/
 
 bulk-request:
 	python py_bulk_request.py
