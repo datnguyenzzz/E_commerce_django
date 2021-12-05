@@ -6,7 +6,7 @@ import random
 import string
 
 url = "http://localhost:8080/api/v1.0/gather"
-concurrent = 8
+concurrent = 10
 
 def gen_data():
     chars=string.ascii_uppercase + string.digits
@@ -33,7 +33,7 @@ for i in range(concurrent):
     t.daemon = True
     t.start()
 try:
-    MAX_REQ = 1000
+    MAX_REQ = 2000
     for i in range(MAX_REQ):
         data_str = gen_data()
         q.put(data_str)
