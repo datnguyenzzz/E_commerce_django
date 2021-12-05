@@ -45,11 +45,11 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
 
 ## HADOOP
-  hadoop-base:
-    build: 
-      context: ./hadoop/base
-    hostname: hadoop-base
-    container_name: hadoop-base
+  #hadoop-base:
+  #  build: 
+  #    context: ./hadoop/base
+  #  hostname: hadoop-base
+  #  container_name: hadoop-base
 
   hdfs-namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
@@ -59,8 +59,8 @@ services:
     ports:
       - 9870:9870
       - 9000:9000
-    depends_on:
-      - hadoop-base
+    #depends_on:
+    #  - hadoop-base
     environment:
       - CLUSTER_NAME=test
     env_file:
@@ -73,8 +73,8 @@ services:
     restart: always 
     ports:
       - 9864:9864
-    depends_on:
-      - hadoop-base
+    #depends_on:
+    #  - hadoop-base
     environment:
       SERVICE_PRECONDITION: "hdfs-namenode:9870"
     env_file:
@@ -84,8 +84,8 @@ services:
     image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
     container_name: yarn-resourcemanager
     restart: always
-    depends_on:
-      - hadoop-base
+    #depends_on:
+    #  - hadoop-base
     environment:
       SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864"
     env_file:
@@ -95,8 +95,8 @@ services:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
     container_name: yarn-nodemanager
     restart: always
-    depends_on:
-      - hadoop-base
+    #depends_on:
+    #  - hadoop-base
     environment:
       SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
     env_file:
@@ -106,8 +106,8 @@ services:
     image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
     container_name: yarn-historyserver
     restart: always
-    depends_on:
-      - hadoop-base
+    #depends_on:
+    #  - hadoop-base
     environment:
       SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
     env_file:

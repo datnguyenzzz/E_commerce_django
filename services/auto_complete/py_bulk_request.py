@@ -6,7 +6,7 @@ import random
 import string
 
 url = "http://localhost:8080/api/v1.0/gather"
-concurrent = 4
+concurrent = 8
 
 def gen_data():
     chars=string.ascii_uppercase + string.digits
