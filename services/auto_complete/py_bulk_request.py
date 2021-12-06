@@ -33,7 +33,7 @@ for i in range(concurrent):
     t.daemon = True
     t.start()
 try:
-    MAX_REQ = 2000
+    MAX_REQ = 5000
     for i in range(MAX_REQ):
         data_str = gen_data()
         q.put(data_str)

@@ -8,18 +8,18 @@ curl -s \
         "config": { 
             "connector.class": "io.confluent.connect.hdfs3.Hdfs3SinkConnector", 
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
-            "partition.duration.ms": 1800000,
+            "partition.duration.ms": '$PARTITION_DURATION',
             "path.format": "YYYYMMdd_HHmm",
             "timestamp.extractor":"Record",
-            "confluent.topic.bootstrap.servers":"kafka:9092",
-            "tasks.max": "1", 
-            "topics": "words-from-client", 
+            "confluent.topic.bootstrap.servers":"'$CONNECT_BOOTSTRAP_SERVERS'",
+            "tasks.max": "'$TASKS_MAX'", 
+            "topics": "'$TOPIC_NAME'", 
             "hdfs.url": "hdfs://hdfs-namenode:9000", 
-            "flush.size": "3", 
+            "flush.size": "'$FLUSH_SIZE'", 
             "locale": "en",
             "timezone": "UTC",
-            "topics.dir": "/words/1_sink",
-            "logs.dir": "/words/1_sink/logs",
+            "topics.dir": "'$TOPIC_DIR'",
+            "logs.dir": "'$LOG_DIR'",
             "name": "hdfs-sink-phrases" 
         } 
     }'
