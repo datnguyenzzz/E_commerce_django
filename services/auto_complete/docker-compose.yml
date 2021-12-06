@@ -157,7 +157,6 @@ services:
       - -c 
       - /scripts/deploy.sh
         
-
 ## COLLECTOR
   collector-gathering-service:
     container_name: gathering-service
