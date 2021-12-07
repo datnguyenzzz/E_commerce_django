@@ -16,8 +16,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <java.version>17</java.version>
     <hadoop.version>3.2.1</hadoop.version>
     <hadoop-core.version>1.2.1</hadoop-core.version>
+    <avro.version>1.8.2</avro.version>
   </properties>
 
   <dependencies>
@@ -28,6 +30,7 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Hadoop -->
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-hdfs</artifactId>
@@ -45,10 +48,28 @@
       <artifactId>hadoop-core</artifactId>
       <version>${hadoop-core.version}</version>
     </dependency>
+
+    <!-- Avro--> 
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-compiler</artifactId>
+        <version>${avro.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>${avro.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
@@ -89,7 +110,35 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro-maven-plugin</artifactId>
+          <version>${avro.version}</version>
+          <executions>
+              <execution>
+                  <id>schemas</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                      <goal>schema</goal>
+                  </goals>
+                  <configuration>
+                      <sourceDirectory>${project.basedir}/src/main/resources/</sourceDirectory>
+                      <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+                  </configuration>
+              </execution>
+          </executions>
+        </plugin>
+  
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+
       </plugins>
-    </pluginManagement>
   </build>
 </project>
