@@ -27,12 +27,6 @@ init:
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/4_with_weight_ordered/
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/5_tries/
 
-turnon:
-	docker-compose up -d --build --scale collector-gathering-service=1
-
-turnoff:
-	docker-compose down
-
 migrate:
 	docker build -t autocomplete/weight-processing ./collector/WeightProcessing
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/weight-processing
@@ -41,5 +35,6 @@ bulk-request:
 	python py_bulk_request.py
 
 reset:
+	docker-compose down
 	docker volume prune -f
 	docker container prune -f
