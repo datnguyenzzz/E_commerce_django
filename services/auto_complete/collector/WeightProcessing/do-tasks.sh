@@ -25,7 +25,7 @@ APP_NAME="com.mycompany.app.App"
 echo "${INPUT_BATCH}"
 
 cd /HADOOP_TASKS/${TASK_NAME}
-mvn package
+mvn clean package
 java -cp ${JAR_FILEPATH} ${APP_NAME}
 
 for input_folder in ${INPUT_BATCH}; do
