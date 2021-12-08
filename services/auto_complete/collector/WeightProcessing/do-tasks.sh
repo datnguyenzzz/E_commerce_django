@@ -28,6 +28,6 @@ cd /HADOOP_TASKS/${TASK_NAME}
 mvn package
 java -cp ${JAR_FILEPATH} ${APP_NAME}
 
-for input_file in ${INPUT_BATCH}; do
-    echo "Processing input: " $input_file;
+for input_folder in ${INPUT_BATCH}; do
+    echo "Processing input: " $input_folder;
 done;
