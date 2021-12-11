@@ -40,3 +40,4 @@ reset:
 	docker-compose down
 	docker volume prune  -f
 	docker container prune  -f
+	docker system prune -f

@@ -35,7 +35,6 @@ echo "-----------------------"
 echo "---- JAR TEST----------"
 
 cd HADOOP_TASKS/${TASK_NAME}
-
 base_weight=1
 for input_folder in ${INPUT_FOLDERS}; do 
     echo "============================================================"
@@ -77,4 +76,15 @@ TASK_NAME="WeightSort"
 echo "---- JAR TEST----------"
 ls HADOOP_TASKS/${TASK_NAME}
 echo "-----------------------"
+JAR_FILEPATH="/HADOOP_TASKS/${TASK_NAME}/${TASK_NAME}.jar"
+INPUT_PATH="/words/with_weight/${TARGET_ID}"
+OUTPUT_PATH="/words/with_weight_sorted/${TARGET_ID}"
 
+hadoop jar ${JAR_FILEPATH} ${TASK_NAME} \
+               -libjars ${AVRO_LIBPATH} \
+               ${INPUT_PATH} ${OUTPUT_PATH}
+
+#=========================== TEST RESULT AFTER SORTED ====================
+hadoop fs -rm r /words/with_weight_sorted/${TARGET_ID}/_SUCCESS
+FOLDERS=`hadoop fs -ls /words/with_weight_sorted/${TARGET_ID}/ | sed 1,1d | sort -r -k8 | awk '{print \$8}' | head -${MAX_NUMBER_OF_INPUT_FOLDERS} | sort`
+hadoop fs -cat /words/with_weight_sorted/${TARGET_ID}/*
