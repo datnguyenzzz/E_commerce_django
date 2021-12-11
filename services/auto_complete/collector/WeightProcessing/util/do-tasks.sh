@@ -20,7 +20,7 @@ INPUT_FOLDERS=`hadoop fs -ls /words/kafka_sink/words-from-client/ | sed 1,1d | s
 JAR_FILEPATH="/HADOOP_TASKS/${TASK_NAME}/${TASK_NAME}.jar"
 OUTPUT_PATH="/words/temp"
 export HADOOP_CLASSPATH=`echo ${AVRO_LIBPATH} | sed s/,/:/g`
-# CREATE WEIGHT HDFS BATCH
+# ========================= CREATE WEIGHT HDFS BATCH==============================SSSS
 hadoop fs -mkdir -p /words/with_weight/${TARGET_ID}/
 
 #build jar 
@@ -57,11 +57,12 @@ for input_folder in ${INPUT_FOLDERS}; do
 
     hadoop fs -mv ${OUTPUT_PATH}/* /words/with_weight/${TARGET_ID}/
     hadoop fs -rm -r ${OUTPUT_PATH}/
-    base_weight=$((base_weight*2))
+    #base_weight=$((base_weight*2))
     echo "============================================================"
 done
 
-#==================WORD WITH WEIGHT MERGED======================
+#==================WEIGHT SORT======================
+hadoop fs -rm r /words/with_weight/${TARGET_ID}/_SUCCESS
 FOLDERS=`hadoop fs -ls /words/with_weight/${TARGET_ID}/ | sed 1,1d | sort -r -k8 | awk '{print \$8}' | head -${MAX_NUMBER_OF_INPUT_FOLDERS} | sort`
 for folder in ${FOLDERS}; do
     echo "----------------------------------"
@@ -69,5 +70,11 @@ for folder in ${FOLDERS}; do
     hadoop jar ${AVRO_LIBPATH} tojson --pretty ${folder}
     echo "----------------------------------"
 done;
+TASK_NAME="WeightSort"
 
+#build jar 
+./HADOOP_TASKS/build-jar.sh ${TASK_NAME}
+echo "---- JAR TEST----------"
+ls HADOOP_TASKS/${TASK_NAME}
+echo "-----------------------"
 

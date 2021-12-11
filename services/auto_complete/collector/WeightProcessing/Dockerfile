@@ -5,6 +5,7 @@ ARG SCHEMA_FILE=word-schema.avsc
 
 # Map Reduce jobs
 COPY WeightCompute.java /HADOOP_TASKS/WeightCompute/WeightCompute.java
+COPY WeightSort.java /HADOOP_TASKS/WeightSort/WeightSort.java
 
 # Avro tool
 COPY avro/ /HADOOP_TASKS/avro/
