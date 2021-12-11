@@ -131,7 +131,7 @@ services:
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONNECT_PLUGIN_PATH: "/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
-      PARTITION_DURATION: 180000
+      PARTITION_DURATION: 60000
       TOPIC_NAME: words-from-client
       TOPIC_DIR: /words/kafka_sink
       LOG_DIR: /words/kafka_sink/logs

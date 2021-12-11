@@ -31,7 +31,7 @@ ls HADOOP_TASKS/${TASK_NAME}
 echo "-----------------------"
 ls HADOOP_TASKS/${TASK_NAME}/com/example/GatheringService
 echo "-----------------------"
-hadoop fs -cat /words/kafka_sink/words-from-client/20211211_1151/words-from-client+0+0000000000+0000000002.avro
+#hadoop fs -cat /words/kafka_sink/words-from-client/20211211_1151/words-from-client+0+0000000000+0000000002.avro
 echo "---- JAR TEST----------"
 
 cd HADOOP_TASKS/${TASK_NAME}
@@ -42,22 +42,32 @@ for input_folder in ${INPUT_FOLDERS}; do
     echo "Processing input: " $input_folder 
 	echo "base_weight: " $base_weight 
 
-    echo "------- INPUT DATA --------------" 
-    pwd
-    hadoop fs -ls ${input_folder}
-    echo "---------------------------------"
+    #echo "------- INPUT DATA --------------" 
+    #pwd
+    #hadoop fs -ls ${input_folder}
+    #echo "---------------------------------"
 
     hadoop jar ${JAR_FILEPATH} ${TASK_NAME} \
                -libjars ${AVRO_LIBPATH} \
                ${input_folder} ${OUTPUT_PATH} ${base_weight}
 
-    echo "----------------- OUTPUT TEMP ------------------------------"
-    hadoop fs -cat ${OUTPUT_PATH}/*
-    echo "------------------------------------------------------------"
+    #echo "----------------- OUTPUT TEMP ------------------------------"
+    #hadoop fs -cat ${OUTPUT_PATH}/*
+    #echo "------------------------------------------------------------"
 
-    hadoop fs -rm -r ${OUTPUT_PATH}
+    hadoop fs -mv ${OUTPUT_PATH}/* /words/with_weight/${TARGET_ID}/
+    hadoop fs -rm -r ${OUTPUT_PATH}/
     base_weight=$((base_weight*2))
     echo "============================================================"
 done
+
+#==================WORD WITH WEIGHT MERGED======================
+FOLDERS=`hadoop fs -ls /words/with_weight/${TARGET_ID}/ | sed 1,1d | sort -r -k8 | awk '{print \$8}' | head -${MAX_NUMBER_OF_INPUT_FOLDERS} | sort`
+for folder in ${FOLDERS}; do
+    echo "----------------------------------"
+    echo $folder
+    hadoop jar ${AVRO_LIBPATH} tojson --pretty ${folder}
+    echo "----------------------------------"
+done;
 
 

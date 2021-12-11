@@ -54,26 +54,7 @@ public class WeightCompute extends Configured implements Tool {
             context.write(word, this.weight);
         }
     }
-    /*
-    public static class WeightCombiner extends Reducer<
-        Text, 
-        LongWritable,
-        Text,
-        LongWritable
-    > {
-        private LongWritable weightSumUp = new LongWritable();
-
-        public void reduce(Text word, Iterable<LongWritable> weights, Context context)
-                throws IOException, InterruptedException {
-            long weightSum = 0L;
-            for (LongWritable w: weights) {
-                weightSum += w.get();
-            }
-            weightSumUp.set(weightSum);
-            context.write(word, weightSumUp);
-        }
-    }
-    */
+    
     public static class WeightReducer extends Reducer<
         Text, 
         LongWritable,
@@ -112,7 +93,6 @@ public class WeightCompute extends Configured implements Tool {
         job.setMapOutputValueClass(LongWritable.class);
 
         job.setMapperClass(WeightMapper.class);
-        //job.setCombinerClass(WeightCombiner.class);
         job.setReducerClass(WeightReducer.class);
 
         AvroJob.setInputKeySchema(job, com.example.GatheringService.Word.getClassSchema());

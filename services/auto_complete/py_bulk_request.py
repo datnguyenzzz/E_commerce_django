@@ -35,8 +35,10 @@ for i in range(concurrent):
 try:
     MAX_REQ = 20
     for i in range(MAX_REQ):
+        times = random.randint(1,5)
         data_str = gen_data()
-        q.put(data_str)
+        for _ in range(times):
+            q.put(data_str)
     q.join()
 except KeyboardInterrupt:
     sys.exit(1)
