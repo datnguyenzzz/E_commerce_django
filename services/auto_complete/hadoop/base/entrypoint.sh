@@ -56,6 +56,10 @@ if [ "$MULTIHOMED_NETWORK" = "1" ]; then
 
     # MAPRED
     addProperty /etc/hadoop/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
+    addProperty /etc/hadoop/mapred-site.xml yarn.app.mapreduce.am.env HADOOP_MAPRED_HOME=$HADOOP_HOME
+    addProperty /etc/hadoop/mapred-site.xml mapreduce.map.env HADOOP_MAPRED_HOME=$HADOOP_HOME
+    addProperty /etc/hadoop/mapred-site.xml mapreduce.reduce.env HADOOP_MAPRED_HOME=$HADOOP_HOME
+
 fi
 
 if [ -n "$GANGLIA_HOST" ]; then

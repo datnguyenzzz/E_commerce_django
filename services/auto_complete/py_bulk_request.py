@@ -24,7 +24,7 @@ def doWork():
         data_str = q.get()
         lang_str = "en"
         r = requests.post(url, json={"word": data_str, "lang": lang_str})
-        print(f"POST data : {data_str} CODE_{r.status_code}")
+        print(f"POST data code:{r.status_code} : {data_str}")
         q.task_done()
 
 q = Queue(concurrent)
@@ -33,7 +33,7 @@ for i in range(concurrent):
     t.daemon = True
     t.start()
 try:
-    MAX_REQ = 1000
+    MAX_REQ = 20
     for i in range(MAX_REQ):
         data_str = gen_data()
         q.put(data_str)
