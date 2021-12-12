@@ -95,7 +95,4 @@ public class Trie {
             return curr.getTopPopular();
         }
     }
-
-    public static void main(String[] args) {
-    }
 }

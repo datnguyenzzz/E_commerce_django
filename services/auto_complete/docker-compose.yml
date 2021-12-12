@@ -160,3 +160,12 @@ services:
       - SCHEMA_REGISTRY_PORT=8081
     ports:
       - 8080:8080
+
+## DATA MODEL 
+  trie-model:
+    container_name: trie-model
+    hostname: trie-model
+    build: ./models
+    volumes:
+      - ./models/Trie.py:/models/Trie.py
+    command: python /models/Trie.py
