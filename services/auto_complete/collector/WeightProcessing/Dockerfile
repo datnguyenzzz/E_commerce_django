@@ -19,4 +19,10 @@ COPY util/do-tasks.sh /HADOOP_TASKS/do-tasks.sh
 RUN chmod a+x /HADOOP_TASKS/do-tasks.sh
 RUN chmod a+x /HADOOP_TASKS/build-jar.sh
 
+ARG ZK_VERSION=3.4.13
+RUN curl https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/zookeeper-${ZK_VERSION}.tar.gz -o /tmp/zookeeper-${ZK_VERSION}.tar.gz
+RUN tar -xf /tmp/zookeeper-${ZK_VERSION}.tar.gz -C /tmp/
+RUN mv /tmp/zookeeper-${ZK_VERSION} /zookeeper
+RUN rm /tmp/zookeeper-${ZK_VERSION}.tar.gz
+
 CMD ["/HADOOP_TASKS/do-tasks.sh"] 

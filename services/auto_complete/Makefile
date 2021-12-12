@@ -3,11 +3,9 @@ ENV_FILE = hadoop/hadoop.env
 
 test:
 	echo "TESTING ZK NODES";
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 stat /autocomplete
+	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 get /autocomplete/collector/last_built_target
 	echo "TESTING HDFS BATCHES";
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -ls /words
-	echo "TEST HDFS CAT" 
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -cat /words/kafka_sink/words-from-client/20211211_1130/words-from-client+0+0000000000+0000000002.avro
 
 init:
 	docker-compose up -d --build --scale collector-gathering-service=1
@@ -40,4 +38,3 @@ shutdown:
 	docker-compose down
 	docker volume prune  -f
 	docker container prune  -f
-	docker system prune -f

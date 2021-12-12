@@ -85,6 +85,16 @@ hadoop jar ${JAR_FILEPATH} ${TASK_NAME} \
                ${INPUT_PATH} ${OUTPUT_PATH}
 
 #=========================== TEST RESULT AFTER SORTED ====================
-hadoop fs -rm r /words/with_weight_sorted/${TARGET_ID}/_SUCCESS
 FOLDERS=`hadoop fs -ls /words/with_weight_sorted/${TARGET_ID}/ | sed 1,1d | sort -r -k8 | awk '{print \$8}' | head -${MAX_NUMBER_OF_INPUT_FOLDERS} | sort`
 hadoop fs -cat /words/with_weight_sorted/${TARGET_ID}/*
+
+#=========================== STORE LAST BUILD TO ZOOKEEPER ===================
+cd /zookeeper/bin 
+echo "---------------- TEST ZOOKEEPER STORE #1---------------------"
+pwd 
+./zkCli.sh -server zookeeper:2181 ls /autocomplete
+echo "----------------------------------------------------------"
+./zkCli.sh -server zookeeper:2181 set /autocomplete/collector/last_built_target ${TARGET_ID}
+
+echo "---------------- TEST ZOOKEEPER STORE #2---------------------"
+./zkCli.sh -server zookeeper:2181 get /autocomplete/collector/last_built_target
