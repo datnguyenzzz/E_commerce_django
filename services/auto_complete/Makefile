@@ -26,6 +26,8 @@ init:
 
 
 migrate:
+	docker image prune -a -f 
+	docker container prune  -f
 	docker build -t autocomplete/weight-processing ./collector/WeightProcessing
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/weight-processing
 
