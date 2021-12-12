@@ -1,5 +1,7 @@
 import java.io.IOException;
 
+import org.apache.hadoop.fs.Path;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
@@ -34,7 +36,7 @@ public class WeightSort extends Configured implements Tool {
     > {
         public void map(AvroKey<CharSequence> key, AvroValue<Long> value, Context context) 
                 throws IOException, InterruptedException {
-            LongWritable weight = new LongWriable(value.datum()); 
+            LongWritable weight = new LongWritable(value.datum()); 
             Text stringKey = new Text(key.datum().toString());
 
             context.write(weight, stringKey);

@@ -34,7 +34,6 @@ echo "-----------------------"
 #hadoop fs -cat /words/kafka_sink/words-from-client/20211211_1151/words-from-client+0+0000000000+0000000002.avro
 echo "---- JAR TEST----------"
 
-cd HADOOP_TASKS/${TASK_NAME}
 base_weight=1
 for input_folder in ${INPUT_FOLDERS}; do 
     echo "============================================================"
@@ -61,7 +60,7 @@ for input_folder in ${INPUT_FOLDERS}; do
 done
 
 #==================WEIGHT SORT======================
-hadoop fs -rm r /words/with_weight/${TARGET_ID}/_SUCCESS
+hadoop fs -rm -r /words/with_weight/${TARGET_ID}/_SUCCESS
 FOLDERS=`hadoop fs -ls /words/with_weight/${TARGET_ID}/ | sed 1,1d | sort -r -k8 | awk '{print \$8}' | head -${MAX_NUMBER_OF_INPUT_FOLDERS} | sort`
 for folder in ${FOLDERS}; do
     echo "----------------------------------"
@@ -73,6 +72,7 @@ TASK_NAME="WeightSort"
 
 #build jar 
 ./HADOOP_TASKS/build-jar.sh ${TASK_NAME}
+
 echo "---- JAR TEST----------"
 ls HADOOP_TASKS/${TASK_NAME}
 echo "-----------------------"
