@@ -1,4 +1,6 @@
-TOP_POPULAR_SIZE = 5
+import os
+
+TOP_POPULAR_SIZE = int(os.getenv("TOP_POPULAR_SIZE"))
 
 class Node:
     def __init__(self):
