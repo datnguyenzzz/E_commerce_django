@@ -5,12 +5,12 @@ from kazoo.client import KazooClient, DataWatch
 
 from Trie import Trie
 
-#ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
-ZK_LAST_BUILT_FROM_HADOOP = '/test'
+ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
+ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/from_last_collector'
+#ZK_LAST_BUILT_FROM_HADOOP = '/test'
 
 class TrieBuilder:
     def __init__(self):
-        print(f'===============ZK HOST : {os.getenv("ZK_HOST")}:{os.getenv("ZK_PORT")} ==================')
         self._zk = KazooClient(hosts=f'{os.getenv("ZK_HOST")}:{os.getenv("ZK_PORT")}')
         
         self._logger = logging.getLogger(__name__)
@@ -28,6 +28,13 @@ class TrieBuilder:
     def stop(self):
         self._zk.stop()
         
+    def _is_built(self, target_id):
+        if (self._zk.exists(ZK_TO_DISTRIBUTOR) is None):
+            return False 
+        
+        next_target_id = self._zk.get(ZK_TO_DISTRIBUTOR)[0].decode()
+        return next_target_id == target_id
+        
     def _on_last_built_changed(self, data, stat, event=None):
         #data in byte string
         self._logger.debug(f"_on_last_built_changed data is {data}")
@@ -35,10 +42,11 @@ class TrieBuilder:
         if data is None:
             return 
         
-        self._build(data)
+        #self._build(data)
+        self._build(data.decode()) #decode to string
     
-    def _build(self,data):
-        if not data:
+    def _build(self,target_id):
+        if not data or self._is_built(target_id):
             return False
         
         self._zk.create("/test_res", data)

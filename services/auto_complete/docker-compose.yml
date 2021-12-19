@@ -168,11 +168,11 @@ services:
     build: ./models
     volumes:
       - ./models/Trie.py:/models/Trie.py
-      - ./models/Builder.py:/models/Builder.py
+      - ./models/TrieBuilder.py:/models/TrieBuilder.py
     depends_on:
       - zookeeper
     environment:
       - ZK_HOST=zookeeper
       - ZK_PORT=2181
       - LOG_LEVEL=INFO
-    command: python /models/Builder.py
+    command: python /models/TrieBuilder.py
