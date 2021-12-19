@@ -35,7 +35,7 @@ class TrieBuilder:
         
     def _on_last_built_changed(self, data, stat, event=None):
         #data in byte string
-        self._logger.debug(f"_on_last_built_changed data is {data}")
+        self._logger.info(f"_on_last_built_changed data is {data}")
         
         if data is None:
             return 
@@ -49,7 +49,26 @@ class TrieBuilder:
         
         self._logger.info(self._hdfsClient.list("/words/with_weight_sorted/" + target_id))
         
+        trie = self._create_trie(target_id)
+        
         return True
+    
+    def _create_trie(self,target_id):
+        trie = Trie()
+        
+        hdfs_source = f'/words/with_weight_sorted/{target_id}/part-r-00000'
+        self._logger.info(f'HDFS source {hdfs_source}')
+        with self._hdfsClient.get_stream(hdfs_source) as stream:
+            for line in stream.iter_lines():
+                if not line:
+                    continue 
+                
+                # weight - word
+                word = line.decode("utf-8").split("\t", maxsplit=1)[1]
+                trie.add_word(word)
+                self._logger.info(f'Adding word: {word}')
+        
+        return trie
 
 def test_trie_model():
     trie = Trie() 

@@ -174,7 +174,7 @@ services:
     depends_on:
       - zookeeper
     environment:
-      - TOP_POPULAR_SIZE = 5
+      - TOP_POPULAR_SIZE=5
       - ZK_HOST=zookeeper
       - ZK_PORT=2181
       - LOG_LEVEL=INFO
