@@ -33,7 +33,7 @@ for i in range(concurrent):
     t.daemon = True
     t.start()
 try:
-    MAX_REQ = 20
+    MAX_REQ = 10
     for i in range(MAX_REQ):
         times = random.randint(1,5)
         data_str = gen_data()

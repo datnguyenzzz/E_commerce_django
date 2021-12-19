@@ -16,7 +16,6 @@ init:
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/collector ""
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/collector/last_built_target ""
 
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete ""
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/distributor ""
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/distributor/from_last_collector ""
 

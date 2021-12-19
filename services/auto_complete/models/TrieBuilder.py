@@ -1,9 +1,10 @@
 import os
 import time
-import logging
 from kazoo.client import KazooClient, DataWatch
 
 from Trie import Trie
+from HdfsClient import HdfsClient
+from MyLogger import MyLogger
 
 ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
 ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/from_last_collector'
@@ -13,16 +14,13 @@ class TrieBuilder:
     def __init__(self):
         self._zk = KazooClient(hosts=f'{os.getenv("ZK_HOST")}:{os.getenv("ZK_PORT")}')
         
-        self._logger = logging.getLogger(__name__)
-        log_lvl_name = logging.getLevelName(os.getenv("LOG_LEVEL","INFO"))
-        self._logger.setLevel(log_lvl_name)
-        log_handler = logging.StreamHandler() 
-        log_handler.setLevel(log_lvl_name)
-        self._logger.addHandler(log_handler)
+        self._hdfsClient = HdfsClient(os.getenv("HADOOP_NAMENODE"), os.getenv("HADOOP_DATANODE"))
+        
+        self._logger = MyLogger(__name__).logger
     
     def start(self):
-        print("===============START ZOOKEEPER CONNECT ==================")
         self._zk.start()
+        self._logger.info(f'start ZK on {os.getenv("ZK_HOST")}:{os.getenv("ZK_PORT")}')
         data_watch = DataWatch(client=self._zk, path=ZK_LAST_BUILT_FROM_HADOOP, func=self._on_last_built_changed) 
     
     def stop(self):
@@ -46,10 +44,10 @@ class TrieBuilder:
         self._build(data.decode()) #decode to string
     
     def _build(self,target_id):
-        if not data or self._is_built(target_id):
+        if not target_id or self._is_built(target_id):
             return False
         
-        self._zk.create("/test_res", data)
+        self._logger.info(self._hdfsClient.list("/words/with_weight_sorted/" + target_id))
         
         return True
 

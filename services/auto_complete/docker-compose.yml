@@ -169,10 +169,14 @@ services:
     volumes:
       - ./models/Trie.py:/models/Trie.py
       - ./models/TrieBuilder.py:/models/TrieBuilder.py
+      - ./models/HdfsClient.py:/models/HdfsClient.py
+      - ./models/MyLogger.py:/models/MyLogger.py
     depends_on:
       - zookeeper
     environment:
       - ZK_HOST=zookeeper
       - ZK_PORT=2181
       - LOG_LEVEL=INFO
+      - HADOOP_NAMENODE=hdfs-namenode
+      - HADOOP_DATANODE=hdfs-datanode
     command: python /models/TrieBuilder.py
