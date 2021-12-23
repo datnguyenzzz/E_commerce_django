@@ -1,5 +1,7 @@
 import os
 import time
+import bisect
+import pickle
 from kazoo.client import KazooClient, DataWatch
 
 from Trie import Trie
@@ -8,6 +10,7 @@ from MyLogger import MyLogger
 
 ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
 ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/from_last_collector'
+TRIE_PARTITIONS = int(os.getenv("TRIE_PARTITIONS"))
 #ZK_LAST_BUILT_FROM_HADOOP = '/test'
 
 class TrieBuilder:
@@ -43,18 +46,46 @@ class TrieBuilder:
         #self._build(data)
         self._build(data.decode()) #decode to string
     
+    def _init_bounded(self):
+        all_size = ord('z') - ord('a') + 1 
+        partitions_size = all_size // TRIE_PARTITIONS + 1
+        
+        bound = [] 
+        for i in range(ord('a'),ord('z')+1, partitions_size):
+            if i!= ord('a'):
+                bound.append(chr(i))
+            
+        bound.append('{') 
+        
+        return bound
+    
+    def _get_trie_hdfs_file(self, target_id, bound):
+        return f'/words/tries/{target_id}/{bound}'
+    
     def _build(self,target_id):
         if not target_id or self._is_built(target_id):
             return False
         
         self._logger.info(self._hdfsClient.list("/words/with_weight_sorted/" + target_id))
         
-        trie = self._create_trie(target_id)
+        trie_list = [Trie() for _ in range(TRIE_PARTITIONS)]
+        
+        bounded = self._init_bounded()
+        
+        self._create_trie(target_id, trie_list, bounded)
+                
+        for trie,bound in zip(trie_list,bounded):
+            #store to local and move to hdfs 
+            local_trie_file = "trie.dat"
+            pickle.dump(trie, open(local_trie_file,'wb'))
+            
+            trie_hdfs_file = self._get_trie_hdfs_file(target_id, bound)
+            self._logger.info(f'Transfer data from {local_trie_file} to {trie_hdfs_file}')
+            self._hdfsClient.upload_to_hdfs(local_trie_file, trie_hdfs_file)
         
         return True
     
-    def _create_trie(self,target_id):
-        trie = Trie()
+    def _create_trie(self,target_id, trie_list, bounded):
         
         hdfs_source = f'/words/with_weight_sorted/{target_id}/part-r-00000'
         self._logger.info(f'HDFS source {hdfs_source}')
@@ -65,10 +96,11 @@ class TrieBuilder:
                 
                 # weight - word
                 word = line.decode("utf-8").split("\t", maxsplit=1)[1]
-                trie.add_word(word)
+                pos = bisect.bisect_right(bounded, word)
+                trie_list[pos].add_word(word)
+                print(pos,"----",word)
                 self._logger.info(f'Adding word: {word}')
         
-        return trie
 
 def test_trie_model():
     trie = Trie() 
