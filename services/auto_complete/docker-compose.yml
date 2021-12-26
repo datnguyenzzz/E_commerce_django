@@ -184,4 +184,14 @@ services:
     command: python /models/TrieBuilder.py
 
 ## DISTRIBUTOR 
-
+  recommend-service:
+    container_name: recommend-service 
+    hostname: recommend-service 
+    build: ./distributor/recommend
+    volumes:
+      - ./distributor/recommend/main.py:/recommend_service/main.py
+    ports:
+      - "8001:5000"
+    environment:
+      - SERVICE_PORT=5000 
+    command: python /recommend_service/main.py
