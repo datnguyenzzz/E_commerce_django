@@ -29,8 +29,6 @@ class HdfsClient:
         
         URI = f'http://{self._namenode}:9870/webhdfs/v1{hdfs_path}?op=CREATE&overwrite=true'
         
-        self._logger.info(f'Used URI for uploading {URI}')
-        
         with open(local_path, 'rb') as f:
             r = requests.put(URI, data=f)
             self._logger.debug(f'Upload result {r.content}')

@@ -46,21 +46,21 @@ class TrieBuilder:
         #self._build(data)
         self._build(data.decode()) #decode to string
     
-    def _init_bounded(self):
+    def _init_boundaries(self):
         all_size = ord('z') - ord('a') + 1 
         partitions_size = all_size // TRIE_PARTITIONS + 1
         
-        bound = [] 
+        boundaries = [] 
         for i in range(ord('a'),ord('z')+1, partitions_size):
             if i!= ord('a'):
-                bound.append(chr(i))
+                boundaries.append(chr(i))
             
-        bound.append('{') 
+        boundaries.append('{') 
         
-        return bound
+        return boundaries
     
-    def _get_trie_hdfs_file(self, target_id, bound):
-        return f'/words/tries/{target_id}/{bound}'
+    def _get_trie_hdfs_file(self, target_id, boundary):
+        return f'/words/tries/{target_id}/{boundary}'
     
     def _build(self,target_id):
         if not target_id or self._is_built(target_id):
@@ -70,19 +70,23 @@ class TrieBuilder:
         
         trie_list = [Trie() for _ in range(TRIE_PARTITIONS)]
         
-        bounded = self._init_bounded()
+        boundaries = self._init_boundaries()
         
-        self._create_trie(target_id, trie_list, bounded)
+        self._create_trie(target_id, trie_list, boundaries)
                 
-        for trie,bound in zip(trie_list,bounded):
+        for trie,boundary in zip(trie_list,boundaries):
             #store to local and move to hdfs 
             local_trie_file = "trie.dat"
             pickle.dump(trie, open(local_trie_file,'wb'))
             
-            trie_hdfs_file = self._get_trie_hdfs_file(target_id, bound)
-            self._logger.info(f'Transfer data from {local_trie_file} to {trie_hdfs_file}')
+            trie_hdfs_file = self._get_trie_hdfs_file(target_id, boundary)
             self._hdfsClient.upload_to_hdfs(local_trie_file, trie_hdfs_file)
-        
+            
+            #register hdfs trie file locator to zk 
+            self._register_trie_locator(target_id, boundary, trie_hdfs_file)
+            
+        self._register_last_build_id(target_id)
+            
         return True
     
     def _create_trie(self,target_id, trie_list, bounded):
@@ -101,7 +105,16 @@ class TrieBuilder:
                 print(pos,"----",word)
                 self._logger.info(f'Adding word: {word}')
         
-
+    def _register_trie_locator(self, target_id, boundary, trie_hdfs_file):
+        base_zk_path = f'/autocomplete/distributor/{target_id}/{boundary}'
+        self._zk.ensure_path(f'{base_zk_path}/trie_hdfs_locator')
+        self._zk.set(f'{base_zk_path}/trie_hdfs_locator', trie_hdfs_file.encode())
+    
+    def _register_last_build_id(self, target_id):
+        base_zk_path = f'/autocomplete/distributor/last_built_target'
+        self._zk.ensure_path(base_zk_path)
+        self._zk.set(base_zk_path, target_id.encode())
+    
 def test_trie_model():
     trie = Trie() 
     trie.add_word("abc")

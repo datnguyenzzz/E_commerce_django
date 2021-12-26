@@ -182,3 +182,6 @@ services:
       - HADOOP_NAMENODE=hdfs-namenode
       - HADOOP_DATANODE=hdfs-datanode
     command: python /models/TrieBuilder.py
+
+## DISTRIBUTOR 
+

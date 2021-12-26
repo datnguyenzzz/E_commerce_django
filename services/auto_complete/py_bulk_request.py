@@ -51,7 +51,7 @@ def main():
         t.daemon = True
         t.start()
     try:
-        MAX_REQ = 50
+        MAX_REQ = 20
         old_data = ""
         for i in range(MAX_REQ):
             times = random.randint(1,5)
