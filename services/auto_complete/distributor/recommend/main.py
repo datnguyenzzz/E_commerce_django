@@ -1,5 +1,8 @@
 from flask import Flask 
 import os 
+
+from service import WordRecommendation
+
 app = Flask(__name__) 
 
 @app.route('/top-phrases/<phrase>')

@@ -44,7 +44,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
 
- #HADOOP
+##HADOOP
 
   hdfs-namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
@@ -190,6 +190,7 @@ services:
     build: ./distributor/recommend
     volumes:
       - ./distributor/recommend/main.py:/recommend_service/main.py
+      - ./distributor/recommend/service.py:/recommend_service/service.py
     ports:
       - "8001:5000"
     environment:
