@@ -197,6 +197,7 @@ services:
     volumes:
       - ./distributor/recommend/main.py:/recommend_service/main.py
       - ./distributor/recommend/service.py:/recommend_service/service.py
+      - ./distributor/recommend/MyLogger.py:/recommend_service/MyLogger.py
     ports:
       - "8001:5000"
     depends_on:
