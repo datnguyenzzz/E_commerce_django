@@ -209,5 +209,6 @@ services:
       - ZK_PORT=2181
       - CACHE_HOST=redis
       - CACHE_PORT=6379
-      - DISTRIBUTED_CACHE_ENABLED=false
+      - CACHE_LIFE_TIME=30
+      - TRIE_PARTITIONS=5
     command: python /recommend_service/main.py
