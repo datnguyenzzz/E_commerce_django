@@ -7,6 +7,8 @@ app = Flask(__name__)
 
 @app.route('/top-phrases/<phrase>')
 def phrase_recommend(phrase):
+    word_recommender = WordRecommendation()
+    word_recommender.start()
     return phrase
 
 if __name__ == "__main__":
