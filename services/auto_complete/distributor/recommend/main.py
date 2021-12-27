@@ -7,12 +7,11 @@ app = Flask(__name__)
 
 @app.route('/top-phrases/<phrase>')
 def phrase_recommend(phrase):
-    #word_recommender = WordRecommendation()
-    #word_recommender.start()
+    word_recommender = WordRecommendation()
+    word_recommender.start()
     
-    #list_recommeded_phrases = word_recommender.top_phrases_for(phrase)
-    #return list_recommeded_phrases
-    return phrase
+    list_recommeded_phrases = word_recommender.top_phrases_for(phrase)
+    return list_recommeded_phrases
 
 if __name__ == "__main__":
     SERVICE_PORT = os.getenv("SERVICE_PORT")
