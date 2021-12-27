@@ -173,6 +173,7 @@ services:
       - ./models/MyLogger.py:/models/MyLogger.py
     depends_on:
       - zookeeper
+      - hdfs-namenode
     environment:
       - TOP_POPULAR_SIZE=5
       - TRIE_PARTITIONS=5
@@ -203,6 +204,7 @@ services:
     depends_on:
       - redis
       - zookeeper
+      - hdfs-namenode
     environment:
       - SERVICE_PORT=5000 
       - LOG_LEVEL=INFO
@@ -220,10 +222,20 @@ services:
     build: ./distributor/search
     volumes:
       - ./distributor/search/main.py:/search-services/main.py
+      - ./distributor/search/servers.py:/search-services/servers.py
+      - ./distributor/search/HdfsClient.py:/search-services/HdfsClient.py
       - ./distributor/search/MyLogger.py:/search-services/MyLogger.py
       - ./distributor/search/Trie.py:/search-services/Trie.py
+    depends_on:
+      - hdfs-namenode
+      - zookeeper
     ports:
       - "8001:5001"
     environment:
       - SERVICE_PORT=5001 
+      - ZK_HOST=zookeeper
+      - ZK_PORT=2181
+      - HADOOP_NAMENODE=hdfs-namenode
+      - HADOOP_DATANODE=hdfs-datanode
+      - TRIE_PARTITIONS=5
     command: python /search-services/main.py
