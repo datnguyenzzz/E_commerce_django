@@ -6,7 +6,7 @@ import random
 import string
 
 url = "http://localhost:8080/api/v1.0/gather"
-concurrent = 10
+concurrent = 5
 q = Queue(concurrent)
 
 def gen_data():

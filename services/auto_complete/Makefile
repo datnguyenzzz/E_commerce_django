@@ -17,7 +17,6 @@ init:
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/collector/last_built_target ""
 
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/distributor ""
-	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/distributor/from_last_collector ""
 	docker exec -it zookeeper ./bin/zkCli.sh -server localhost:2181 create /autocomplete/distributor/last_built_target ""
 
 	echo "----------------------CREATE HDFS BATCHES-----------------------------";

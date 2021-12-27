@@ -9,7 +9,7 @@ from HdfsClient import HdfsClient
 from MyLogger import MyLogger
 
 ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
-ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/from_last_collector'
+ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/last_built_target'
 TRIE_PARTITIONS = int(os.getenv("TRIE_PARTITIONS"))
 #ZK_LAST_BUILT_FROM_HADOOP = '/test'
 
@@ -111,7 +111,7 @@ class TrieBuilder:
         self._zk.set(f'{base_zk_path}/trie_hdfs_locator', trie_hdfs_file.encode())
     
     def _register_last_build_id(self, target_id):
-        base_zk_path = f'/autocomplete/distributor/last_built_target'
+        base_zk_path = ZK_TO_DISTRIBUTOR
         self._zk.ensure_path(base_zk_path)
         self._zk.set(base_zk_path, target_id.encode())
     
