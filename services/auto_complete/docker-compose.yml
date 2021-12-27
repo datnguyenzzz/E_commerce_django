@@ -199,9 +199,10 @@ services:
       - ./distributor/recommend/service.py:/recommend_service/service.py
       - ./distributor/recommend/MyLogger.py:/recommend_service/MyLogger.py
     ports:
-      - "8001:5000"
+      - "8000:5000"
     depends_on:
       - redis
+      - zookeeper
     environment:
       - SERVICE_PORT=5000 
       - LOG_LEVEL=INFO
@@ -212,3 +213,17 @@ services:
       - CACHE_LIFE_TIME=30
       - TRIE_PARTITIONS=5
     command: python /recommend_service/main.py
+
+  search-services:
+    container_name: search-services
+    hostname: search-services
+    build: ./distributor/search
+    volumes:
+      - ./distributor/search/main.py:/search-services/main.py
+      - ./distributor/search/MyLogger.py:/search-services/MyLogger.py
+      - ./distributor/search/Trie.py:/search-services/Trie.py
+    ports:
+      - "8001:5001"
+    environment:
+      - SERVICE_PORT=5001 
+    command: python /search-services/main.py
