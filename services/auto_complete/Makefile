@@ -4,6 +4,17 @@ SEARCH_SETTING_ENV = distributor/search/SETTINGS.env
 
 TRIE_PARTITIONS = 1 2 3 
 
+test:
+	docker-compose up -d recommend-service
+	docker build -t autocomplete/search-service-1 ./distributor/search
+	docker run \
+		--rm --name search-service-1 \
+		-d -p 8001:5001 \
+		-e SERVICE_PORT=5001 \
+		--network ${DOCKER_NETWORK} \
+		--env-file ${SEARCH_SETTING_ENV} \
+		autocomplete/search-service-1
+
 init:
 	docker-compose up -d
 
@@ -25,14 +36,14 @@ init:
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/tries/
 
 	$(echo "----------------------CREATE SEARCH SERVICES--------------------------")
-	$(foreach var,$(TRIE_PARTITIONS),docker build -t autocomplete/search_service_$(var) ./distributor/search &&) echo.
+	$(foreach var,$(TRIE_PARTITIONS),docker build -t autocomplete/search-service-$(var) ./distributor/search &&) echo.
 	$(foreach var,$(TRIE_PARTITIONS),docker run \
-		--rm --name search_service_$(var) \
+		--rm --name search-service-$(var) \
 		-d -p 800$(var):500$(var) \
 		-e SERVICE_PORT=500$(var) \
 		--network ${DOCKER_NETWORK} \
 		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search_service_$(var) &&) echo.
+		autocomplete/search-service-$(var) &&) echo.
 
 migrate:
 	docker image prune -a -f 
