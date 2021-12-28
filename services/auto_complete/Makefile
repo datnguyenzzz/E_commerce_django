@@ -2,18 +2,7 @@ DOCKER_NETWORK = auto_complete_default
 ENV_FILE = hadoop/hadoop.env
 SEARCH_SETTING_ENV = distributor/search/SETTINGS.env 
 
-test:
-
-	docker-compose up -d zookeeper
-
-	docker build -t autocomplete/search_service_1 ./distributor/search
-
-	docker run --rm --name search_service_1 \
-		-d -p 8001:5001 \
-		-e SERVICE_PORT=5001 \
-		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search_service_1
-
+TRIE_PARTITIONS = 1 2 3 
 
 init:
 	docker-compose up -d
@@ -36,30 +25,14 @@ init:
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/hbase hadoop fs -mkdir -p /words/tries/
 
 	$(echo "----------------------CREATE SEARCH SERVICES--------------------------")
-	docker build -t autocomplete/search_service_1 ./distributor/search
-	docker build -t autocomplete/search_service_2 ./distributor/search
-	docker build -t autocomplete/search_service_3 ./distributor/search
-
-	docker run --rm --name search_service_1 \
-		-d -p 8001:5001 \
-		-e SERVICE_PORT=5001 \
+	$(foreach var,$(TRIE_PARTITIONS),docker build -t autocomplete/search_service_$(var) ./distributor/search &&) echo.
+	$(foreach var,$(TRIE_PARTITIONS),docker run \
+		--rm --name search_service_$(var) \
+		-d -p 800$(var):500$(var) \
+		-e SERVICE_PORT=500$(var) \
 		--network ${DOCKER_NETWORK} \
 		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search_service_1
-	
-	docker run --rm --name search_service_2 \
-		-d -p 8002:5002 \
-		-e SERVICE_PORT=5002 \
-		--network ${DOCKER_NETWORK} \
-		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search_service_2
-	
-	docker run --rm --name search_service_3 \
-		-d -p 8003:5003 \
-		-e SERVICE_PORT=5003 \
-		--network ${DOCKER_NETWORK} \
-		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search_service_3
+		autocomplete/search_service_$(var) &&) echo.
 
 migrate:
 	docker image prune -a -f 
