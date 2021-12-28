@@ -74,16 +74,17 @@ class TrieBuilder:
         
         self._create_trie(target_id, trie_list, boundaries)
                 
-        for trie,boundary in zip(trie_list,boundaries):
+        for trie,boundary in zip(trie_list,enumerate(boundaries)):
+            print(trie, boundary[0], boundary[1])
             #store to local and move to hdfs 
             local_trie_file = "trie.dat"
             pickle.dump(trie, open(local_trie_file,'wb'))
             
-            trie_hdfs_file = self._get_trie_hdfs_file(target_id, boundary)
+            trie_hdfs_file = self._get_trie_hdfs_file(target_id, boundary[1])
             self._hdfsClient.upload_to_hdfs(local_trie_file, trie_hdfs_file)
             
             #register hdfs trie file locator to zk 
-            self._register_trie_locator(target_id, boundary, trie_hdfs_file)
+            self._register_trie_locator(target_id, boundary[0], boundary[1], trie_hdfs_file)
             
         self._register_last_build_id(target_id)
             
@@ -105,10 +106,16 @@ class TrieBuilder:
                 print(pos,"----",word)
                 self._logger.info(f'Adding word: {word}')
         
-    def _register_trie_locator(self, target_id, boundary, trie_hdfs_file):
+    def _register_trie_locator(self, target_id, boundary_id, boundary, trie_hdfs_file):
         base_zk_path = f'/autocomplete/distributor/{target_id}/{boundary}'
+        #trie hdfs file locator
         self._zk.ensure_path(f'{base_zk_path}/trie_hdfs_locator')
         self._zk.set(f'{base_zk_path}/trie_hdfs_locator', trie_hdfs_file.encode())
+        
+        #server host 
+        self._zk.ensure_path(f'{base_zk_path}/server_host')
+        server_host = f'search_service_{boundary_id+1}:{boundary_id+5001}'
+        self._zk.set(f'{base_zk_path}/server_host', server_host.encode())
     
     def _register_last_build_id(self, target_id):
         base_zk_path = ZK_TO_DISTRIBUTOR
