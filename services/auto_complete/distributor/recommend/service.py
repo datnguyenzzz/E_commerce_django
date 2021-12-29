@@ -14,6 +14,7 @@ from MyLogger import MyLogger
 ZK_DITRIBUTOR_BASE = f'/autocomplete/distributor'
 ZK_LAST_BUILT_TARGET = f'{ZK_DITRIBUTOR_BASE}/last_built_target'
 TRIE_PARTITIONS = int(os.getenv("TRIE_PARTITIONS"))
+CACHE_LIFE_TIME = int(os.getenv("CACHE_LIFE_TIME"))
 
 def _init_boundaries():
     all_size = ord('z') - ord('a') + 1 
@@ -53,7 +54,10 @@ class WordRecommendation:
             self._logger.info(f'Got top phrases from cache: {top_phrases_from_cache}')
             return top_phrases_from_cache
         
-        return self._response_from_server_host_for(phrase)
+        top_phrase = self._response_from_server_host_for(phrase)
+        
+        self._insert_to_cache(phrase, top_phrase)
+        return top_phrase
     
     def _response_from_server_host_for(self,phrase):
         
@@ -83,7 +87,11 @@ class WordRecommendation:
         
         if self._cache.exists(cache_key):
             pickled_list = self._cache.get(cache_key)
-            return pickle.loads(pickled_list)
+            result = pickle.loads(pickled_list)
+            return result
         
         return None
     
+    def _insert_to_cache(self, key, value):
+        time_expire = CACHE_LIFE_TIME * 60
+        self._cache.set(key, pickle.dumps(value), ex=time_expire)
