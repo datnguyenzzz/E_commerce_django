@@ -56,8 +56,11 @@ migrate:
 	docker build -t autocomplete/weight-processing ./collector/WeightProcessing
 	docker run --name Weight_Process --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/weight-processing
 
-bulk-request:
-	python py_bulk_request.py
+init_data:
+	python initial_data.py
+
+bulk_request:
+	python bulk_request.py
 
 shutdown:
 	docker stop $(shell docker ps -a -q)

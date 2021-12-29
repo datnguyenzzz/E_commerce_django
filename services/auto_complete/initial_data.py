@@ -27,23 +27,6 @@ def doWork():
         r = requests.post(url, json={"word": data_str, "lang": lang_str})
         print(f"POST data code:{r.status_code} : {data_str}")
         q.task_done()
-        
-def test():
-    MAX_REQ = 10
-    old_data = ""
-    for i in range(MAX_REQ):
-        times = random.randint(1,5)
-        data_str = gen_data()
-        choose = random.choice([0,1])
-        if choose==0:
-            previous = random.randint(0, min(5,len(old_data)))
-        else:
-            previous = 0
-        data_str = "".join([old_data[:previous], data_str])
-
-        print(data_str)
-        
-        old_data = data_str
 
 def main():
     for i in range(concurrent):

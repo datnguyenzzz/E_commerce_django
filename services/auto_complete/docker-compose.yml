@@ -145,7 +145,7 @@ services:
       - /scripts/deploy.sh
         
 ## COLLECTOR
-  collector-gathering-service:
+  gathering-service:
     container_name: gathering-service
     build: 
       context: ./collector/GatheringService
@@ -215,4 +215,7 @@ services:
       - CACHE_PORT=6379
       - CACHE_LIFE_TIME=30
       - TRIE_PARTITIONS=3
+      - GATHERING_HOST=gathering-service
+      - GATHERING_PORT=8080
+      - API_ENDPOINT=api/v1.0/gather
     command: python /recommend_service/main.py
