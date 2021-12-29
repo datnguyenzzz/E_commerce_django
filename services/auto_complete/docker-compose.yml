@@ -1,0 +1,221 @@
+version: '3.8'
+services:
+
+## EVENT BROKER
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    hostname: zookeeper 
+    container_name: zookeeper 
+    ports:
+      - "2181:2181"  
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181 
+      ZOOKEEPER_TICK_TIME: 2000
+  
+  kafka:
+    image: wurstmeister/kafka:latest
+    hostname: kafka 
+    container_name: kafka 
+    depends_on:
+      - zookeeper 
+    ports:
+      - "9092:9092" 
+    expose:
+      - "9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.5.1
+    container_name: schema-registry
+    ports:
+      - 8081:8081
+    depends_on:
+      - zookeeper 
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+
+##HADOOP
+
+  hdfs-namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    hostname: hdfs-namenode
+    container_name: hdfs-namenode
+    restart: always
+    ports:
+      - 9870:9870
+      - 9000:9000
+    environment:
+      - CLUSTER_NAME=test
+    env_file:
+      - ./hadoop/hadoop.env
+
+  hdfs-datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    hostname: hdfs-datanode
+    container_name: hdfs-datanode
+    restart: always 
+    ports:
+      - 9864:9864
+    environment:
+      SERVICE_PRECONDITION: "hdfs-namenode:9870"
+    env_file:
+      - ./hadoop/hadoop.env
+
+  yarn-resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: yarn-resourcemanager
+    restart: always
+    ports:
+      - 8088:8088
+    environment:
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864"
+    env_file:
+      - ./hadoop/hadoop.env
+
+  yarn-nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: yarn-nodemanager
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
+    env_file:
+      - ./hadoop/hadoop.env
+
+  yarn-historyserver:
+    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
+    container_name: yarn-historyserver
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "hdfs-namenode:9000 hdfs-namenode:9870 hdfs-datanode:9864 yarn-resourcemanager:8088"
+    env_file:
+      - ./hadoop/hadoop.env
+
+  hdfs-sink:
+    container_name: hdfs-sink
+    hostname: hdfs-sink
+    build: ./hadoop/kafka-sink-hdfs
+    depends_on:
+      - zookeeper 
+      - kafka
+      - schema-registry
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'kafka:9092'
+      CONNECT_REST_ADVERTISED_HOST_NAME: hdfs-sink
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONNECT_PLUGIN_PATH: "/usr/share/confluent-hub-components"
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      PARTITION_DURATION: 60000
+      TOPIC_NAME: words-from-client
+      TOPIC_DIR: /words/kafka_sink
+      LOG_DIR: /words/kafka_sink/logs
+      TASKS_MAX: 1
+      FLUSH_SIZE: 3
+    volumes:
+      - ./hadoop/kafka-sink-hdfs/scripts:/scripts
+    command:
+      - bash 
+      - -c 
+      - /scripts/deploy.sh
+        
+## COLLECTOR
+  gathering-service:
+    container_name: gathering-service
+    build: 
+      context: ./collector/GatheringService
+    depends_on:
+      - kafka 
+      - zookeeper
+      - schema-registry
+    environment:
+      - BROKER_HOST=kafka
+      - BROKER_PORT=9092
+      - SCHEMA_REGISTRY_HOST=schema-registry
+      - SCHEMA_REGISTRY_PORT=8081
+    ports:
+      - 8080:8080
+
+## DATA MODEL 
+  trie-model:
+    container_name: trie-model
+    hostname: trie-model
+    build: ./models
+    volumes:
+      - ./models/Trie.py:/models/Trie.py
+      - ./models/TrieBuilder.py:/models/TrieBuilder.py
+      - ./models/HdfsClient.py:/models/HdfsClient.py
+      - ./models/MyLogger.py:/models/MyLogger.py
+    depends_on:
+      - zookeeper
+      - hdfs-namenode
+    environment:
+      - TOP_POPULAR_SIZE=5
+      - TRIE_PARTITIONS=3
+      - ZK_HOST=zookeeper
+      - ZK_PORT=2181
+      - LOG_LEVEL=INFO
+      - HADOOP_NAMENODE=hdfs-namenode
+      - HADOOP_DATANODE=hdfs-datanode
+      - PORT_OFFSET=5001
+    command: python /models/TrieBuilder.py
+
+## DISTRIBUTOR 
+  redis:
+    container_name: redis
+    image: redis:6.0.6
+    ports:
+      - "6379:6379"
+
+  recommend-service:
+    container_name: recommend-service 
+    hostname: recommend-service 
+    build: ./distributor/recommend
+    volumes:
+      - ./distributor/recommend/main.py:/recommend_service/main.py
+      - ./distributor/recommend/service.py:/recommend_service/service.py
+      - ./distributor/recommend/MyLogger.py:/recommend_service/MyLogger.py
+    ports:
+      - "8000:5000"
+    depends_on:
+      - redis
+      - zookeeper
+      - hdfs-namenode
+    environment:
+      - SERVICE_PORT=5000 
+      - LOG_LEVEL=INFO
+      - ZK_HOST=zookeeper
+      - ZK_PORT=2181
+      - CACHE_HOST=redis
+      - CACHE_PORT=6379
+      - CACHE_LIFE_TIME=30
+      - TRIE_PARTITIONS=3
+      - GATHERING_HOST=gathering-service
+      - GATHERING_PORT=8080
+      - API_ENDPOINT=api/v1.0/gather
+    command: python /recommend_service/main.py

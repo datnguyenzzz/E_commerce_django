@@ -1,0 +1,14 @@
+topic:
+  name: words-from-client 
+  partitions-num: 10 
+  replication-factor: 3
+spring:
+  kafka:
+    properties:
+      schema.registry.url:
+        http://${SCHEMA_REGISTRY_HOST}:${SCHEMA_REGISTRY_PORT}
+    bootstrap-servers:
+      ${BROKER_HOST}:${BROKER_PORT}
+    producer:
+      keySerializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      valueSerializer: io.confluent.kafka.serializers.KafkaAvroSerializer

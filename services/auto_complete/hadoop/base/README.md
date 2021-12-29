@@ -1,0 +1,1 @@
+COPYRIGHT: https://github.com/lopespm/autocomplete/tree/master/assembler/hadoop/base

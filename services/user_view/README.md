@@ -1,0 +1,1 @@
+service support api endpoint for get product data

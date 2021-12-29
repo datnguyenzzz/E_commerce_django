@@ -1,0 +1,12 @@
+{
+    "type": "record",
+    "name": "Word",
+    "namespace": "com.example.GatheringService",
+    "fields": [
+        {
+            "name": "context",
+            "type": "string",
+            "avro.java.string": "String"
+        }
+    ]
+}
