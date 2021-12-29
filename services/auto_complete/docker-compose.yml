@@ -182,6 +182,7 @@ services:
       - LOG_LEVEL=INFO
       - HADOOP_NAMENODE=hdfs-namenode
       - HADOOP_DATANODE=hdfs-datanode
+      - PORT_OFFSET=5001
     command: python /models/TrieBuilder.py
 
 ## DISTRIBUTOR 

@@ -5,7 +5,7 @@ SEARCH_SETTING_ENV = distributor/search/SETTINGS.env
 TRIE_PARTITIONS = 1 2 3 
 
 test:
-	docker-compose up -d recommend-service
+	docker-compose up -d zookeeper
 	docker build -t autocomplete/search-service-1 ./distributor/search
 	docker run \
 		--rm --name search-service-1 \

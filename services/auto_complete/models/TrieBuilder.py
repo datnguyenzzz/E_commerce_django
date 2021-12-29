@@ -11,6 +11,7 @@ from MyLogger import MyLogger
 ZK_LAST_BUILT_FROM_HADOOP = '/autocomplete/collector/last_built_target'
 ZK_TO_DISTRIBUTOR = '/autocomplete/distributor/last_built_target'
 TRIE_PARTITIONS = int(os.getenv("TRIE_PARTITIONS"))
+PORT_OFFSET = int(os.getenv("PORT_OFFSET"))
 #ZK_LAST_BUILT_FROM_HADOOP = '/test'
 
 class TrieBuilder:
@@ -114,7 +115,8 @@ class TrieBuilder:
         
         #server host 
         self._zk.ensure_path(f'{base_zk_path}/server_host')
-        server_host = f'search-service-{boundary_id+1}:{boundary_id+5001}'
+        server_port = boundary_id+PORT_OFFSET
+        server_host = f'search-service-{boundary_id+1}:{server_port}'
         self._zk.set(f'{base_zk_path}/server_host', server_host.encode())
     
     def _register_last_build_id(self, target_id):

@@ -1,11 +1,13 @@
 from flask import Flask 
+from flask import jsonify
 import os 
 
 app = Flask(__name__) 
 
-@app.route('/search-services/<phrase>')
+@app.route('/search-services/<phrase>', methods=['GET'])
 def service_handle(phrase):
-    return f'FROM SEARCH SERVICE with requested: {phrase} in port: {os.getenv("SERVICE_PORT") }'
+    result = [f'{phrase}', os.getenv("SERVICE_PORT"), 'string 3']
+    return jsonify(result)
 
 if __name__ == "__main__":
     SERVICE_PORT = os.getenv("SERVICE_PORT") 
