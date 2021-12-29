@@ -4,14 +4,16 @@
 + Payment gateway. Stacks: Kafka, Akka
 + Like, add button. Stacks: Python Django, RabbitMQ
 
-Overall architecture:
+# Architectures:
+
+Overall 
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/overall_architecture.png)
 
-Payment processor system architecture 
+Payment processor system  
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/payment_service_provider_architecture.png)
 
-Autocomplete system architecture 
+Autocomplete system  
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/auto_complete.png)
