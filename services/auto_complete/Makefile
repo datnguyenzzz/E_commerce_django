@@ -4,16 +4,22 @@ SEARCH_SETTING_ENV = distributor/search/SETTINGS.env
 
 TRIE_PARTITIONS = 1 2 3 
 
+test_recommend:
+	docker-compose up -d recommend-service
+
 test:
 	docker-compose up -d zookeeper
-	docker build -t autocomplete/search-service-1 ./distributor/search
-	docker run \
-		--rm --name search-service-1 \
-		-d -p 8001:5001 \
-		-e SERVICE_PORT=5001 \
+	docker-compose up -d hdfs-namenode
+	docker-compose up -d recommend-service
+
+	$(foreach var,$(TRIE_PARTITIONS),docker build -t autocomplete/search-service-$(var) ./distributor/search &&) echo.
+	$(foreach var,$(TRIE_PARTITIONS),docker run \
+		--rm --name search-service-$(var) \
+		-d -p 800$(var):500$(var) \
+		-e SERVICE_PORT=500$(var) \
 		--network ${DOCKER_NETWORK} \
 		--env-file ${SEARCH_SETTING_ENV} \
-		autocomplete/search-service-1
+		autocomplete/search-service-$(var) &&) echo.
 
 init:
 	docker-compose up -d
@@ -49,7 +55,7 @@ migrate:
 	docker image prune -a -f 
 	docker container prune  -f
 	docker build -t autocomplete/weight-processing ./collector/WeightProcessing
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/weight-processing
+	docker run --name Weight_Process --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} autocomplete/weight-processing
 
 bulk-request:
 	python py_bulk_request.py

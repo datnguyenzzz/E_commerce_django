@@ -1,9 +1,8 @@
 from hdfs import InsecureClient
 
 class HdfsClient:
-    def __init__(self, namenode, datanode):
+    def __init__(self, namenode):
         self._namenode = namenode 
-        self._datanode = datanode
         self._client = InsecureClient(f'http://{self._namenode}:9870')
         
     def download(self, hdfs_path, local_path):
