@@ -10,8 +10,11 @@ SERVICE_PORT = int(os.getenv("SERVICE_PORT"))
 @app.route('/search-services/<phrase>', methods=['GET'])
 def service_handle(phrase):
     
-    result = [f'{phrase}', os.getenv("SERVICE_PORT"), f'{partition}']
-    return jsonify(result)
+    top_phrases_result = server.top_phrases_for(phrase)
+    if len(top_phrases_result) == 0:
+        return jsonify([phrase])
+    
+    return jsonify(top_phrases_result)
 
 if __name__ == "__main__":
     partition = SERVICE_PORT - PORT_OFFSET

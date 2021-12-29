@@ -53,9 +53,9 @@ class WordRecommendation:
             self._logger.info(f'Got top phrases from cache: {top_phrases_from_cache}')
             return top_phrases_from_cache
         
-        return self._server_host_for(phrase)
+        return self._response_from_server_host_for(phrase)
     
-    def _server_host_for(self,phrase):
+    def _response_from_server_host_for(self,phrase):
         
         top_phrases = None
         pos = bisect.bisect_right(self._trie_partitions, phrase)

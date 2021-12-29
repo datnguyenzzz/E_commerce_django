@@ -42,9 +42,17 @@ class Servers:
         self._trie = trie
         
     def start(self):
-        self._logger.info(f"Start server bind to partion {self._partition}")
+        self._logger.info(f"Start server bind to partition {self._partition}")
         self._zk.start()
         datawatch = DataWatch(client = self._zk, path=LAST_BUILT_TARGET, func=self._on_last_built_target_changed)
+    
+    def top_phrases_for(self, phrase):
+        if self._trie is None:
+            return [phrase] 
+        
+        top_phrases = self._trie.get_top_popular(phrase)
+        self._logger.info(f"Top phrases: {top_phrases} with type: {type(top_phrases)}")
+        return list(top_phrases)
     
     def _load_trie(self, target_id):
         trie_locator = f'{ZK_DISTRIBUTOR_BASE}/{target_id}/{self._partition}/trie_hdfs_locator'
@@ -63,6 +71,10 @@ class Servers:
             self._logger.info(f'trie loaded successfully from hdfs: {trie_obj}')
             self._set_trie(trie_obj)
     
+    def _remove_zk_hisotry(self, target_id):
+        zk_old_path = f'{ZK_DISTRIBUTOR_BASE}/{target_id}'
+        self._zk.delete(zk_old_path)
+    
     def _migrate(self, target_id):
         if not target_id:
             return False 
@@ -70,6 +82,11 @@ class Servers:
         self._logger.info(f'Start load trie from target: {target_id}')
         self._load_trie(target_id)
         
+        self._rollback.append(target_id) 
+        if len(self._rollback) > ROLLBACK_QUEUE:
+            removed_target = self._rollback.popleft()
+            self._remove_zk_hisotry(removed_target)
+
         return True
 
     def _on_last_built_target_changed(self, data, stat, event=None):

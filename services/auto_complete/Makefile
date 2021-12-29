@@ -44,8 +44,7 @@ init:
 	$(echo "----------------------CREATE SEARCH SERVICES--------------------------")
 	$(foreach var,$(TRIE_PARTITIONS),docker build -t autocomplete/search-service-$(var) ./distributor/search &&) echo.
 	$(foreach var,$(TRIE_PARTITIONS),docker run \
-		--rm --name search-service-$(var) \
-		-d -p 800$(var):500$(var) \
+		--rm --name search-service-$(var) -d \
 		-e SERVICE_PORT=500$(var) \
 		--network ${DOCKER_NETWORK} \
 		--env-file ${SEARCH_SETTING_ENV} \
