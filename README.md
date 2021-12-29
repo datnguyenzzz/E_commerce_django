@@ -1,17 +1,8 @@
-# Monolith codebase
+# List of services 
 
-Proposals: 
-+ Crucial functional in Ecommerce application 
-+ Buiding model, view and template. Familiarize with MVT pattern in Django framework
-+ Payment gateway with Paypal integration
-+ SQL database
-+ Pytest + unitest 
-+ Docker for deployment
-
-Advanced:
-+ Monitoring, OLAP (analytic, statistics,...)
-+ Live chat with chat bot 
-+ Notifications (via email, ...)
++ Prefix auto complete. Stacks: Hadoop (YARN, HDFS, MapReduce), Zookeeper, Kafka, Cloudfront, Spring (Boot + Cloud), Redis, Python Flask
++ Payment gateway. Stacks: Kafka, Akka
++ Like, add button. Stacks: Python Django, RabbitMQ
 
 Overall architecture:
 
