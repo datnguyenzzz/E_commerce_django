@@ -2,7 +2,6 @@
 
 Stacks: 
 
-+ Hadoop (HDFS, YARN, MapReduce, Storm) 
++ Hadoop (HDFS, YARN, MapReduce, HBASE) 
 + Kafka 
-+ Elastic search, Logstash, Kibana 
 + Docker 
