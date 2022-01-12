@@ -13,9 +13,9 @@ Advanced:
 + Live chat with chat bot 
 + Notifications (via email, ...)
 
-Overall architecture:
+Recommendation architecture:
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/overall_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/recommender-service.png)
 
 Payment processor system architecture 
 
