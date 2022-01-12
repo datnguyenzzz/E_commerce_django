@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Backend;
 
+//@Entity
 public class PublishRatingCommand implements RatingCommand {
     private final int clientId;
     private final int itemId;
@@ -21,5 +22,12 @@ public class PublishRatingCommand implements RatingCommand {
 
     public int getItemid() {
         return this.itemId;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClientId() + " published to " 
+             + this.getItemid() + " " 
+             + this.getScore() + " scores";
     }
 }
