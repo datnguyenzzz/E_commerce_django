@@ -15,8 +15,8 @@
 	<description>Service handle command for rating</description>
 	<properties>
 		<java.version>11</java.version>
-		<eventuateLocalVersion>0.36.0.RELEASE</eventuateLocalVersion>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -31,12 +31,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>io.eventuate.local.java</groupId>
-  			<artifactId>eventuate-local-java-spring-jdbc</artifactId>
-			<version>${eventuateLocalVersion}</version>
 		</dependency>
 
 	</dependencies>
