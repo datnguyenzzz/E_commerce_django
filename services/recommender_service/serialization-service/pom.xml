@@ -46,7 +46,7 @@
         <executions>
           <execution>
             <id>schemas</id>
-            <phase>generate-source</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>schema</goal>
               <goal>protocol</goal>
