@@ -2,12 +2,10 @@ package vn.datnguyen.recommender.Web.commands;
 
 import java.util.Locale;
 
-public class UpdateRatingCommand {
+public class UpdateRatingCommand extends Command {
     private String clientId; 
     private String itemId; 
     private int score; 
-
-    public UpdateRatingCommand() {}
 
     public UpdateRatingCommand(String clientId, String itemId, int score) {
         this.clientId = clientId; 
