@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Web.commands;
+package vn.datnguyen.recommender.Commands;
 
 import java.util.Locale;
 

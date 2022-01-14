@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Web.commands;
+package vn.datnguyen.recommender.Commands;
 
 abstract public class Command {
     public Command() {}

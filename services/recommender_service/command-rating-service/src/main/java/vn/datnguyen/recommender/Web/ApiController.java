@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import vn.datnguyen.recommender.Web.commands.DeleteRatingCommand;
-import vn.datnguyen.recommender.Web.commands.PublishRatingCommand;
-import vn.datnguyen.recommender.Web.commands.UpdateRatingCommand;
+import vn.datnguyen.recommender.Commands.DeleteRatingCommand;
+import vn.datnguyen.recommender.Commands.PublishRatingCommand;
+import vn.datnguyen.recommender.Commands.UpdateRatingCommand;
 
 @RestController
 @RequestMapping("/api/v/1.0.0/rating")
