@@ -1,1 +1,4 @@
+vn\datnguyen\recommender\event\PublishRatingEvent.class
+vn\datnguyen\recommender\event\EventHandler.class
 vn\datnguyen\recommender\App.class
+vn\datnguyen\recommender\event\Event.class
