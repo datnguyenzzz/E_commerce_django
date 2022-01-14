@@ -1,4 +1,5 @@
 init:
+	mvn clean install
 	docker-compose up -d 
 
 shutdown:

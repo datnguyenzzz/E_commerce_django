@@ -1,10 +1,10 @@
 version: '3.8'
 services:
 ## RATING COMMAND 
-  ratingcommand:
-    container_name: rating-command-service 
+  commandrating:
+    container_name: command-rating-service
     build: 
-      context: ./rating-command-service
+      context: ./command-rating-service
     ports:
       - 8000:8000
     environment:
