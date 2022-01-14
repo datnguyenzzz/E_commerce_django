@@ -1,0 +1,13 @@
+{
+    "namespace": "vn.datnguyen.recommender.TopicPartition",
+    "type": "record",
+    "name": "AvroTopicPartition",
+    "fields": [
+        {
+            "name": "partitionId", "type": "int"
+        }, 
+        {
+            "name": "description", "type": "string"
+        }
+    ]
+}

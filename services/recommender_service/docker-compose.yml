@@ -42,4 +42,5 @@ services:
       - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
     environment:
       SERVICE_PORT: 8000
+      PARTITION_ID: 1
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
