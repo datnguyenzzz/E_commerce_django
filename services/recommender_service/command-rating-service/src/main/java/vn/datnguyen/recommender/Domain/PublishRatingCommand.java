@@ -1,13 +1,13 @@
-package vn.datnguyen.recommender.Commands;
+package vn.datnguyen.recommender.Domain;
 
 import java.util.Locale;
 
-public class UpdateRatingCommand extends Command {
+public class PublishRatingCommand extends Command {
     private String clientId; 
     private String itemId; 
     private int score; 
 
-    public UpdateRatingCommand(String clientId, String itemId, int score) {
+    public PublishRatingCommand(String clientId, String itemId, int score) {
         this.clientId = clientId; 
         this.itemId = itemId; 
         this.score = score;
@@ -40,7 +40,7 @@ public class UpdateRatingCommand extends Command {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                            "UpdateRatingCommand(clientId=%s,itemId=%s,score=%d)",
+                            "PublishRatingCommand(clientId=%s,itemId=%s,score=%d)",
                             getClientId(), getItemId(), getScore());
     }
 }

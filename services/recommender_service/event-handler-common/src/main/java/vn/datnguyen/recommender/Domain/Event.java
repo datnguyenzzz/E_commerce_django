@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.event;
+package vn.datnguyen.recommender.Domain;
 
 import java.util.UUID;
 

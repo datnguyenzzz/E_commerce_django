@@ -1,14 +1,13 @@
-package vn.datnguyen.recommender.event;
+package vn.datnguyen.recommender.Domain;
 
 import java.util.Locale;
 
-public class PublishRatingEvent extends Event {
-
+public class UpdateRatingEvent extends Event {
     private final String clientId; 
     private final String itemId; 
     private final int score;
 
-    public PublishRatingEvent(final String clientId, final String itemId, final int score) {
+    public UpdateRatingEvent(final String clientId, final String itemId, final int score) {
         super();
         this.clientId = clientId; 
         this.itemId = itemId; 
@@ -30,8 +29,7 @@ public class PublishRatingEvent extends Event {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                "PublishRatingEvent{eventId=%s, clientId=%s, itemId=%s, score=%d}",
+                "UpdateRatingEvent{eventId=%s, clientId=%s, itemId=%s, score=%d}",
                 this.getEventId(), this.clientId, this.itemId, this.score);
     }
-    
 }
