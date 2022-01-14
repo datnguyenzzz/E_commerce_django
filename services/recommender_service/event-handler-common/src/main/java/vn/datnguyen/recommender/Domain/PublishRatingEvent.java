@@ -30,8 +30,8 @@ public class PublishRatingEvent extends Event {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                "PublishRatingEvent{eventId=%s, clientId=%s, itemId=%s, score=%d}",
-                this.getEventId(), this.clientId, this.itemId, this.score);
+                "PublishRatingEvent{eventId=%s, timestamp=%d, clientId=%s, itemId=%s, score=%d}",
+                this.getEventId(), this.getTimestamp(), this.clientId, this.itemId, this.score);
     }
     
 }

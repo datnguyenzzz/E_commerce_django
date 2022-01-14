@@ -326,3 +326,287 @@ com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct 
 [2022-01-14T15:52:35.035Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-3] [32] [INFO ] COMMAND-RATING-SERVICE:published rating command = PublishRatingCommand(clientId=312-4324,itemId=2312-4523542,score=232)
 [2022-01-14T15:52:44.044Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-4] [38] [INFO ] COMMAND-RATING-SERVICE:updated rating command = UpdateRatingCommand(clientId=312-4324,itemId=2312-4523542,score=232)
 [2022-01-14T15:52:50.050Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:19:27.027Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 9296 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:19:27.027Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:19:29.029Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:19:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:19:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:19:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:19:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:19:29.029Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 2025 ms
+[2022-01-14T18:19:30.030Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:19:30.030Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:19:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:19:30.030Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:19:30.030Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 3.985 seconds (JVM running for 4.72)
+[2022-01-14T18:19:47.047Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:19:47.047Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:19:47.047Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [547] [INFO ] Completed initialization in 4 ms
+[2022-01-14T18:19:48.048Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-1] [175] [ERROR] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.http.converter.HttpMessageConversionException: Type definition error: [simple type, class vn.datnguyen.recommender.Domain.PublishRatingCommand]; nested exception is com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `vn.datnguyen.recommender.Domain.PublishRatingCommand` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: (PushbackInputStream); line: 2, column: 5]] with root cause
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `vn.datnguyen.recommender.Domain.PublishRatingCommand` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: (PushbackInputStream); line: 2, column: 5]
+	at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67)
+	at com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1615)
+	at com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:400)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1077)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1332)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:331)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:164)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4526)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3521)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:274)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:243)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:205)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:158)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:131)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:121)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:170)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:106)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:894)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1060)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:962)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:652)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:733)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.doFilterInternal(WebMvcMetricsFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:143)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:374)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:888)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1597)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+[2022-01-14T18:21:04.004Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:22:00.000Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 4356 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:22:00.000Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:22:02.002Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:22:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:22:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:22:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:22:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:22:02.002Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 1994 ms
+[2022-01-14T18:22:03.003Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:22:03.003Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:22:03.003Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:22:03.003Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:22:03.003Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 3.979 seconds (JVM running for 4.681)
+[2022-01-14T18:22:18.018Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:22:18.018Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:22:18.018Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [547] [INFO ] Completed initialization in 4 ms
+[2022-01-14T18:22:18.018Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-2] [39] [INFO ] COMMAND-RATING-SERVICE: published rating command = 
+[2022-01-14T18:22:47.047Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-3] [39] [INFO ] COMMAND-RATING-SERVICE: published rating command = 
+[2022-01-14T18:22:53.053Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:25:32.032Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 11116 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:25:32.032Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:25:35.035Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:25:35.035Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:25:35.035Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:25:35.035Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:25:35.035Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:25:35.035Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 2148 ms
+[2022-01-14T18:25:35.035Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:25:36.036Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:25:36.036Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:25:36.036Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:25:36.036Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 4.134 seconds (JVM running for 4.798)
+[2022-01-14T18:25:43.043Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:25:43.043Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:25:43.043Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [547] [INFO ] Completed initialization in 1 ms
+[2022-01-14T18:25:44.044Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-2] [38] [INFO ] COMMAND-RATING-SERVICE: published rating command = PublishRatingCommand(clientId=312-432-45,itemId=2312-452-342,score=32)
+[2022-01-14T18:26:01.001Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:27:27.027Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 2128 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:27:27.027Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:27:29.029Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:27:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:27:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:27:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:27:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:27:29.029Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 2125 ms
+[2022-01-14T18:27:29.029Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:27:30.030Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:27:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:27:30.030Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:27:30.030Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 4.524 seconds (JVM running for 5.228)
+[2022-01-14T18:27:41.041Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-2] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:27:41.041Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:27:41.041Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-2] [547] [INFO ] Completed initialization in 2 ms
+[2022-01-14T18:27:41.041Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-2] [38] [INFO ] COMMAND-RATING-SERVICE: published rating command = PublishRatingCommand(clientId=312-432-45,itemId=2312-452-342,score=32)
+[2022-01-14T18:41:46.046Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:42:09.009Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 10152 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:42:09.009Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:42:10.010Z] [org.springframework.context.support.AbstractApplicationContext] [main] [596] [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [vn.datnguyen.recommender.App]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+[2022-01-14T18:42:10.010Z] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener] [main] [136] [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[2022-01-14T18:42:10.010Z] [org.springframework.boot.SpringApplication] [main] [856] [ERROR] Application run failed
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [vn.datnguyen.recommender.App]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610)
+	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:336)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:252)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:285)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:99)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:751)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:569)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:767)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:759)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:426)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:326)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1311)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at vn.datnguyen.recommender.App.main(App.java:15)
+Caused by: java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:60)
+	at org.springframework.context.annotation.ConditionEvaluator.shouldSkip(ConditionEvaluator.java:108)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:226)
+	at org.springframework.context.annotation.ConfigurationClassParser.processMemberClasses(ConfigurationClassParser.java:372)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:272)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250)
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600)
+	... 20 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'SERVICE_PORT' in value "${SERVICE_PORT}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:178)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:124)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveNestedPlaceholders(AbstractPropertyResolver.java:230)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getProperty(PropertySourcesPropertyResolver.java:88)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getProperty(PropertySourcesPropertyResolver.java:68)
+	at org.springframework.core.env.AbstractEnvironment.getProperty(AbstractEnvironment.java:546)
+	at org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType.getPortProperty(ManagementPortType.java:64)
+	at org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType.get(ManagementPortType.java:58)
+	at org.springframework.boot.actuate.autoconfigure.web.server.OnManagementPortCondition.getMatchOutcome(OnManagementPortCondition.java:49)
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:47)
+	... 26 common frames omitted
+[2022-01-14T18:44:21.021Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 5148 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:44:21.021Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:44:22.022Z] [org.springframework.context.support.AbstractApplicationContext] [main] [596] [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [vn.datnguyen.recommender.App]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+[2022-01-14T18:44:22.022Z] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener] [main] [136] [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[2022-01-14T18:44:22.022Z] [org.springframework.boot.SpringApplication] [main] [856] [ERROR] Application run failed
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [vn.datnguyen.recommender.App]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:610)
+	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:111)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809)
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:193)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:336)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:252)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:285)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:99)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:751)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:569)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:767)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:759)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:426)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:326)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1311)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at vn.datnguyen.recommender.App.main(App.java:15)
+Caused by: java.lang.IllegalStateException: Error processing condition on org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration$DifferentManagementContextConfiguration
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:60)
+	at org.springframework.context.annotation.ConditionEvaluator.shouldSkip(ConditionEvaluator.java:108)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:226)
+	at org.springframework.context.annotation.ConfigurationClassParser.processMemberClasses(ConfigurationClassParser.java:372)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:272)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:250)
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:600)
+	... 20 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'SERVICE_PORT' in value "${SERVICE_PORT}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:178)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:124)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveNestedPlaceholders(AbstractPropertyResolver.java:230)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getProperty(PropertySourcesPropertyResolver.java:88)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getProperty(PropertySourcesPropertyResolver.java:68)
+	at org.springframework.core.env.AbstractEnvironment.getProperty(AbstractEnvironment.java:546)
+	at org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType.getPortProperty(ManagementPortType.java:64)
+	at org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType.get(ManagementPortType.java:58)
+	at org.springframework.boot.actuate.autoconfigure.web.server.OnManagementPortCondition.getMatchOutcome(OnManagementPortCondition.java:49)
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:47)
+	... 26 common frames omitted
+[2022-01-14T18:45:00.000Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 10004 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:45:00.000Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:45:02.002Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:45:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:45:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:45:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:45:02.002Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:45:02.002Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 2040 ms
+[2022-01-14T18:45:02.002Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:45:03.003Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:45:03.003Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:45:03.003Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:45:03.003Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 4.067 seconds (JVM running for 4.74)
+[2022-01-14T18:45:15.015Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:45:15.015Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:45:15.015Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [547] [INFO ] Completed initialization in 3 ms
+[2022-01-14T18:45:15.015Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-1] [38] [INFO ] COMMAND-RATING-SERVICE: published rating command = PublishRatingCommand(clientId=312-432-45,itemId=2312-452-342,score=32)
+[2022-01-14T18:45:37.037Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:46:28.028Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting App using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 3616 (D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes started by datng in D:\My_Code\e_commerce\services\recommender_service\command-rating-service)
+[2022-01-14T18:46:28.028Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-14T18:46:30.030Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8000 (http)
+[2022-01-14T18:46:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:46:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-01-14T18:46:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.41]
+[2022-01-14T18:46:30.030Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-01-14T18:46:30.030Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [289] [INFO ] Root WebApplicationContext: initialization completed in 1945 ms
+[2022-01-14T18:46:30.030Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-14T18:46:30.030Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-14T18:46:31.031Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8000"]
+[2022-01-14T18:46:31.031Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8000 (http) with context path ''
+[2022-01-14T18:46:31.031Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started App in 3.835 seconds (JVM running for 4.514)
+[2022-01-14T18:46:45.045Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8000-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-01-14T18:46:45.045Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-01-14T18:46:45.045Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8000-exec-1] [547] [INFO ] Completed initialization in 0 ms
+[2022-01-14T18:46:45.045Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-1] [38] [INFO ] COMMAND-RATING-SERVICE: published rating command = PublishRatingCommand(clientId=312-432-45,itemId=2312-452-342,score=32)
+[2022-01-14T18:46:45.045Z] [vn.datnguyen.recommender.Handler.RatingService] [ForkJoinPool.commonPool-worker-1] [29] [INFO ] Publishing event: PublishRatingEvent{eventId=879ddee4-da54-4940-bd59-b57ad574404e, clientId=312-432-45, itemId=2312-452-342, score=32}
+[2022-01-14T18:47:01.001Z] [vn.datnguyen.recommender.Web.ApiController] [http-nio-8000-exec-3] [38] [INFO ] COMMAND-RATING-SERVICE: published rating command = PublishRatingCommand(clientId=312-432-45,itemId=2312-452-342,score=323123)
+[2022-01-14T18:47:07.007Z] [vn.datnguyen.recommender.Handler.RatingService] [ForkJoinPool.commonPool-worker-1] [29] [INFO ] Publishing event: PublishRatingEvent{eventId=b5f053fa-e696-4fdc-b399-bde4013f3ab1, clientId=312-432-45, itemId=2312-452-342, score=323123}
+[2022-01-14T18:52:17.017Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'

@@ -29,7 +29,7 @@ public class UpdateRatingEvent extends Event {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                "UpdateRatingEvent{eventId=%s, clientId=%s, itemId=%s, score=%d}",
-                this.getEventId(), this.clientId, this.itemId, this.score);
+                "UpdateRatingEvent{eventId=%s, timestamp=%d, clientId=%s, itemId=%s, score=%d}",
+                this.getEventId(), this.getTimestamp(), this.clientId, this.itemId, this.score);
     }
 }

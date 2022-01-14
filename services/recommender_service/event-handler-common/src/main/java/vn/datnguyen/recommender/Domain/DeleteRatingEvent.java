@@ -6,7 +6,7 @@ public class DeleteRatingEvent extends Event {
     private final String clientId; 
     private final String itemId; 
 
-    public DeleteRatingEvent(final String clientId, final String itemId, final int score) {
+    public DeleteRatingEvent(final String clientId, final String itemId) {
         super();
         this.clientId = clientId; 
         this.itemId = itemId; 
@@ -23,8 +23,8 @@ public class DeleteRatingEvent extends Event {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                "DeleteRatingEvent{eventId=%s, clientId=%s, itemId=%s}",
-                this.getEventId(), this.clientId, this.itemId);
+                "DeleteRatingEvent{eventId=%s, timestamp=%d, clientId=%s, itemId=%s}",
+                this.getEventId(), this.getTimestamp(), this.clientId, this.itemId);
     }
 }
 

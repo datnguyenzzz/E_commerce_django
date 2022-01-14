@@ -7,6 +7,8 @@ public class UpdateRatingCommand extends Command {
     private String itemId; 
     private int score; 
 
+    public UpdateRatingCommand() {}
+
     public UpdateRatingCommand(String clientId, String itemId, int score) {
         this.clientId = clientId; 
         this.itemId = itemId; 

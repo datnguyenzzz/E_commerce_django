@@ -6,6 +6,8 @@ public class DeleteRatingCommand extends Command {
     private String clientId; 
     private String itemId; 
 
+    public DeleteRatingCommand() {}
+
     public DeleteRatingCommand(String clientId, String itemId) {
         this.clientId = clientId; 
         this.itemId = itemId; 
