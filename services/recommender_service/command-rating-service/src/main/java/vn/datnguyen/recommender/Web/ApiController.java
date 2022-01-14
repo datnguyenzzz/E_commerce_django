@@ -42,7 +42,7 @@ public class ApiController {
                                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
                             })
                             .exceptionally(e -> {
-                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
                                 String bodyRes = "Published not sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
@@ -57,7 +57,7 @@ public class ApiController {
                                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
                             })
                             .exceptionally(e -> {
-                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
                                 String bodyRes = "Updated not sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
@@ -72,7 +72,7 @@ public class ApiController {
                                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
                             })
                             .exceptionally(e -> {
-                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
                                 String bodyRes = "Deleted not sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
