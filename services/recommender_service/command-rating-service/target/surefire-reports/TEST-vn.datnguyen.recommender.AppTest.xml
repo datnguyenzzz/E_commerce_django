@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="vn.datnguyen.recommender.AppTest" time="0.023" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="vn.datnguyen.recommender.AppTest" time="0.02" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="D:\My_Code\e_commerce\services\recommender_service\event-handler-common\target\test-classes;D:\My_Code\e_commerce\services\recommender_service\event-handler-common\target\classes;C:\Users\datng\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="java.class.path" value="D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\test-classes;D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes;C:\Users\datng\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,9 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="D:\Java\jdk-17.0.1\bin"/>
-    <property name="sun.java.command" value="C:\Users\datng\AppData\Local\Temp\surefire1876980378417748223\surefirebooter13035590692031059773.jar C:\Users\datng\AppData\Local\Temp\surefire1876980378417748223 2022-01-14T14-15-48_036-jvmRun1 surefire11661876822106995137tmp surefire_112116006815751279633tmp"/>
+    <property name="sun.java.command" value="C:\Users\datng\AppData\Local\Temp\surefire8736105420697724485\surefirebooter3709196244202483708.jar C:\Users\datng\AppData\Local\Temp\surefire8736105420697724485 2022-01-14T14-15-48_036-jvmRun1 surefire15463050105935228607tmp surefire_214288995707623538528tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="D:\My_Code\e_commerce\services\recommender_service\event-handler-common\target\test-classes;D:\My_Code\e_commerce\services\recommender_service\event-handler-common\target\classes;C:\Users\datng\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="surefire.test.class.path" value="D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\test-classes;D:\My_Code\e_commerce\services\recommender_service\command-rating-service\target\classes;C:\Users\datng\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\datng"/>
     <property name="user.language" value="en"/>
@@ -25,12 +25,12 @@
     <property name="java.version.date" value="2021-10-19"/>
     <property name="java.home" value="D:\Java\jdk-17.0.1"/>
     <property name="file.separator" value="\"/>
-    <property name="basedir" value="D:\My_Code\e_commerce\services\recommender_service\event-handler-common"/>
+    <property name="basedir" value="D:\My_Code\e_commerce\services\recommender_service\command-rating-service"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\datng\AppData\Local\Temp\surefire1876980378417748223\surefirebooter13035590692031059773.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\datng\AppData\Local\Temp\surefire8736105420697724485\surefirebooter3709196244202483708.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.1+12-LTS-39"/>
@@ -44,7 +44,7 @@
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\datng\AppData\Local\Temp\"/>
     <property name="java.version" value="17.0.1"/>
-    <property name="user.dir" value="D:\My_Code\e_commerce\services\recommender_service\event-handler-common"/>
+    <property name="user.dir" value="D:\My_Code\e_commerce\services\recommender_service\command-rating-service"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="sun.os.patch.level" value=""/>
@@ -56,5 +56,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testApp" classname="vn.datnguyen.recommender.AppTest" time="0.001"/>
+  <testcase name="testApp" classname="vn.datnguyen.recommender.AppTest" time="0.002"/>
 </testsuite>
