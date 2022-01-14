@@ -1,5 +1,34 @@
 version: '3.8'
 services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    hostname: zookeeper 
+    container_name: zookeeper 
+    ports:
+      - "2181:2181"  
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181 
+      ZOOKEEPER_TICK_TIME: 2000
+  
+  kafka:
+    image: wurstmeister/kafka:latest
+    hostname: kafka 
+    container_name: kafka 
+    depends_on:
+      - zookeeper 
+    ports:
+      - "9092:9092" 
+    expose:
+      - "9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
 ## RATING COMMAND 
   commandrating:
     container_name: command-rating-service
@@ -7,6 +36,8 @@ services:
       context: ./command-rating-service
     ports:
       - 8000:8000
+    depends_on:
+      - kafka
     volumes:
       - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
     environment:
