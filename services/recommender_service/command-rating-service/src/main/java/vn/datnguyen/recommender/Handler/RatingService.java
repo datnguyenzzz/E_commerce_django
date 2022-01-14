@@ -3,8 +3,7 @@ package vn.datnguyen.recommender.Handler;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.Domain.Command;
@@ -22,11 +21,16 @@ import static java.util.Collections.singletonList;
 @Service
 public class RatingService implements CommandHandler, EventHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(RatingService.class);
+    private RatingPublisher ratingPublisher;
+
+    @Autowired
+    public RatingService(RatingPublisher ratingPublisher) {
+        this.ratingPublisher = ratingPublisher;
+    }
 
     @Override
     public CompletableFuture<Void> process(Command command) {
-        return CompletableFuture.runAsync(() -> validate(command).forEach(event -> logger.info("Publishing event: "+event.toString())));
+        return CompletableFuture.runAsync(() -> validate(command).forEach(ratingPublisher::execute));
     }
 
     private List<Event> validate(Command command) {
