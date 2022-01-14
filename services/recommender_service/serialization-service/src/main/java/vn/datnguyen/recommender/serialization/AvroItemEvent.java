@@ -3,15 +3,15 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package vn.datnguyen.recommender.serialization;
+package vn.datnguyen.recommender.Serialization;
 
 import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4449284895286728940L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroItemEvent\",\"namespace\":\"vn.datnguyen.recommender.serialization\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroRemoveRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
+  private static final long serialVersionUID = -5216375757871699627L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroItemEvent\",\"namespace\":\"vn.datnguyen.recommender.Serialization\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroRemoveRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String eventId;
   @Deprecated public long timestamp;
@@ -110,8 +110,8 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
    * Creates a new AvroItemEvent RecordBuilder.
    * @return A new AvroItemEvent RecordBuilder
    */
-  public static vn.datnguyen.recommender.serialization.AvroItemEvent.Builder newBuilder() {
-    return new vn.datnguyen.recommender.serialization.AvroItemEvent.Builder();
+  public static vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder newBuilder() {
+    return new vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder();
   }
 
   /**
@@ -119,8 +119,8 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
    * @param other The existing builder to copy.
    * @return A new AvroItemEvent RecordBuilder
    */
-  public static vn.datnguyen.recommender.serialization.AvroItemEvent.Builder newBuilder(vn.datnguyen.recommender.serialization.AvroItemEvent.Builder other) {
-    return new vn.datnguyen.recommender.serialization.AvroItemEvent.Builder(other);
+  public static vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder other) {
+    return new vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder(other);
   }
 
   /**
@@ -128,8 +128,8 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
    * @param other The existing instance to copy.
    * @return A new AvroItemEvent RecordBuilder
    */
-  public static vn.datnguyen.recommender.serialization.AvroItemEvent.Builder newBuilder(vn.datnguyen.recommender.serialization.AvroItemEvent other) {
-    return new vn.datnguyen.recommender.serialization.AvroItemEvent.Builder(other);
+  public static vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroItemEvent other) {
+    return new vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder(other);
   }
 
   /**
@@ -151,7 +151,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(vn.datnguyen.recommender.serialization.AvroItemEvent.Builder other) {
+    private Builder(vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.eventId)) {
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
@@ -171,7 +171,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
      * Creates a Builder by copying an existing AvroItemEvent instance
      * @param other The existing instance to copy.
      */
-    private Builder(vn.datnguyen.recommender.serialization.AvroItemEvent other) {
+    private Builder(vn.datnguyen.recommender.Serialization.AvroItemEvent other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.eventId)) {
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
@@ -200,7 +200,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @param value The value of 'eventId'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder setEventId(java.lang.String value) {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setEventId(java.lang.String value) {
       validate(fields()[0], value);
       this.eventId = value;
       fieldSetFlags()[0] = true;
@@ -220,7 +220,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * Clears the value of the 'eventId' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder clearEventId() {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearEventId() {
       eventId = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -239,7 +239,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @param value The value of 'timestamp'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder setTimestamp(long value) {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setTimestamp(long value) {
       validate(fields()[1], value);
       this.timestamp = value;
       fieldSetFlags()[1] = true;
@@ -259,7 +259,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * Clears the value of the 'timestamp' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder clearTimestamp() {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearTimestamp() {
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -277,7 +277,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @param value The value of 'data'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder setData(java.lang.Object value) {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setData(java.lang.Object value) {
       validate(fields()[2], value);
       this.data = value;
       fieldSetFlags()[2] = true;
@@ -297,7 +297,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * Clears the value of the 'data' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.serialization.AvroItemEvent.Builder clearData() {
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearData() {
       data = null;
       fieldSetFlags()[2] = false;
       return this;
