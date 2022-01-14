@@ -1,4 +1,5 @@
 D:\My_Code\e_commerce\services\recommender_service\event-handler-common\src\main\java\vn\datnguyen\recommender\event\Event.java
+D:\My_Code\e_commerce\services\recommender_service\event-handler-common\src\main\java\vn\datnguyen\recommender\event\UpdateRatingEvent.java
 D:\My_Code\e_commerce\services\recommender_service\event-handler-common\src\main\java\vn\datnguyen\recommender\event\EventHandler.java
 D:\My_Code\e_commerce\services\recommender_service\event-handler-common\src\main\java\vn\datnguyen\recommender\App.java
 D:\My_Code\e_commerce\services\recommender_service\event-handler-common\src\main\java\vn\datnguyen\recommender\event\PublishRatingEvent.java
