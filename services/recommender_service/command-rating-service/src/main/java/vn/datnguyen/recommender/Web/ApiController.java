@@ -5,6 +5,8 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,36 +34,47 @@ public class ApiController {
     }
 
     @PostMapping()
-    public CompletableFuture<String> PublishRating(@Validated @RequestBody PublishRatingCommand command) {
+    public CompletableFuture<ResponseEntity<String>> PublishRating(@Validated @RequestBody PublishRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "published rating command = " + command.toString());
         return ratingService.process(command)
-                            .thenApply(result -> "Published successfully!!")
+                            .thenApply(result -> {
+                                String bodyRes = "Published sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
-                                return "Error when transfer publishing";
+                                String bodyRes = "Published not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
-                                
     }
 
     @PutMapping() 
-    public CompletableFuture<String> UpdateRating(@Validated @RequestBody UpdateRatingCommand command) {
+    public CompletableFuture<ResponseEntity<String>> UpdateRating(@Validated @RequestBody UpdateRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "updated rating command = "+ command.toString());
         return ratingService.process(command)
-                            .thenApply(result -> "Updated successfully!!")
+                            .thenApply(result -> {
+                                String bodyRes = "Updated sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
-                                return "Error when transfer publishing";
+                                String bodyRes = "Updated not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
     }
 
     @DeleteMapping() 
-    public CompletableFuture<String> DeleteRating(@Validated @RequestBody DeleteRatingCommand command) {
+    public CompletableFuture<ResponseEntity<String>> DeleteRating(@Validated @RequestBody DeleteRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "deleted rating command = "+ command.toString());
         return ratingService.process(command)
-                            .thenApply(result -> "Deleted successfully!!")
+                            .thenApply(result -> {
+                                String bodyRes = "Deleted sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command", e);
-                                return "Error when transfer publishing";
+                                String bodyRes = "Deleted not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
     }
 }
