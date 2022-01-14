@@ -7,6 +7,8 @@ public class PublishRatingCommand {
     private String itemId; 
     private int score; 
 
+    public PublishRatingCommand() {}
+
     public PublishRatingCommand(String clientId, String itemId, int score) {
         this.clientId = clientId; 
         this.itemId = itemId; 
