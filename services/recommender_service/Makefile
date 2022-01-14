@@ -1,6 +1,7 @@
 init:
 	mvn clean install
-	docker-compose up -d 
+	docker-compose up -d
+	docker-compose ps
 
 shutdown:
 	docker stop $(shell docker ps -a -q)
