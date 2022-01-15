@@ -1,4 +1,9 @@
 server:
   port: 8000
 
-partition.message.id: 1
+transactionKafka:
+  messageId: 1
+  bootstrapServers: localhost:9092
+  transactionIdPrefix: rating-command
+  topic: MEWMEWMEW
+  groupId: MEWMEWMEW
