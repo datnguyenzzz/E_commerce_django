@@ -1,7 +1,7 @@
 {
     "namespace": "vn.datnguyen.recommender.Serialization",
     "type": "record",
-    "name": "AvroItemEvent",
+    "name": "AvroEvent",
     "fields": [
         {
             "name": "eventId", "type": "string"
