@@ -14,6 +14,13 @@ public class UpdateRatingEvent extends Event {
         this.score = score;
     }
 
+    public UpdateRatingEvent(final String clientId, final String itemId, final int score, int partitionId) {
+        super(partitionId);
+        this.clientId = clientId;
+        this.itemId = itemId;
+        this.score = score;
+    }
+
     public String getClientId() {
         return this.clientId;
     }

@@ -47,6 +47,7 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private List<Event> validate(PublishRatingCommand command) {
+        //int partitionId = Integer.parseInt(System.getenv("PARTITION_ID"));
         return singletonList(new PublishRatingEvent(command.getClientId(), command.getItemId(), command.getScore()));
     }
 

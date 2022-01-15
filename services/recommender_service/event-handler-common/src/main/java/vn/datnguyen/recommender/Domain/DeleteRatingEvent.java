@@ -12,6 +12,12 @@ public class DeleteRatingEvent extends Event {
         this.itemId = itemId; 
     }
 
+    public DeleteRatingEvent(final String clientId, final String itemId, int partitionId) {
+        super(partitionId);
+        this.clientId = clientId;
+        this.itemId = itemId;
+    }
+
     public String getClientId() {
         return this.clientId;
     }
