@@ -10,10 +10,11 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5216375757871699627L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroItemEvent\",\"namespace\":\"vn.datnguyen.recommender.Serialization\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroRemoveRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
+  private static final long serialVersionUID = -1967011292930482530L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroItemEvent\",\"namespace\":\"vn.datnguyen.recommender.Serialization\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"partitionId\",\"type\":\"int\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroRemoveRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String eventId;
+  @Deprecated public int partitionId;
   @Deprecated public long timestamp;
   @Deprecated public java.lang.Object data;
 
@@ -27,11 +28,13 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
   /**
    * All-args constructor.
    * @param eventId The new value for eventId
+   * @param partitionId The new value for partitionId
    * @param timestamp The new value for timestamp
    * @param data The new value for data
    */
-  public AvroItemEvent(java.lang.String eventId, java.lang.Long timestamp, java.lang.Object data) {
+  public AvroItemEvent(java.lang.String eventId, java.lang.Integer partitionId, java.lang.Long timestamp, java.lang.Object data) {
     this.eventId = eventId;
+    this.partitionId = partitionId;
     this.timestamp = timestamp;
     this.data = data;
   }
@@ -41,8 +44,9 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return eventId;
-    case 1: return timestamp;
-    case 2: return data;
+    case 1: return partitionId;
+    case 2: return timestamp;
+    case 3: return data;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -52,8 +56,9 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: eventId = (java.lang.String)value$; break;
-    case 1: timestamp = (java.lang.Long)value$; break;
-    case 2: data = (java.lang.Object)value$; break;
+    case 1: partitionId = (java.lang.Integer)value$; break;
+    case 2: timestamp = (java.lang.Long)value$; break;
+    case 3: data = (java.lang.Object)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -72,6 +77,22 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
    */
   public void setEventId(java.lang.String value) {
     this.eventId = value;
+  }
+
+  /**
+   * Gets the value of the 'partitionId' field.
+   * @return The value of the 'partitionId' field.
+   */
+  public java.lang.Integer getPartitionId() {
+    return partitionId;
+  }
+
+  /**
+   * Sets the value of the 'partitionId' field.
+   * @param value the value to set.
+   */
+  public void setPartitionId(java.lang.Integer value) {
+    this.partitionId = value;
   }
 
   /**
@@ -139,6 +160,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
     implements org.apache.avro.data.RecordBuilder<AvroItemEvent> {
 
     private java.lang.String eventId;
+    private int partitionId;
     private long timestamp;
     private java.lang.Object data;
 
@@ -157,13 +179,17 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.partitionId)) {
+        this.partitionId = data().deepCopy(fields()[1].schema(), other.partitionId);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.data)) {
-        this.data = data().deepCopy(fields()[2].schema(), other.data);
+      if (isValidValue(fields()[2], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[2].schema(), other.timestamp);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.data)) {
+        this.data = data().deepCopy(fields()[3].schema(), other.data);
+        fieldSetFlags()[3] = true;
       }
     }
 
@@ -177,13 +203,17 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
         this.eventId = data().deepCopy(fields()[0].schema(), other.eventId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.partitionId)) {
+        this.partitionId = data().deepCopy(fields()[1].schema(), other.partitionId);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.data)) {
-        this.data = data().deepCopy(fields()[2].schema(), other.data);
+      if (isValidValue(fields()[2], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[2].schema(), other.timestamp);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.data)) {
+        this.data = data().deepCopy(fields()[3].schema(), other.data);
+        fieldSetFlags()[3] = true;
       }
     }
 
@@ -227,6 +257,44 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
     }
 
     /**
+      * Gets the value of the 'partitionId' field.
+      * @return The value.
+      */
+    public java.lang.Integer getPartitionId() {
+      return partitionId;
+    }
+
+    /**
+      * Sets the value of the 'partitionId' field.
+      * @param value The value of 'partitionId'.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setPartitionId(int value) {
+      validate(fields()[1], value);
+      this.partitionId = value;
+      fieldSetFlags()[1] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'partitionId' field has been set.
+      * @return True if the 'partitionId' field has been set, false otherwise.
+      */
+    public boolean hasPartitionId() {
+      return fieldSetFlags()[1];
+    }
+
+
+    /**
+      * Clears the value of the 'partitionId' field.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearPartitionId() {
+      fieldSetFlags()[1] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'timestamp' field.
       * @return The value.
       */
@@ -240,9 +308,9 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setTimestamp(long value) {
-      validate(fields()[1], value);
+      validate(fields()[2], value);
       this.timestamp = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -251,7 +319,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'timestamp' field has been set, false otherwise.
       */
     public boolean hasTimestamp() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
@@ -260,7 +328,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearTimestamp() {
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -278,9 +346,9 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder setData(java.lang.Object value) {
-      validate(fields()[2], value);
+      validate(fields()[3], value);
       this.data = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -289,7 +357,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'data' field has been set, false otherwise.
       */
     public boolean hasData() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -299,7 +367,7 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       */
     public vn.datnguyen.recommender.Serialization.AvroItemEvent.Builder clearData() {
       data = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -308,8 +376,9 @@ public class AvroItemEvent extends org.apache.avro.specific.SpecificRecordBase i
       try {
         AvroItemEvent record = new AvroItemEvent();
         record.eventId = fieldSetFlags()[0] ? this.eventId : (java.lang.String) defaultValue(fields()[0]);
-        record.timestamp = fieldSetFlags()[1] ? this.timestamp : (java.lang.Long) defaultValue(fields()[1]);
-        record.data = fieldSetFlags()[2] ? this.data : (java.lang.Object) defaultValue(fields()[2]);
+        record.partitionId = fieldSetFlags()[1] ? this.partitionId : (java.lang.Integer) defaultValue(fields()[1]);
+        record.timestamp = fieldSetFlags()[2] ? this.timestamp : (java.lang.Long) defaultValue(fields()[2]);
+        record.data = fieldSetFlags()[3] ? this.data : (java.lang.Object) defaultValue(fields()[3]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

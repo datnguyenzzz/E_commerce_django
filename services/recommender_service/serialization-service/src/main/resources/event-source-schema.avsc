@@ -7,6 +7,9 @@
             "name": "eventId", "type": "string"
         },
         {
+            "name": "partitionId", "type": "int"
+        },
+        {
             "name": "timestamp","type": "long"
         },
         {

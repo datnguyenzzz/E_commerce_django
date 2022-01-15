@@ -21,10 +21,10 @@ import static java.util.Collections.singletonList;
 @Service
 public class RatingService implements CommandHandler, EventHandler {
 
-    private RatingPublisher ratingPublisher;
+    private RatingTransactionalPublisher ratingPublisher;
 
     @Autowired
-    public RatingService(RatingPublisher ratingPublisher) {
+    public RatingService(RatingTransactionalPublisher ratingPublisher) {
         this.ratingPublisher = ratingPublisher;
     }
 
