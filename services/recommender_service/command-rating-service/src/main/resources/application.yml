@@ -5,4 +5,4 @@ transactionKafka:
   messageId: 1
   bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
   transactionIdPrefix: ratingCommand
-  topic: ratingCommandToEventSource
+  topic: ${TOPIC_NAME}
