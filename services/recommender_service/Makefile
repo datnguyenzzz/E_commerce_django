@@ -1,3 +1,7 @@
+testConsumer:
+	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093
+	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic ratingCommandToEventSource --from-beginning
+
 start:
 	mvn clean install
 	docker-compose up -d

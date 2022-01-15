@@ -3,7 +3,6 @@ server:
 
 transactionKafka:
   messageId: 1
-  bootstrapServers: localhost:9092
-  transactionIdPrefix: rating-command
-  topic: MEWMEWMEW
-  groupId: MEWMEWMEW
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  transactionIdPrefix: ratingCommand
+  topic: ratingCommandToEventSource

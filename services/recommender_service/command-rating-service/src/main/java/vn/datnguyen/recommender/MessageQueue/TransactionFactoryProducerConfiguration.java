@@ -38,6 +38,7 @@ public class TransactionFactoryProducerConfiguration {
         return factory;
     }
 
+    @Bean
     public KafkaTemplate<String, AvroEvent> kafkaTemplate(@Autowired ProducerFactory<String, AvroEvent> factory) {
         return new KafkaTemplate<>(factory);
     }
