@@ -13,6 +13,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import vn.datnguyen.recommender.Converter.AvroEventSerializer;
 import vn.datnguyen.recommender.Serialization.AvroEvent;
 
 @Configuration
@@ -29,7 +30,7 @@ public class TransactionFactoryProducerConfiguration {
         Map<String, Object> configs = new HashMap<>();
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
-        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"");
+        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,AvroEventSerializer.class);
 
         DefaultKafkaProducerFactory<String, AvroEvent> factory = new DefaultKafkaProducerFactory<>(configs);
         factory.setTransactionIdPrefix(transactionIdPrefix);
