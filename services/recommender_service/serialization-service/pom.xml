@@ -16,6 +16,7 @@
   <properties>
     <avro.version>1.8.1</avro.version>
     <plugin.avro.version>1.10.1</plugin.avro.version>
+    <spring.kafka.version>2.6.5</spring.kafka.version>
   </properties>
 
   <dependencies>
@@ -45,6 +46,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- kafka -->
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId> 
+      <version>${spring.kafka.version}</version>
     </dependency>
   </dependencies>
 
