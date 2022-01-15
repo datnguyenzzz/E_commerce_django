@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.Domain.Command;
@@ -22,6 +23,9 @@ import static java.util.Collections.singletonList;
 public class RatingService implements CommandHandler, EventHandler {
 
     private RatingTransactionalPublisher ratingPublisher;
+
+    @Value("${PARTITION_ID}")
+    private String partitionId;
 
     @Autowired
     public RatingService(RatingTransactionalPublisher ratingPublisher) {
@@ -47,16 +51,18 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private List<Event> validate(PublishRatingCommand command) {
-        //int partitionId = Integer.parseInt(System.getenv("PARTITION_ID"));
-        return singletonList(new PublishRatingEvent(command.getClientId(), command.getItemId(), command.getScore()));
+        int messageId = Integer.parseInt(partitionId);
+        return singletonList(new PublishRatingEvent(command.getClientId(), command.getItemId(), command.getScore(), messageId));
     }
 
     private List<Event> validate(UpdateRatingCommand command) {
-        return singletonList(new UpdateRatingEvent(command.getClientId(), command.getItemId(), command.getScore()));
+        int messageId = Integer.parseInt(partitionId);
+        return singletonList(new UpdateRatingEvent(command.getClientId(), command.getItemId(), command.getScore(), messageId));
     }
 
     private List<Event> validate(DeleteRatingCommand command) {
-        return singletonList(new DeleteRatingEvent(command.getClientId(), command.getItemId()));
+        int messageId = Integer.parseInt(partitionId);
+        return singletonList(new DeleteRatingEvent(command.getClientId(), command.getItemId(), messageId));
     }
 
     @Override
