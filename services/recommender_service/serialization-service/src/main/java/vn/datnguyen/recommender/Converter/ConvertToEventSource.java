@@ -1,5 +1,7 @@
 package vn.datnguyen.recommender.Converter;
 
+import org.springframework.stereotype.Component;
+
 import vn.datnguyen.recommender.Domain.DeleteRatingEvent;
 import vn.datnguyen.recommender.Domain.Event;
 import vn.datnguyen.recommender.Domain.PublishRatingEvent;
@@ -9,6 +11,7 @@ import vn.datnguyen.recommender.Serialization.AvroEvent;
 import vn.datnguyen.recommender.Serialization.AvroPublishRating;
 import vn.datnguyen.recommender.Serialization.AvroUpdateRating;
 
+@Component
 public class ConvertToEventSource {
     public ConvertToEventSource() {}
 
