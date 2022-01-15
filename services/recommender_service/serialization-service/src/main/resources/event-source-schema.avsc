@@ -48,7 +48,7 @@
                 },
 
                 {
-                    "name": "AvroRemoveRating",
+                    "name": "AvroDeleteRating",
                     "type": "record",
                     "fields": [
                         {

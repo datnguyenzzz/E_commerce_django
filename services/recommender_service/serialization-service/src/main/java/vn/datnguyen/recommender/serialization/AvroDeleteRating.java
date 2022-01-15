@@ -9,9 +9,9 @@ import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 2573291852744665652L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroRemoveRating\",\"namespace\":\"vn.datnguyen.recommender.Serialization\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}");
+public class AvroDeleteRating extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = -3983951875627422743L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroDeleteRating\",\"namespace\":\"vn.datnguyen.recommender.Serialization\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String clientId;
   @Deprecated public java.lang.String itemId;
@@ -21,14 +21,14 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public AvroRemoveRating() {}
+  public AvroDeleteRating() {}
 
   /**
    * All-args constructor.
    * @param clientId The new value for clientId
    * @param itemId The new value for itemId
    */
-  public AvroRemoveRating(java.lang.String clientId, java.lang.String itemId) {
+  public AvroDeleteRating(java.lang.String clientId, java.lang.String itemId) {
     this.clientId = clientId;
     this.itemId = itemId;
   }
@@ -86,36 +86,36 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
   }
 
   /**
-   * Creates a new AvroRemoveRating RecordBuilder.
-   * @return A new AvroRemoveRating RecordBuilder
+   * Creates a new AvroDeleteRating RecordBuilder.
+   * @return A new AvroDeleteRating RecordBuilder
    */
-  public static vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder newBuilder() {
-    return new vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder();
+  public static vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder newBuilder() {
+    return new vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder();
   }
 
   /**
-   * Creates a new AvroRemoveRating RecordBuilder by copying an existing Builder.
+   * Creates a new AvroDeleteRating RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new AvroRemoveRating RecordBuilder
+   * @return A new AvroDeleteRating RecordBuilder
    */
-  public static vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder other) {
-    return new vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder(other);
+  public static vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder other) {
+    return new vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder(other);
   }
 
   /**
-   * Creates a new AvroRemoveRating RecordBuilder by copying an existing AvroRemoveRating instance.
+   * Creates a new AvroDeleteRating RecordBuilder by copying an existing AvroDeleteRating instance.
    * @param other The existing instance to copy.
-   * @return A new AvroRemoveRating RecordBuilder
+   * @return A new AvroDeleteRating RecordBuilder
    */
-  public static vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroRemoveRating other) {
-    return new vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder(other);
+  public static vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder newBuilder(vn.datnguyen.recommender.Serialization.AvroDeleteRating other) {
+    return new vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder(other);
   }
 
   /**
-   * RecordBuilder for AvroRemoveRating instances.
+   * RecordBuilder for AvroDeleteRating instances.
    */
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<AvroRemoveRating>
-    implements org.apache.avro.data.RecordBuilder<AvroRemoveRating> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<AvroDeleteRating>
+    implements org.apache.avro.data.RecordBuilder<AvroDeleteRating> {
 
     private java.lang.String clientId;
     private java.lang.String itemId;
@@ -129,7 +129,7 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder other) {
+    private Builder(vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.clientId)) {
         this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -142,10 +142,10 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
     }
 
     /**
-     * Creates a Builder by copying an existing AvroRemoveRating instance
+     * Creates a Builder by copying an existing AvroDeleteRating instance
      * @param other The existing instance to copy.
      */
-    private Builder(vn.datnguyen.recommender.Serialization.AvroRemoveRating other) {
+    private Builder(vn.datnguyen.recommender.Serialization.AvroDeleteRating other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.clientId)) {
         this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -170,7 +170,7 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'clientId'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder setClientId(java.lang.String value) {
+    public vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder setClientId(java.lang.String value) {
       validate(fields()[0], value);
       this.clientId = value;
       fieldSetFlags()[0] = true;
@@ -190,7 +190,7 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'clientId' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder clearClientId() {
+    public vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder clearClientId() {
       clientId = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -209,7 +209,7 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'itemId'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder setItemId(java.lang.String value) {
+    public vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder setItemId(java.lang.String value) {
       validate(fields()[1], value);
       this.itemId = value;
       fieldSetFlags()[1] = true;
@@ -229,16 +229,16 @@ public class AvroRemoveRating extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'itemId' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.Serialization.AvroRemoveRating.Builder clearItemId() {
+    public vn.datnguyen.recommender.Serialization.AvroDeleteRating.Builder clearItemId() {
       itemId = null;
       fieldSetFlags()[1] = false;
       return this;
     }
 
     @Override
-    public AvroRemoveRating build() {
+    public AvroDeleteRating build() {
       try {
-        AvroRemoveRating record = new AvroRemoveRating();
+        AvroDeleteRating record = new AvroDeleteRating();
         record.clientId = fieldSetFlags()[0] ? this.clientId : (java.lang.String) defaultValue(fields()[0]);
         record.itemId = fieldSetFlags()[1] ? this.itemId : (java.lang.String) defaultValue(fields()[1]);
         return record;
