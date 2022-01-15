@@ -24,7 +24,7 @@ public class RatingService implements CommandHandler, EventHandler {
 
     private RatingTransactionalPublisher ratingPublisher;
 
-    @Value("${PARTITION_ID}")
+    @Value("${partition.message.id}")
     private String partitionId;
 
     @Autowired

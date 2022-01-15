@@ -1,2 +1,4 @@
 server:
-  port: ${SERVICE_PORT}
+  port: 8000
+
+partition.message.id: 1

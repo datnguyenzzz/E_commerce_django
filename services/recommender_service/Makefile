@@ -1,4 +1,4 @@
-init:
+start:
 	mvn clean install
 	docker-compose up -d
 	docker-compose ps
