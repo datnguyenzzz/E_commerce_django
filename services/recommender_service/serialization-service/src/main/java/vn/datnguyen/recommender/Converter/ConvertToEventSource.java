@@ -60,6 +60,7 @@ public class ConvertToEventSource {
         return AvroEvent.newBuilder()
                         .setEventId(event.getEventId())
                         .setTimestamp(event.getTimestamp())
+                        .setPartitionId(event.getPartitionId())
                         .setData(payload)
                         .build();
     }
