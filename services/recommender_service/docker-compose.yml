@@ -44,3 +44,19 @@ services:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
+
+## EVENT SOURCE STORAGE 
+  eventstorage:
+    container_name: event-source-storage
+    build:
+      context: ./event-source-storage
+    ports:
+      - 8001:8001 
+    depends_on:
+      - kafka
+    volumes:
+      - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
+    environment:
+      KAFKA_INTERNAL_HOST: kafka
+      TOPIC_NAME: ratingCommandToEventSource
+    command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
