@@ -18,20 +18,16 @@ import vn.datnguyen.recommender.Serialization.AvroEvent;
 @Configuration
 public class FactoryConsumerConfiguration {
 
-    @Value("${transactionKafka.bootstrapServers}")
+    @Value("${ConsumerKafka.bootstrapServers}")
     private String bootstrapServer;
 
-    @Value("${groupId}")
-    private String groupId;
-
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, AvroEvent> 
-        kafkaListenerContainerFactory(ConsumerFactory<String, AvroEvent> consumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, AvroEvent> kafkaListenerContainerFactory(ConsumerFactory<String, AvroEvent> consumerFactory) {
             ConcurrentKafkaListenerContainerFactory<String, AvroEvent> factory = 
-                new ConcurrentKafkaListenerContainerFactory<String, AvroEvent>();
+                new ConcurrentKafkaListenerContainerFactory<>();
             
-            factory.setConsumerFactory(consumerFactory);
-            return null;
+            factory.setConsumerFactory(consumerFactory());
+            return factory;
     }
 
     @Bean
@@ -43,7 +39,6 @@ public class FactoryConsumerConfiguration {
         Map<String, Object> props = new HashMap<>();
 
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AvroEventDeserializer.class);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
