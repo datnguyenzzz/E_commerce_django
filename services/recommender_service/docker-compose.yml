@@ -59,4 +59,5 @@ services:
     environment:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
+      CONSUMER_GROUP: eventSourcing
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
