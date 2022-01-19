@@ -1,0 +1,8 @@
+server:
+  port: 8000
+
+transactionKafka:
+  messageId: 1
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  transactionIdPrefix: ratingCommand
+  topic: ${TOPIC_NAME}

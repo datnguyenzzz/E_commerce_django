@@ -1,0 +1,7 @@
+server:
+  port: 8001
+
+ConsumerKafka:
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  groupId: ${CONSUMER_GROUP}
+  topicConsumerFromRatingCommand: ${TOPIC_NAME}
