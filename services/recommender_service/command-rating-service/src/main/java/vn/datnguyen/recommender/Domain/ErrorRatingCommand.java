@@ -8,13 +8,13 @@ public class ErrorRatingCommand extends Command {
     private String error; 
 
     public ErrorRatingCommand(String error) {
-        this(null, null);
-        this.error = error;
+        this(null, null, error);
     }
 
-    public ErrorRatingCommand(String clientId, String itemId) {
+    public ErrorRatingCommand(String clientId, String itemId, String error) {
         this.clientId = clientId; 
         this.itemId = itemId; 
+        this.error = error;
     }
 
     public String getClientId() {

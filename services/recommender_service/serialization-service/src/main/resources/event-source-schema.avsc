@@ -13,6 +13,9 @@
             "name": "timestamp","type": "long"
         },
         {
+            "name": "eventType", "type": "string"
+        },
+        {
             "name": "data",
             "type": [
                 {

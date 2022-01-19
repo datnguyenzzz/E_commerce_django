@@ -8,10 +8,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
-import vn.datnguyen.recommender.Converter.ConvertToEventSource;
-import vn.datnguyen.recommender.Domain.Event;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.MessageQueue.Publisher;
-import vn.datnguyen.recommender.Serialization.AvroEvent;
 
 @Component
 public class RatingTransactionalPublisher implements Publisher {
@@ -22,22 +20,21 @@ public class RatingTransactionalPublisher implements Publisher {
     private String topicName;
 
     private KafkaTemplate<String, AvroEvent> kafkaTemplate;
-    private ConvertToEventSource converter;
 
     @Autowired
-    public RatingTransactionalPublisher(KafkaTemplate<String, AvroEvent> kafkaTemplate, ConvertToEventSource converter) {
+    public RatingTransactionalPublisher(KafkaTemplate<String, AvroEvent> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-        this.converter = converter;
     }
 
     public RatingTransactionalPublisher() {}
 
     @Override
-    public void execute(Event event) {
+    public void execute(AvroEvent event) {
         logger.info("Attempt publishing raw event: " + event.toString());
 
         kafkaTemplate.executeInTransaction(op -> {
-            op.send(topicName, Integer.toString(event.getPartitionId()), converter.from(event)).addCallback(this::onSuccess, this::onFailure);
+            op.send(topicName, Integer.toString(event.getPartitionId()), event)
+                .addCallback(this::onSuccess, this::onFailure);
             return true;
         });
     }
