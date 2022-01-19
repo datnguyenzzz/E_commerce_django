@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.MessageQueue.Consumer;
-import vn.datnguyen.recommender.Serialization.AvroEvent;
 
 @Component
 public class EventConsumer implements Consumer {

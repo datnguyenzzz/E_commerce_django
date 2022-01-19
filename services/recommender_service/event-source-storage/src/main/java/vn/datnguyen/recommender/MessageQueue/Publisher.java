@@ -1,7 +1,7 @@
 package vn.datnguyen.recommender.MessageQueue;
 
-import vn.datnguyen.recommender.Domain.Event;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 
 public interface Publisher {
-    void execute(Event event);
+    void execute(AvroEvent event);
 }

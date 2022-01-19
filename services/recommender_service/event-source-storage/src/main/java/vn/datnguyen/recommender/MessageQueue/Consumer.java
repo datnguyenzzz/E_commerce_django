@@ -1,6 +1,6 @@
 package vn.datnguyen.recommender.MessageQueue;
 
-import vn.datnguyen.recommender.Serialization.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 
 public interface Consumer {
     void execute(AvroEvent event);

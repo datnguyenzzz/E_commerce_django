@@ -13,8 +13,9 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
-import vn.datnguyen.recommender.Converter.AvroEventSerializer;
-import vn.datnguyen.recommender.Serialization.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Serialization.AvroEventSerializer;
+
 
 @Configuration
 public class TransactionFactoryProducerConfiguration {

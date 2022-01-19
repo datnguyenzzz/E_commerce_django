@@ -12,8 +12,9 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
-import vn.datnguyen.recommender.Converter.AvroEventDeserializer;
-import vn.datnguyen.recommender.Serialization.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Serialization.AvroEventDeserializer;
+
 
 @Configuration
 public class FactoryConsumerConfiguration {
