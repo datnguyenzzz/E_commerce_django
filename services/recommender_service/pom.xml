@@ -133,8 +133,6 @@
         
     <module>serialization-service</module>
         
-    <module>event-handler-common</module>
-        
     <module>command-rating-service</module>
         
     <module>event-source-storage</module>
