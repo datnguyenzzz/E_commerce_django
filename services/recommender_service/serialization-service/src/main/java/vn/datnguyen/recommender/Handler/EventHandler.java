@@ -2,10 +2,9 @@ package vn.datnguyen.recommender.Handler;
 
 import java.util.concurrent.CompletableFuture;
 
-import vn.datnguyen.recommender.Domain.Event;
-
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 
 public interface EventHandler {
-    CompletableFuture<Void> process(Event event);
-    void apply(Event event);
+    CompletableFuture<Void> process(AvroEvent event);
+    void apply(AvroEvent event);
 }

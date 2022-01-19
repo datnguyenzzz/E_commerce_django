@@ -20,7 +20,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 @Service
-public class RatingService implements CommandHandler, EventHandler {
+public class RatingService implements CommandHandler {
 
     private RatingTransactionalPublisher ratingPublisher;
 

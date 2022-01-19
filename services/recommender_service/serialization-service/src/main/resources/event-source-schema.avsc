@@ -1,5 +1,5 @@
 {
-    "namespace": "vn.datnguyen.recommender.Serialization",
+    "namespace": "vn.datnguyen.recommender.AvroClasses",
     "type": "record",
     "name": "AvroEvent",
     "fields": [

@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Converter;
+package vn.datnguyen.recommender.Serialization;
 
 import java.io.IOException;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
-import vn.datnguyen.recommender.Serialization.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 
 public class AvroEventDeserializer implements Deserializer<AvroEvent> {
 
