@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Domain.Command;
 import vn.datnguyen.recommender.Domain.DeleteRatingCommand;
+import vn.datnguyen.recommender.Domain.ErrorRatingCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
 import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
 
@@ -34,7 +35,7 @@ public class RatingService implements CommandHandler, EventHandler {
         return CompletableFuture.runAsync(() -> validate(command).forEach(ratingPublisher::execute));
     }
 
-    private List<AvroEvent> validate(Command command) {
+    private Command validate(Command command) {
         if (command instanceof PublishRatingCommand) {
             return validate((PublishRatingCommand) command);
         }
@@ -44,7 +45,7 @@ public class RatingService implements CommandHandler, EventHandler {
         else if (command instanceof DeleteRatingCommand) {
             return validate((DeleteRatingCommand) command);
         }
-        return emptyList();
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId());
     }
 
     private List<AvroEvent> toAvroEvent(Command command) {
@@ -67,27 +68,27 @@ public class RatingService implements CommandHandler, EventHandler {
             return command;
         }
         
-        return emptyList();
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId());
     }
 
     private Command validate(UpdateRatingCommand command) {
         boolean acceptable = true;
         
         if (acceptable) {
-            return toAvroEvent(command);
+            return command;
         }
         
-        return emptyList();
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId());
     }
 
     private Command validate(DeleteRatingCommand command) {
         boolean acceptable = true;
         
         if (acceptable) {
-            return toAvroEvent(command);
+            return command;
         }
         
-        return emptyList();
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId());
     }
 
     private 

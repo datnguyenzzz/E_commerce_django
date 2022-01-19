@@ -4,9 +4,13 @@ import java.util.Locale;
 
 public class ErrorRatingCommand extends Command {
     private String clientId; 
-    private String itemId; 
+    private String itemId;
+    private String error; 
 
-    public ErrorRatingCommand() {}
+    public ErrorRatingCommand(String error) {
+        this(null, null);
+        this.error = error;
+    }
 
     public ErrorRatingCommand(String clientId, String itemId) {
         this.clientId = clientId; 
@@ -29,10 +33,18 @@ public class ErrorRatingCommand extends Command {
         this.itemId = itemId;
     }
 
+    public String getError() {
+        return this.error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), 
-                            "ErrorRatingCommand(clientId=%s,itemId=%s)",
-                            getClientId(), getItemId());
+                            "ErrorRatingCommand(clientId=%s,itemId=%s,error=%s)",
+                            getClientId(), getItemId(),getError());
     }
 }
