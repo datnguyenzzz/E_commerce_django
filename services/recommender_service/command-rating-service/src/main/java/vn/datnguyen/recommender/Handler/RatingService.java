@@ -26,6 +26,15 @@ public class RatingService implements CommandHandler, EventHandler {
     @Value("${transactionKafka.messageId}")
     private String partitionId;
 
+    @Value("${incomingEvent.avroPublishRatingEvent}")
+    private String avroPublishRatingEvent;
+
+    @Value("${incomingEvent.avroUpdateRatingEvent}")
+    private String avroUpdateRatingEvent;
+
+    @Value("${incomingEvent.avroDeleteRatingEvent}")
+    private String avroDeleteRatingEvent;
+
     @Autowired
     public RatingService(RatingTransactionalPublisher ratingPublisher) {
         this.ratingPublisher = ratingPublisher;
@@ -107,7 +116,7 @@ public class RatingService implements CommandHandler, EventHandler {
             .setScore(command.getScore())
             .build();
         
-        return wrap(eventPayload,"AvroPublishRating");
+        return wrap(eventPayload, avroPublishRatingEvent);
     }
 
     private AvroEvent toAvroEvent(UpdateRatingCommand command) {
@@ -117,7 +126,7 @@ public class RatingService implements CommandHandler, EventHandler {
             .setScore(command.getScore())
             .build();
         
-        return wrap(eventPayload,"UpdateRatingCommand");
+        return wrap(eventPayload, avroUpdateRatingEvent);
     }
 
     private AvroEvent toAvroEvent(DeleteRatingCommand command) {
@@ -126,7 +135,7 @@ public class RatingService implements CommandHandler, EventHandler {
             .setItemId(command.getItemId())
             .build();
         
-        return wrap(eventPayload,"DeleteRatingCommand");
+        return wrap(eventPayload, avroDeleteRatingEvent);
     }
 
     private AvroEvent wrap(Object payload, String payloadType) {

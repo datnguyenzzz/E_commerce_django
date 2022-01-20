@@ -29,6 +29,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 
+  redis:
+    container_name: redis
+    image: redis:6.0.6
+    ports:
+      - "6379:6379"
+
 ## RATING COMMAND 
   commandrating:
     container_name: command-rating-service
@@ -54,10 +60,14 @@ services:
       - 8001:8001 
     depends_on:
       - kafka
+      - redis
     volumes:
       - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
     environment:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
       CONSUMER_GROUP: eventSourcing
+      REDIS_HOST: redis 
+      REDIS_PORT: 6379
+      REDIS_LIFE_TIME: 300
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
