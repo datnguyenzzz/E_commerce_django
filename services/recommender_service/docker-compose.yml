@@ -29,6 +29,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 
+  redis:
+    container_name: redis
+    image: redis:6.0.6
+    ports:
+      - "6379:6379"
+
 ## RATING COMMAND 
   commandrating:
     container_name: command-rating-service

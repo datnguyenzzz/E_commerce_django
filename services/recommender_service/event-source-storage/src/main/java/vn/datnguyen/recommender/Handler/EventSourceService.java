@@ -22,7 +22,6 @@ public class EventSourceService implements EventHandler {
     }
 
     @Override
-    public void apply(AvroEvent event) {
+    public void apply(AvroEvent event) {}
 
-    }
 }
