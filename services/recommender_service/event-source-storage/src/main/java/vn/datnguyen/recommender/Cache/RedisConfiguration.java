@@ -8,7 +8,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
-import vn.datnguyen.recommender.Cache.Repository.CachedEvent;
+import vn.datnguyen.recommender.Models.CachedEvent;
 
 @Configuration
 @EnableRedisRepositories(basePackageClasses = CachedEvent.class)

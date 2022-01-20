@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Cache.Repository;
+package vn.datnguyen.recommender.Models;
 
 import java.io.Serializable;
 

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.Cache.Repository.CachedEvent;
-import vn.datnguyen.recommender.Cache.Repository.CachedEventRepository;
+import vn.datnguyen.recommender.Models.CachedEvent;
+import vn.datnguyen.recommender.Repositories.CachedEventRepository;
 
 @Service
 public class EventSourceService implements EventHandler {
