@@ -28,7 +28,18 @@ public class EventSourceService implements EventHandler {
     public CompletableFuture<Void> process(AvroEvent event) {
         //logger.info("EVENT-SOURCE-STORAGE: consumer event " + event);
         return CompletableFuture.runAsync(
-            () -> Stream.of(event).filter(this::isEventDuplicated).map(this::cachingEvent).forEach(this::testLogging)
+            () -> Stream.of(event).filter( ev -> {
+                    try {
+                        return isEventDuplicated(ev);
+                    }
+                    catch (Exception e) {
+                        logger.warn("EVENT-SOURCE-STORAGE: filter exception" + e);
+                    }
+                    return false;
+                }
+            )
+            .map(this::cachingEvent)
+            .forEach(this::testLogging)
         );
     }
 
