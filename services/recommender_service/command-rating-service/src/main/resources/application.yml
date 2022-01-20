@@ -1,6 +1,11 @@
 server:
   port: 8000
 
+incomingEvent:
+  avroPublishRatingEvent: AvroPublishRatingEvent
+  avroUpdateRatingEvent: AvroUpdateRatingEvent
+  avroDeleteRatingEvent: AvroDeleteRatingEvent
+
 transactionKafka:
   messageId: 1
   bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
