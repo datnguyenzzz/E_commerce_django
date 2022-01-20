@@ -59,7 +59,7 @@
       <artifactId>spring-kafka</artifactId> 
       <version>${spring.kafka.version}</version>
     </dependency>
-    <!-- rediss -->
+    <!-- redis -->
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-redis</artifactId>

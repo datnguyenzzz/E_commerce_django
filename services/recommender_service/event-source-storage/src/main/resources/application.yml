@@ -1,6 +1,11 @@
 server:
   port: 8001
 
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+  expireTime: ${REDIS_LIFE_TIME}
+
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
   avroUpdateRatingEvent: AvroUpdateRatingEvent
