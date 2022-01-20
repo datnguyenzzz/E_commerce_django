@@ -6,8 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+
+import vn.datnguyen.recommender.Cache.Repository.CachedEvent;
 
 @Configuration
+@EnableRedisRepositories(basePackageClasses = CachedEvent.class)
 public class RedisConfiguration {
 
     @Value("${redis.host}")
@@ -22,7 +26,7 @@ public class RedisConfiguration {
 
         config.setHostName(host);
         config.setPort(Integer.parseInt(port));
-        
+
         return new JedisConnectionFactory(config);
     }
 
