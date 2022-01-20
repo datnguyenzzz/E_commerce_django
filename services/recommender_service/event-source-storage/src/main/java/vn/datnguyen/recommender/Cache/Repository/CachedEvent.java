@@ -2,24 +2,26 @@ package vn.datnguyen.recommender.Cache.Repository;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash(value = "Event", timeToLive = 300)
 public class CachedEvent implements Serializable {
-    private String id; 
+    @Id
+    private String eventId; 
     private String eventType;
 
-    public CachedEvent(String id, String eventType) {
-        this.id = id;
+    public CachedEvent(String eventId, String eventType) {
+        this.eventId = eventId;
         this.eventType = eventType;
     }
 
-    public String getId() {
-        return this.id;
+    public String getEventId() {
+        return this.eventId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String eventId) {
+        this.eventId = eventId;
     }
 
     public String getEventType() {
@@ -33,6 +35,6 @@ public class CachedEvent implements Serializable {
 
     @Override
     public String toString() {
-        return "Event "  + getId() + " type = " + getEventType();
+        return "Event "  + getEventId() + " type = " + getEventType();
     }
 }
