@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Controller.EventConsumer;
 import vn.datnguyen.recommender.Models.CachedEvent;
 import vn.datnguyen.recommender.Repositories.CachedEventRepository;
 
