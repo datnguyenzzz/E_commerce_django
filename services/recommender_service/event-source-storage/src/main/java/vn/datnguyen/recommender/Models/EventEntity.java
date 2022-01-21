@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import vn.datnguyen.recommender.Utils.HashMapConverter;
+import vn.datnguyen.recommender.Utils.EventHashMapConverter;
 
 
 @Entity
@@ -32,12 +32,12 @@ public class EventEntity {
     @Column(name = "TYPE")
     private String eventType;
 
-    @Column(name = "PAYLOAD")
+    @Column(name = "DATA")
     private String payloadJSON;
     
     // Object -> String before persist 
     // String -> Object when get
-    @Convert(converter = HashMapConverter.class)
+    @Convert(converter = EventHashMapConverter.class)
     private Map<String, Object> payload;
 
     public long getEventId() {
@@ -73,16 +73,16 @@ public class EventEntity {
     }
 
     // Object mapper 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     
     public void serializePayload() throws JsonProcessingException {
-        String jsonResult = objectMapper.writeValueAsString(payload);
+        String jsonResult = objectMapper.writeValueAsString(getPayload());
         setPayloadJSON(jsonResult);
     }
 
     public void deserializePayload() throws IOException {
         Map<String, Object> mapResult = 
-            objectMapper.readValue(payloadJSON, new TypeReference<Map<String, Object>>(){});
+            objectMapper.readValue(getPayloadJSON(), new TypeReference<Map<String, Object>>(){});
         
         setPayload(mapResult);
     }

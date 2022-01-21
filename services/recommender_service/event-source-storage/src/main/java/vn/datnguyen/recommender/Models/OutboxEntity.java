@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,24 +15,28 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import vn.datnguyen.recommender.Utils.HashMapConverter;
+import org.hibernate.annotations.GenericGenerator;
+
+import vn.datnguyen.recommender.Utils.OutboxHashMapConverter;
 
 @Entity
 @Table(name = "OUTBOX")
 public class OutboxEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "ID")
     private long eventId;
 
     @Column(name = "TYPE")
     private String eventType;
 
-    @Column(name = "PAYLOAD")
+    @Column(name = "DATA")
     private String payloadJSON;
     
     // Object -> String before persist 
     // String -> Object when get
-    @Convert(converter = HashMapConverter.class)
+    @Convert(converter = OutboxHashMapConverter.class)
     private Map<String, Object> payload;
 
     public long getEventId() {
@@ -66,17 +72,18 @@ public class OutboxEntity {
     }
 
     // Object mapper 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     
     public void serializePayload() throws JsonProcessingException {
-        String jsonResult = objectMapper.writeValueAsString(payload);
+        String jsonResult = objectMapper.writeValueAsString(getPayload());
         setPayloadJSON(jsonResult);
     }
 
     public void deserializePayload() throws IOException {
         Map<String, Object> mapResult = 
-            objectMapper.readValue(payloadJSON, new TypeReference<Map<String, Object>>(){});
+            objectMapper.readValue(getPayloadJSON(), new TypeReference<Map<String, Object>>(){});
         
         setPayload(mapResult);
     }
+
 }
