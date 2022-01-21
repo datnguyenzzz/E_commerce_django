@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,12 +15,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import vn.datnguyen.recommender.Utils.OutboxHashMapConverter;
 
 @Entity
 @Table(name = "OUTBOX")
 public class OutboxEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "ID")
     private long eventId;
 

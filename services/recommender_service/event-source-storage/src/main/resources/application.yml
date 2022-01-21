@@ -6,6 +6,11 @@ spring.datasource:
   url: jdbc:postgresql://postgresql:5432/EventSource
   username: postgres
   password: password
+  initialization-mode: always
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
+spring.jpa.hibernate.ddl-auto: create
+spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
 redis:
   host: ${REDIS_HOST}

@@ -1,17 +1,30 @@
 package vn.datnguyen.recommender.Handler;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
+
+import javax.transaction.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
+import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Controller.EventConsumer;
 import vn.datnguyen.recommender.Models.CachedEvent;
+import vn.datnguyen.recommender.Models.EventEntity;
+import vn.datnguyen.recommender.Models.OutboxEntity;
 import vn.datnguyen.recommender.Repositories.CachedEventRepository;
+import vn.datnguyen.recommender.Repositories.EventRepository;
+import vn.datnguyen.recommender.Repositories.OutboxRepository;
 
 @Service
 public class EventSourceService implements EventHandler {
@@ -19,10 +32,16 @@ public class EventSourceService implements EventHandler {
     private Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
     private CachedEventRepository cachedEventRepository;
+    private EventRepository eventRepository;
+    private OutboxRepository outboxRepository;
 
     @Autowired
-    public EventSourceService(CachedEventRepository cachedEventRepository) {
+    public EventSourceService(CachedEventRepository cachedEventRepository,
+                            EventRepository eventRepository, 
+                            OutboxRepository outboxRepository) {
         this.cachedEventRepository = cachedEventRepository;
+        this.eventRepository = eventRepository;
+        this.outboxRepository = outboxRepository;
     }
     
     @Override
@@ -40,7 +59,7 @@ public class EventSourceService implements EventHandler {
                 }
             )
             .map(this::cachingEvent)
-            .forEach(this::testLogging)
+            .forEach(this::storeEvent)
         );
     }
 
@@ -58,8 +77,75 @@ public class EventSourceService implements EventHandler {
         return event;
     }
     
-    private void testLogging(AvroEvent event) {
+    @Transactional
+    private void storeEvent(AvroEvent event) {
         logger.info("EVENT-SOURCE-STORAGE: consumer event after caching" + event);
+
+        try {
+            EventEntity eventEntity = new EventEntity();
+            OutboxEntity outboxEntity = new OutboxEntity();
+
+            eventEntity.setEventType(event.getEventType());
+            outboxEntity.setEventType(event.getEventType()); 
+            
+            Map<String, Object> payload = payloadFrom(event);
+
+            eventEntity.setPayload(payload);
+            eventEntity.serializePayload();
+
+            outboxEntity.setPayload(payload);
+            outboxEntity.serializePayload();
+            
+            eventRepository.save(eventEntity);
+
+            outboxRepository.save(outboxEntity);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, Object> payloadFrom(AvroEvent event) {
+
+        Object data = event.getData();
+
+        if (data instanceof AvroPublishRating) {
+            return payloadFrom((AvroPublishRating) data);
+        }
+        else if (data instanceof AvroUpdateRating) {
+            return payloadFrom((AvroUpdateRating) data);
+        }
+
+        else if (data instanceof AvroDeleteRating) {
+            return payloadFrom((AvroDeleteRating) data);
+        }
+
+        return null;
+    }
+
+    private Map<String, Object> payloadFrom(AvroPublishRating data) {
+        Map<String,Object> payload = new HashMap<>();
+        payload.put("clientId", data.getClientId());
+        payload.put("itemId", data.getItemId());
+        payload.put("score", data.getScore());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroPublishRating: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroUpdateRating data) {
+        Map<String,Object> payload = new HashMap<>();
+        payload.put("clientId", data.getClientId());
+        payload.put("itemId", data.getItemId());
+        payload.put("score", data.getScore());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroUpdateRating: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroDeleteRating data) {
+        Map<String,Object> payload = new HashMap<>();
+        payload.put("clientId", data.getClientId());
+        payload.put("itemId", data.getItemId());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroDeleteRating: " + payload);
+        return payload;
     }
 
     @Override
