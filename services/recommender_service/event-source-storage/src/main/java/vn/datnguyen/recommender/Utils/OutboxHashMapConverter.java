@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HashMapConverter implements AttributeConverter<Map<String, Object>, String> {
+public class OutboxHashMapConverter implements AttributeConverter<Map<String, Object>, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(HashMapConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventHashMapConverter.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -24,7 +24,7 @@ public class HashMapConverter implements AttributeConverter<Map<String, Object>,
         try {
             payloadJSON = objectMapper.writeValueAsString(payloadInfo);
         } catch (JsonProcessingException e) {
-            logger.error("EVENT-SOURCE: json writting error",e);
+            logger.error("EVENT-SOURCE: json outbox db writting error",e);
         }
 
         return payloadJSON;
@@ -37,7 +37,7 @@ public class HashMapConverter implements AttributeConverter<Map<String, Object>,
         try {
             payload = objectMapper.readValue(payloadJSON, new TypeReference<Map<String, Object>>(){});
         } catch (IOException e) {
-            logger.error("EVENT-SOURCE: json reading error",e);
+            logger.error("EVENT-SOURCE: json outbox db reading error",e);
         }
         
         return payload;

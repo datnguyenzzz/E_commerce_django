@@ -34,6 +34,16 @@ services:
     image: redis:6.0.6
     ports:
       - "6379:6379"
+  
+  postgresql:
+    container_name: postgresql
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: EventSource
 
 ## RATING COMMAND 
   commandrating:
@@ -61,6 +71,7 @@ services:
     depends_on:
       - kafka
       - redis
+      - postgresql
     volumes:
       - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
     environment:

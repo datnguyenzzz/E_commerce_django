@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import vn.datnguyen.recommender.Utils.HashMapConverter;
+import vn.datnguyen.recommender.Utils.OutboxHashMapConverter;
 
 @Entity
 @Table(name = "OUTBOX")
@@ -25,12 +25,12 @@ public class OutboxEntity {
     @Column(name = "TYPE")
     private String eventType;
 
-    @Column(name = "PAYLOAD")
+    @Column(name = "DATA")
     private String payloadJSON;
     
     // Object -> String before persist 
     // String -> Object when get
-    @Convert(converter = HashMapConverter.class)
+    @Convert(converter = OutboxHashMapConverter.class)
     private Map<String, Object> payload;
 
     public long getEventId() {
@@ -66,17 +66,18 @@ public class OutboxEntity {
     }
 
     // Object mapper 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     
     public void serializePayload() throws JsonProcessingException {
-        String jsonResult = objectMapper.writeValueAsString(payload);
+        String jsonResult = objectMapper.writeValueAsString(getPayload());
         setPayloadJSON(jsonResult);
     }
 
     public void deserializePayload() throws IOException {
         Map<String, Object> mapResult = 
-            objectMapper.readValue(payloadJSON, new TypeReference<Map<String, Object>>(){});
+            objectMapper.readValue(getPayloadJSON(), new TypeReference<Map<String, Object>>(){});
         
         setPayload(mapResult);
     }
+
 }
