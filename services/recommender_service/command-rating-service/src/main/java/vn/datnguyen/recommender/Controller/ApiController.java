@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Web;
+package vn.datnguyen.recommender.Controller;
 
 import java.util.concurrent.CompletableFuture;
 

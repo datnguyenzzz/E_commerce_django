@@ -1,10 +1,11 @@
-package vn.datnguyen.recommender.Handler;
+package vn.datnguyen.recommender.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Handler.EventSourceService;
 import vn.datnguyen.recommender.MessageQueue.Consumer;
 
 @Component
