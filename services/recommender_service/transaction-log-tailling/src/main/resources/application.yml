@@ -1,0 +1,9 @@
+server:
+  port: 8002
+
+#Postgre setup 
+spring.datasource:
+  url: jdbc:postgresql://postgresql:5432/EventSource
+  username: postgres
+  password: password
+  initialization-mode: always
