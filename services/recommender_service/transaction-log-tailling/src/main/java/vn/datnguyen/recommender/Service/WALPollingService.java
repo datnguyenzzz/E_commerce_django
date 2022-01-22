@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.postgresql.PGConnection;
 import org.postgresql.PGProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,16 @@ public class WALPollingService {
         PGProperty.PREFER_QUERY_MODE.set(props, "simple");
 
         try (Connection dbConnection = getConnection(url, props)) {
+            PGConnection replicaConnection = dbConnection.unwrap(PGConnection.class);
 
+            //create replication slot 
+            replicaConnection.getReplicationAPI()
+                .createReplicationSlot()
+                .logical()
+                .withSlotName("wal_miner_logical_slot")
+                .withOutputPlugin("test_decoding")
+                .make();
+                
             while (true) {
                 logger.info("TRANSACTION-LOG-TAILING: Start polling from WAL");
             }
