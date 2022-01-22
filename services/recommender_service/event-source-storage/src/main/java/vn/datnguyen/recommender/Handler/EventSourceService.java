@@ -98,9 +98,8 @@ public class EventSourceService implements EventHandler {
 
             eventRepository.save(eventEntity);
 
-            outboxRepository.save(outboxEntity);
-
             // delete data in outbox. So table won't grow. Because only need tailing log
+            outboxRepository.save(outboxEntity);
             outboxRepository.delete(outboxEntity);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
