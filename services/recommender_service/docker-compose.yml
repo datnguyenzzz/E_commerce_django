@@ -37,13 +37,16 @@ services:
   
   postgresql:
     container_name: postgresql
-    image: postgres
+    image: postgres:latest
     ports:
       - 5432:5432
+    volumes:
+      - ./postgrepsql-custom-config:/custom_config
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: EventSource
+    command: "postgres -c config_file=/custom_config/postgresql.conf"
 
 ## RATING COMMAND 
   commandrating:
