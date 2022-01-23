@@ -10,8 +10,11 @@ import org.postgresql.PGProperty;
 import org.postgresql.replication.PGReplicationStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import vn.datnguyen.recommender.Handler.WALHandler;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -21,6 +24,8 @@ import java.nio.ByteBuffer;
 public class WALPollingService {
 
     private final Logger logger = LoggerFactory.getLogger(WALPollingService.class);
+
+    private final WALHandler walHandler;
 
     @Value("${spring.datasource.username}")
     private String user;
@@ -34,7 +39,10 @@ public class WALPollingService {
     private final String logicalSlotname = "wal_miner_logical_slot";
     private final int feedbackInterval = 20;
 
-    public WALPollingService() {}
+    @Autowired
+    public WALPollingService(WALHandler walHandler) {
+        this.walHandler = walHandler;
+    }
 
     public void streamPhysicalWAL() throws SQLException, InterruptedException {
         logger.info("TRANSACTION-LOG-TAILING: Start polling from WAL");
@@ -83,7 +91,8 @@ public class WALPollingService {
 
                 String receivedString = new String(source, offset, length);
 
-                logger.info("WAL-MINER: Received string= " + receivedString);
+                //logger.info("WAL-MINER: Received string= " + receivedString);
+                this.walHandler.process(receivedString);
 
                 //feedback to db
                 stream.setAppliedLSN(stream.getLastReceiveLSN());
