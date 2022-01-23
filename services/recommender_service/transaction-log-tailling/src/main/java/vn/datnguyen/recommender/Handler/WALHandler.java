@@ -58,24 +58,23 @@ public class WALHandler {
         return (wal[2].equals(insertMethod));
     }
 
-    private String getPayload(String[] wal) {
-        String walPayload = wal[wal.length - 1];
-        int firstPos = walPayload.indexOf('{');
-        int lastPos = walPayload.lastIndexOf('}');
-        String payload =walPayload.substring(firstPos, lastPos+1);
-
-        return payload;
-    }
-
-    private void publish(String walPayload) {
-
+    private Map<String, Object> getPayload(String[] wal) {
         try {
+            String walPayload = wal[wal.length - 1];
+            int firstPos = walPayload.indexOf('{');
+            int lastPos = walPayload.lastIndexOf('}');
+            walPayload =walPayload.substring(firstPos, lastPos+1);
+
             Map<String, Object> payload = 
                 objectMapper.readValue(walPayload, new TypeReference<Map<String, Object>>(){} );
 
-            logger.info("START publishing payload = " + payload);
+            return payload;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void publish(Map<String, Object> walPayload) {
+        logger.info("START publishing payload = " + walPayload);
     }
 }

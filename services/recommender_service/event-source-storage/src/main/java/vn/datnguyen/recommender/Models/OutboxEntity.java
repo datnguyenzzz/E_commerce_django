@@ -1,11 +1,16 @@
 package vn.datnguyen.recommender.Models;
 
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,9 +24,6 @@ public class OutboxEntity {
     @Column(name = "ID")
     private long eventId;
 
-    @Column(name = "TYPE")
-    private String eventType;
-
     @Column(name = "DATA")
     private String payloadJSON;
 
@@ -33,14 +35,6 @@ public class OutboxEntity {
         this.eventId = eventId;
     }
 
-    public String getEventType() {
-        return this.eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
     public String getPayloadJSON() {
         return this.payloadJSON;
     }
@@ -49,5 +43,10 @@ public class OutboxEntity {
         this.payloadJSON = payloadJSON;
     }
 
+    public void setPayloadJSON(Map<String, Object> payload) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String outboxJson = objectMapper.writeValueAsString(payload);
 
+        setPayloadJSON(outboxJson);
+    }
 }

@@ -86,14 +86,16 @@ public class EventSourceService implements EventHandler {
             OutboxEntity outboxEntity = new OutboxEntity();
 
             eventEntity.setEventType(event.getEventType());
-            outboxEntity.setEventType(event.getEventType()); 
             
             Map<String, Object> payload = payloadFrom(event);
 
             eventEntity.setPayload(payload);
             eventEntity.serializePayload();
 
-            outboxEntity.setPayloadJSON(eventEntity.getPayloadJSON());
+            Map<String, Object> outboxPayload = payload;
+            outboxPayload.put("eventType", eventEntity.getEventType());
+
+            outboxEntity.setPayloadJSON(outboxPayload);
 
             eventRepository.save(eventEntity);
 
