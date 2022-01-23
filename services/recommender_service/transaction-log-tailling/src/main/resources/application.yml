@@ -1,6 +1,17 @@
 server:
   port: 8002
 
+incomingEvent:
+  avroPublishRatingEvent: AvroPublishRatingEvent
+  avroUpdateRatingEvent: AvroUpdateRatingEvent
+  avroDeleteRatingEvent: AvroDeleteRatingEvent
+
+transactionKafka:
+  messageId: 1
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  transactionIdPrefix: toRatingQuery
+  topic: ${TOPIC_NAME}
+
 #Postgre setup 
 spring.datasource:
   url: jdbc:postgresql://postgresql:5432/EventSource

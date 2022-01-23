@@ -97,4 +97,7 @@ services:
       - eventstorage
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
+    environment:
+      KAFKA_INTERNAL_HOST: kafka
+      TOPIC_NAME: ratingCommandFromEventSource
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
