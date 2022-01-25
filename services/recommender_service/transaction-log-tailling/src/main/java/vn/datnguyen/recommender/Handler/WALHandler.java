@@ -35,6 +35,18 @@ public class WALHandler {
     @Value("${incomingEvent.avroDeleteRatingEvent}")
     private String avroDeleteRatingEvent;
 
+    @Value("${DBTable.clientIdCol}")
+    private String clientIdCol;
+
+    @Value("${DBTable.itemIdCol}")
+    private String itemIdCol;
+
+    @Value("${DBTable.scoreCol}")
+    private String scoreCol;
+
+    @Value("${DBTable.eventTypeCol}")
+    private String eventTypeCol;
+
     private final Logger logger = LoggerFactory.getLogger(WALHandler.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final TransactionalPublisher eventPublisher;
@@ -100,26 +112,26 @@ public class WALHandler {
     }
 
     private AvroEvent toAvroEvent(Map<String, Object> walPayload) {
-        String eventType = (String)walPayload.get("eventType");
+        String eventType = (String)walPayload.get(eventTypeCol);
         Object payload = null;
         if (eventType.equals(avroPublishRatingEvent)) {
             payload = (AvroPublishRating)AvroPublishRating.newBuilder()
-                        .setClientId((String)walPayload.get("clientId"))
-                        .setItemId((String)walPayload.get("itemId"))
-                        .setScore((int)walPayload.get("score"))
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .setScore((int)walPayload.get(scoreCol))
                         .build();
         }
         else if (eventType.equals(avroUpdateRatingEvent)) {
             payload = (AvroUpdateRating)AvroUpdateRating.newBuilder()
-                        .setClientId((String)walPayload.get("clientId"))
-                        .setItemId((String)walPayload.get("itemId"))
-                        .setScore((int)walPayload.get("score"))
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .setScore((int)walPayload.get(scoreCol))
                         .build();
         }
         else {
             payload = (AvroDeleteRating)AvroDeleteRating.newBuilder()
-                        .setClientId((String)walPayload.get("clientId"))
-                        .setItemId((String)walPayload.get("itemId"))
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
                         .build();
         }
 

@@ -8,6 +8,12 @@ spring.datasource:
   password: password
   initialization-mode: always
 
+DBTable:
+  clientIdCol: clientId
+  itemIdCol: itemId
+  scoreCol: score
+  eventTypeCol: eventType
+
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
 spring.jpa.hibernate.ddl-auto: create
 spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
