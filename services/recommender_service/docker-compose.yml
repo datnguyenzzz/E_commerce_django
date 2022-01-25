@@ -86,8 +86,8 @@ services:
       REDIS_LIFE_TIME: 300
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
   
-  waltailing:
-    container_name: wal-tailing 
+  walminer:
+    container_name: wal-miner
     build: 
       context: ./transaction-log-tailling
     ports:
@@ -99,5 +99,6 @@ services:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     environment:
       KAFKA_INTERNAL_HOST: kafka
-      TOPIC_NAME: ratingCommandFromEventSource
+      TOPIC_TO_QUERY_SERVICE: ratingCommandFromEventSource
+      TOPIC_TO_RECOMMENDER_SERVICE: ratingCommandForRecommendation
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
