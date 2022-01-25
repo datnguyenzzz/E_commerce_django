@@ -9,9 +9,8 @@ incomingEvent:
 transactionKafka:
   messageId: 1
   bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
-  transactionIdPrefixToQueryService: toRatingQuery
+  transactionIdPrefix: fromEventSource
   topicToQueryService: ${TOPIC_TO_QUERY_SERVICE}
-  transactionIdPrefixToRecommendService: toRecommendService
   topicToRecommendSerivce: ${TOPIC_TO_RECOMMENDER_SERVICE}
 
 #Postgre setup 
