@@ -19,10 +19,10 @@ import vn.datnguyen.recommender.Serialization.AvroEventSerializer;
 @Configuration
 public class TransactionalProducerFactoryConfiguration {
 
-    @Value("${transactionIdPrefix}")
+    @Value("${transactionKafka.transactionIdPrefix}")
     private String transactionIdPrefix;
 
-    @Value("${bootstrapServers}")
+    @Value("${transactionKafka.bootstrapServers}")
     private String bootstrapServer;
 
     @Bean

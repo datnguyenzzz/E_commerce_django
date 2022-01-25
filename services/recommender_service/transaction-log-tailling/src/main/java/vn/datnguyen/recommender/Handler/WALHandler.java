@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +37,12 @@ public class WALHandler {
 
     private final Logger logger = LoggerFactory.getLogger(WALHandler.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final TransactionalPublisher eventPublisher;
 
-    public WALHandler() {}
+    @Autowired
+    public WALHandler(TransactionalPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     public CompletableFuture<Void> process(String wal) {
         return CompletableFuture.runAsync(
@@ -49,7 +54,7 @@ public class WALHandler {
                     .filter(this::isInsert)
                     .map(this::getPayload)
                     .map(this::toAvroEvent)
-                    .forEach(this::publish)
+                    .forEach(eventPublisher::execute)
 
         );
     }
@@ -129,9 +134,5 @@ public class WALHandler {
                         .setEventType(eventType)
                         .setData(payload)
                         .build();
-    }
-
-    private void publish(AvroEvent walPayload) {
-        logger.info("START publishing payload = " + walPayload);
     }
 }
