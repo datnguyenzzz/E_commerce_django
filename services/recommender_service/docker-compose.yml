@@ -33,17 +33,20 @@ services:
     container_name: redis
     image: redis:6.0.6
     ports:
-      - "6379:6379"
+      - 6379:6379
   
   postgresql:
     container_name: postgresql
-    image: postgres
+    image: postgres:latest
     ports:
       - 5432:5432
+    volumes:
+      - ./postgrepsql-custom-config:/custom_config
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: EventSource
+    command: "postgres -c config_file=/custom_config/postgresql.conf"
 
 ## RATING COMMAND 
   commandrating:
@@ -67,7 +70,7 @@ services:
     build:
       context: ./event-source-storage
     ports:
-      - 8001:8001 
+      - 8001
     depends_on:
       - kafka
       - redis
@@ -82,3 +85,20 @@ services:
       REDIS_PORT: 6379
       REDIS_LIFE_TIME: 300
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
+  
+  walminer:
+    container_name: wal-miner
+    build: 
+      context: ./transaction-log-tailling
+    ports:
+      - 8002
+    depends_on:
+      - postgresql
+      - eventstorage
+    volumes:
+      - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
+    environment:
+      KAFKA_INTERNAL_HOST: kafka
+      TOPIC_TO_QUERY_SERVICE: ratingCommandFromEventSource
+      TOPIC_TO_RECOMMENDER_SERVICE: ratingCommandForRecommendation
+    command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
