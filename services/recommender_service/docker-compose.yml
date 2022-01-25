@@ -63,6 +63,18 @@ services:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
+  
+  queryrating:
+    container_name: query-rating-service 
+    build: 
+      context: ./query-rating-service
+    ports:
+      - 8003:8003
+    depends_on:
+      - kafka
+    volumes:
+      - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
+    command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
 
 ## EVENT SOURCE STORAGE 
   eventstorage:
