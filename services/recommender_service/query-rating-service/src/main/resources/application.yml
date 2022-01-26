@@ -1,6 +1,11 @@
 server:
   port: 8010
 
+ConsumerKafka:
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  groupId: ${CONSUMER_GROUP}
+  topicConsumerFromRatingCommand: ${TOPIC_NAME}
+
 amazon:
   dynamodb:
     endpoint: http://${DYNAMODB_HOST}:${DYNAMODB_PORT}
