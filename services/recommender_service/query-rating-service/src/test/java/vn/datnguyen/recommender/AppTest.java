@@ -19,7 +19,10 @@ import vn.datnguyen.recommender.Models.Rating;
 @TestPropertySource(properties = {
     "amazon.dynamodb.endpoint=http://localhost:8000/",
     "amazon.aws.accesskey=test-access", 
-    "amazon.aws.secretkey=test-secret"
+    "amazon.aws.secretkey=test-secret",
+    "ConsumerKafka.bootstrapServers= http://localhost:9093",
+    "ConsumerKafka.groupId=fromEventSourcing",
+    "ConsumerKafka.topicConsumerFromEventSource=ratingCommandFromEventSource"
 })
 public class AppTest {
 
