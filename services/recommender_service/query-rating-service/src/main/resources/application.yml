@@ -3,8 +3,7 @@ server:
 
 amazon:
   dynamodb:
-    #endpoint: https://localhost:8000
-    endpoint: htpp://${DYNAMODB_HOST}:${DYNAMODB_PORT}
+    endpoint: http://${DYNAMODB_HOST}:${DYNAMODB_PORT}
   aws:
     accesskey: aws-access-key
     secretkey: aws-secret-key
