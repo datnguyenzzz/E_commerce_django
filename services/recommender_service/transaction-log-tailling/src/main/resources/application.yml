@@ -1,6 +1,12 @@
 server:
   port: 8002
 
+DBTable:
+  clientIdCol: clientId
+  itemIdCol: itemId
+  scoreCol: score
+  eventTypeCol: eventType
+
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
   avroUpdateRatingEvent: AvroUpdateRatingEvent

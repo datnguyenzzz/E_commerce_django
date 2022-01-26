@@ -1,0 +1,14 @@
+server:
+  port: 8010
+
+ConsumerKafka:
+  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  groupId: ${CONSUMER_GROUP}
+  topicConsumerFromEventSource: ${TOPIC_NAME}
+
+amazon:
+  dynamodb:
+    endpoint: http://${DYNAMODB_HOST}:${DYNAMODB_PORT}
+  aws:
+    accesskey: aws-access-key
+    secretkey: aws-secret-key
