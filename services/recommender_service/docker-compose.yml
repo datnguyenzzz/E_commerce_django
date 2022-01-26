@@ -1,5 +1,7 @@
 version: '3.8'
 services:
+
+# Message queue
   zookeeper:
     image: wurstmeister/zookeeper:latest
     hostname: zookeeper 
@@ -29,11 +31,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 
+# database
   redis:
     container_name: redis
     image: redis:6.0.6
     ports:
-      - 6379:6379
+      - 6379
   
   postgresql:
     container_name: postgresql
@@ -47,14 +50,27 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: EventSource
     command: "postgres -c config_file=/custom_config/postgresql.conf"
-
+## Dynamo
+  dynamodb:
+    image:  amazon/dynamodb-local
+    container_name: dynamodb
+    hostname: dynamodb
+    restart: always
+    volumes:
+      -  ./my-dynamodb-data:/home/dynamodblocal/data
+    ports:
+      - 8000:8000
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+    
 ## RATING COMMAND 
   commandrating:
     container_name: command-rating-service
     build: 
       context: ./command-rating-service
     ports:
-      - 8000:8000
+      - 8011:8011
+    expose:
+      - 8011
     depends_on:
       - kafka
     volumes:
@@ -63,17 +79,24 @@ services:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
-  
+
+## Query service  
   queryrating:
     container_name: query-rating-service 
     build: 
       context: ./query-rating-service
     ports:
-      - 8003:8003
+      - 8010:8010
+    expose:
+      - 8010
     depends_on:
       - kafka
+      - dynamodb
     volumes:
       - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
+    environment:
+      DYNAMODB_HOST: dynamodb
+      DYNAMODB_PORT: 8000
     command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
 
 ## EVENT SOURCE STORAGE 
