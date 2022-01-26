@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import junit.framework.Assert;
+import vn.datnguyen.recommender.Handlers.CommandServicesImpl;
 import vn.datnguyen.recommender.Handlers.QueryServicesImpl;
 import vn.datnguyen.recommender.Models.Rating;
 
@@ -25,6 +26,9 @@ public class AppTest {
     @Autowired
     private QueryServicesImpl queryServicesImpl;
 
+    @Autowired
+    private CommandServicesImpl commandServicesImpl;
+
     @Test
     public void testFindingById_thenDelete() {
         String clientId = "321-451-312";
@@ -36,7 +40,7 @@ public class AppTest {
         List<Rating> result = queryServicesImpl.findAllRating();
         int prevSize = result.size();
 
-        queryServicesImpl.addNewRating(rating);
+        commandServicesImpl.addNewClientRating(rating);
 
         result = queryServicesImpl.findAllRating();
         Assert.assertTrue(result.size() > prevSize);
@@ -44,7 +48,7 @@ public class AppTest {
         Assert.assertEquals(result.get(result.size() - 1).getItemId(), itemId);
         Assert.assertEquals(result.get(result.size() - 1).getScore(), score);
 
-        queryServicesImpl.deleteRating(rating);
+        commandServicesImpl.deleteClientRating(rating);
 
         result = queryServicesImpl.findAllRating();
         Assert.assertTrue(result.size() == prevSize);

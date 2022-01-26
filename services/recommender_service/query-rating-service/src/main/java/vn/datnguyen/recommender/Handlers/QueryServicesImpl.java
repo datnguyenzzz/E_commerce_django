@@ -20,19 +20,11 @@ public class QueryServicesImpl implements QueryServices {
     }
 
     @Override
-    public void addNewRating(Rating rating) {
-        clientRatingRepository.save(rating);
-    }
-
-    @Override
-    public void deleteRating(Rating rating) {
-        clientRatingRepository.delete(rating);
-    }
-
     public Optional<Rating> findRatingById(String id) {
         return clientRatingRepository.findById(id);
     }
 
+    @Override
     public List<Rating> findAllRating() {
         return (List<Rating>) clientRatingRepository.findAll();
     }

@@ -4,7 +4,7 @@ server:
 ConsumerKafka:
   bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
   groupId: ${CONSUMER_GROUP}
-  topicConsumerFromRatingCommand: ${TOPIC_NAME}
+  topicConsumerFromEventSource: ${TOPIC_NAME}
 
 amazon:
   dynamodb:

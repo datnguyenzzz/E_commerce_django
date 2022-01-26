@@ -72,7 +72,7 @@ public class EventSourceService implements EventHandler {
                 }
             )
             .map(this::cachingEvent)
-            .forEach(this::storeEvent)
+            .forEach(this::apply)
         );
     }
 
@@ -90,8 +90,9 @@ public class EventSourceService implements EventHandler {
         return event;
     }
     
+    @Override
     @Transactional
-    private void storeEvent(AvroEvent event) {
+    public void apply(AvroEvent event) {
         logger.info("EVENT-SOURCE-STORAGE: consumer event after caching" + event);
 
         try {
@@ -163,8 +164,5 @@ public class EventSourceService implements EventHandler {
         logger.info("EVENT-SOURCE-STORAGE: load data from AvroDeleteRating: " + payload);
         return payload;
     }
-
-    @Override
-    public void apply(AvroEvent event) {}
 
 }
