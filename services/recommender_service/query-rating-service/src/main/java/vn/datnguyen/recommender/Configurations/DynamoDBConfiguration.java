@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.dynamodb;
+package vn.datnguyen.recommender.Configurations;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LocalConfiguration {
+public class DynamoDBConfiguration {
 
-    private final Logger logger = LoggerFactory.getLogger(LocalConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(DynamoDBConfiguration.class);
     
     @Value("${amazon.dynamodb.endpoint}")
     private String dynamoDBEndpoint;

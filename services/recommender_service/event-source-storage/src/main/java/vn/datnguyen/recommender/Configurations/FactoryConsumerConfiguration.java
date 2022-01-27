@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.MessageQueue;
+package vn.datnguyen.recommender.Configurations;
 
 import java.util.HashMap;
 import java.util.Map;

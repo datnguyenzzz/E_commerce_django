@@ -1563,3 +1563,503 @@ NoDefClassFoundExceptions or similar might occur!
 [2022-01-26T21:24:20.020Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [fromEventSourcing-0-C-1] [218] [INFO ] Shutting down ExecutorService
 [2022-01-26T21:24:20.020Z] [org.springframework.core.log.LogAccessor] [fromEventSourcing-0-C-1] [292] [INFO ] fromEventSourcing: Consumer stopped
 [2022-01-26T21:24:20.020Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-27T10:23:13.013Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting AppTest using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 11136 (started by datng in D:\My_Code\e_commerce\services\recommender_service\query-rating-service)
+[2022-01-27T10:23:13.013Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-27T10:23:13.013Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.1.7.Final
+[2022-01-27T10:23:15.015Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [128] [INFO ] Bootstrapping Spring Data DynamoDB repositories in DEFAULT mode.
+[2022-01-27T10:23:15.015Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [188] [INFO ] Finished Spring Data repository scanning in 93 ms. Found 1 DynamoDB repository interfaces.
+[2022-01-27T10:23:16.016Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'dynamoDBConfiguration' of type [vn.datnguyen.recommender.Configurations.DynamoDBConfiguration$$EnhancerBySpringCGLIB$$89bbaf82] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:23:16.016Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'amazonAwsCredentialsProvider' of type [com.amazonaws.auth.AWSStaticCredentialsProvider] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:23:16.016Z] [vn.datnguyen.recommender.Configurations.DynamoDBConfiguration] [main] [41] [INFO ] -----TEST------: http://localhost:8000/
+[2022-01-27T10:23:17.017Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'amazonDynamoDB' of type [com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:23:17.017Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'dynamoDB-DynamoDBMapperConfig' of type [com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [58] [INFO ] Spring Data DynamoDB Version: 5.1.0 (2.1)
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [59] [INFO ] Spring Data Version:          2.4.3
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [60] [INFO ] AWS SDK Version:              1.12.145
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [61] [INFO ] Java Version:                 17.0.1 - Java HotSpot(TM) 64-Bit Server VM 17.0.1+12-LTS-39
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [63] [INFO ] Platform Details:             Windows 10 10.0
+[2022-01-27T10:23:18.018Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [67] [WARN ] This Spring Data DynamoDB implementation might not be compatible with the available Spring Data classes on the classpath!
+NoDefClassFoundExceptions or similar might occur!
+[2022-01-27T10:23:19.019Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-27T10:23:20.020Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-27T10:23:21.021Z] [org.apache.kafka.common.config.AbstractConfig] [main] [354] [INFO ] ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = earliest
+	bootstrap.servers = [http://localhost:9093]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-fromEventSourcing-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = fromEventSourcing
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class vn.datnguyen.recommender.Serialization.AvroEventDeserializer
+
+[2022-01-27T10:23:21.021Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [117] [INFO ] Kafka version: 2.6.0
+[2022-01-27T10:23:21.021Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [118] [INFO ] Kafka commitId: 62abe01bee039651
+[2022-01-27T10:23:21.021Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka startTimeMs: 1643268201717
+[2022-01-27T10:23:21.021Z] [org.apache.kafka.clients.consumer.KafkaConsumer] [main] [965] [INFO ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Subscribed to topic(s): ratingCommandFromEventSource
+[2022-01-27T10:23:21.021Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService
+[2022-01-27T10:23:21.021Z] [org.socialsignin.spring.data.dynamodb.repository.util.Entity2DynamoDBTableSynchronizer] [main] [100] [INFO ] Checking repository classes with DynamoDB tables Rating for ContextRefreshedEvent
+[2022-01-27T10:23:21.021Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started AppTest in 9.056 seconds (JVM running for 11.066)
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:22.022Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:23.023Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:23.023Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:24.024Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:24.024Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:25.025Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:25.025Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:26.026Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:26.026Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:27.027Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:27.027Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:28.028Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:28.028Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:29.029Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:29.029Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:30.030Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:30.030Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:31.031Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:31.031Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:32.032Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:23:32.032Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:23:32.032Z] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener] [main] [136] [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[2022-01-27T10:23:32.032Z] [org.springframework.boot.SpringApplication] [main] [856] [ERROR] Application run failed
+java.lang.IllegalStateException: Failed to execute CommandLineRunner
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:807)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:788)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:333)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:123)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:244)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$6(ClassBasedTestDescriptor.java:350)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:355)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$7(ClassBasedTestDescriptor.java:350)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:349)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$4(ClassBasedTestDescriptor.java:270)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:269)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$2(ClassBasedTestDescriptor.java:259)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$3(ClassBasedTestDescriptor.java:258)
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:101)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:100)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$1(NodeTestTask.java:111)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:111)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:79)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:220)
+	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:188)
+	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:202)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:181)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418)
+Caused by: com.amazonaws.SdkClientException: Unable to execute HTTP request: Connect to localhost:8000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.handleRetryableException(AmazonHttpClient.java:1216)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeHelper(AmazonHttpClient.java:1162)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.doExecute(AmazonHttpClient.java:811)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeWithTimer(AmazonHttpClient.java:779)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.execute(AmazonHttpClient.java:753)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.access$500(AmazonHttpClient.java:713)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutionBuilderImpl.execute(AmazonHttpClient.java:695)
+	at com.amazonaws.http.AmazonHttpClient.execute(AmazonHttpClient.java:559)
+	at com.amazonaws.http.AmazonHttpClient.execute(AmazonHttpClient.java:539)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.doInvoke(AmazonDynamoDBClient.java:6243)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.invoke(AmazonDynamoDBClient.java:6210)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.executeCreateTable(AmazonDynamoDBClient.java:1168)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.createTable(AmazonDynamoDBClient.java:1132)
+	at com.amazonaws.services.dynamodbv2.util.TableUtils.createTableIfNotExists(TableUtils.java:235)
+	at vn.datnguyen.recommender.App.run(App.java:49)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:804)
+	... 72 common frames omitted
+Caused by: org.apache.http.conn.HttpHostConnectException: Connect to localhost:8000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:156)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.amazonaws.http.conn.ClientConnectionManagerFactory$Handler.invoke(ClientConnectionManagerFactory.java:76)
+	at com.amazonaws.http.conn.$Proxy84.connect(Unknown Source)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:56)
+	at com.amazonaws.http.apache.client.impl.SdkHttpClient.execute(SdkHttpClient.java:72)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeOneRequest(AmazonHttpClient.java:1343)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeHelper(AmazonHttpClient.java:1154)
+	... 86 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at org.apache.http.conn.socket.PlainConnectionSocketFactory.connectSocket(PlainConnectionSocketFactory.java:75)
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:142)
+	... 102 common frames omitted
+[2022-01-27T10:23:32.032Z] [org.socialsignin.spring.data.dynamodb.repository.util.Entity2DynamoDBTableSynchronizer] [main] [100] [INFO ] Checking repository classes with DynamoDB tables Rating for ContextClosedEvent
+[2022-01-27T10:23:32.032Z] [org.apache.kafka.clients.consumer.KafkaConsumer] [fromEventSourcing-0-C-1] [1074] [INFO ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Unsubscribed all topics or patterns and assigned partitions
+[2022-01-27T10:23:32.032Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [fromEventSourcing-0-C-1] [218] [INFO ] Shutting down ExecutorService
+[2022-01-27T10:23:32.032Z] [org.springframework.core.log.LogAccessor] [fromEventSourcing-0-C-1] [292] [INFO ] fromEventSourcing: Consumer stopped
+[2022-01-27T10:23:32.032Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'
+[2022-01-27T10:23:32.032Z] [org.springframework.test.context.TestContextManager] [main] [248] [ERROR] Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@7749bf93] to prepare test instance [vn.datnguyen.recommender.AppTest@1e18876d]
+java.lang.IllegalStateException: Failed to load ApplicationContext
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:132)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:244)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$6(ClassBasedTestDescriptor.java:350)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:355)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$7(ClassBasedTestDescriptor.java:350)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:349)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$4(ClassBasedTestDescriptor.java:270)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:269)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$2(ClassBasedTestDescriptor.java:259)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$3(ClassBasedTestDescriptor.java:258)
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:101)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:100)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$1(NodeTestTask.java:111)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:111)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:79)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:220)
+	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:188)
+	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:202)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:181)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418)
+Caused by: java.lang.IllegalStateException: Failed to execute CommandLineRunner
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:807)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:788)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:333)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:123)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	... 67 common frames omitted
+Caused by: com.amazonaws.SdkClientException: Unable to execute HTTP request: Connect to localhost:8000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.handleRetryableException(AmazonHttpClient.java:1216)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeHelper(AmazonHttpClient.java:1162)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.doExecute(AmazonHttpClient.java:811)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeWithTimer(AmazonHttpClient.java:779)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.execute(AmazonHttpClient.java:753)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.access$500(AmazonHttpClient.java:713)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutionBuilderImpl.execute(AmazonHttpClient.java:695)
+	at com.amazonaws.http.AmazonHttpClient.execute(AmazonHttpClient.java:559)
+	at com.amazonaws.http.AmazonHttpClient.execute(AmazonHttpClient.java:539)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.doInvoke(AmazonDynamoDBClient.java:6243)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.invoke(AmazonDynamoDBClient.java:6210)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.executeCreateTable(AmazonDynamoDBClient.java:1168)
+	at com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient.createTable(AmazonDynamoDBClient.java:1132)
+	at com.amazonaws.services.dynamodbv2.util.TableUtils.createTableIfNotExists(TableUtils.java:235)
+	at vn.datnguyen.recommender.App.run(App.java:49)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:804)
+	... 72 common frames omitted
+Caused by: org.apache.http.conn.HttpHostConnectException: Connect to localhost:8000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:156)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.amazonaws.http.conn.ClientConnectionManagerFactory$Handler.invoke(ClientConnectionManagerFactory.java:76)
+	at com.amazonaws.http.conn.$Proxy84.connect(Unknown Source)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:56)
+	at com.amazonaws.http.apache.client.impl.SdkHttpClient.execute(SdkHttpClient.java:72)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeOneRequest(AmazonHttpClient.java:1343)
+	at com.amazonaws.http.AmazonHttpClient$RequestExecutor.executeHelper(AmazonHttpClient.java:1154)
+	... 86 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at org.apache.http.conn.socket.PlainConnectionSocketFactory.connectSocket(PlainConnectionSocketFactory.java:75)
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:142)
+	... 102 common frames omitted
+[2022-01-27T10:25:08.008Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting AppTest using Java 17.0.1 on DESKTOP-8FUI0Q1 with PID 18188 (started by datng in D:\My_Code\e_commerce\services\recommender_service\query-rating-service)
+[2022-01-27T10:25:08.008Z] [org.springframework.boot.SpringApplication] [main] [660] [INFO ] No active profile set, falling back to default profiles: default
+[2022-01-27T10:25:08.008Z] [org.hibernate.validator.internal.util.Version] [background-preinit] [21] [INFO ] HV000001: Hibernate Validator 6.1.7.Final
+[2022-01-27T10:25:09.009Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [128] [INFO ] Bootstrapping Spring Data DynamoDB repositories in DEFAULT mode.
+[2022-01-27T10:25:10.010Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [188] [INFO ] Finished Spring Data repository scanning in 114 ms. Found 1 DynamoDB repository interfaces.
+[2022-01-27T10:25:11.011Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'dynamoDBConfiguration' of type [vn.datnguyen.recommender.Configurations.DynamoDBConfiguration$$EnhancerBySpringCGLIB$$4864508e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:25:11.011Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'amazonAwsCredentialsProvider' of type [com.amazonaws.auth.AWSStaticCredentialsProvider] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:25:11.011Z] [vn.datnguyen.recommender.Configurations.DynamoDBConfiguration] [main] [41] [INFO ] -----TEST------: http://localhost:8000/
+[2022-01-27T10:25:12.012Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'amazonDynamoDB' of type [com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:25:12.012Z] [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] [main] [350] [INFO ] Bean 'dynamoDB-DynamoDBMapperConfig' of type [com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [58] [INFO ] Spring Data DynamoDB Version: 5.1.0 (2.1)
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [59] [INFO ] Spring Data Version:          2.4.3
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [60] [INFO ] AWS SDK Version:              1.12.145
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [61] [INFO ] Java Version:                 17.0.1 - Java HotSpot(TM) 64-Bit Server VM 17.0.1+12-LTS-39
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [63] [INFO ] Platform Details:             Windows 10 10.0
+[2022-01-27T10:25:13.013Z] [org.socialsignin.spring.data.dynamodb.repository.support.DynamoDBRepositoryFactory] [main] [67] [WARN ] This Spring Data DynamoDB implementation might not be compatible with the available Spring Data classes on the classpath!
+NoDefClassFoundExceptions or similar might occur!
+[2022-01-27T10:25:14.014Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService 'applicationTaskExecutor'
+[2022-01-27T10:25:15.015Z] [org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver] [main] [58] [INFO ] Exposing 2 endpoint(s) beneath base path '/actuator'
+[2022-01-27T10:25:16.016Z] [org.apache.kafka.common.config.AbstractConfig] [main] [354] [INFO ] ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = earliest
+	bootstrap.servers = [http://localhost:9093]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-fromEventSourcing-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = fromEventSourcing
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class vn.datnguyen.recommender.Serialization.AvroEventDeserializer
+
+[2022-01-27T10:25:16.016Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [117] [INFO ] Kafka version: 2.6.0
+[2022-01-27T10:25:16.016Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [118] [INFO ] Kafka commitId: 62abe01bee039651
+[2022-01-27T10:25:16.016Z] [org.apache.kafka.common.utils.AppInfoParser$AppInfo] [main] [119] [INFO ] Kafka startTimeMs: 1643268316587
+[2022-01-27T10:25:16.016Z] [org.apache.kafka.clients.consumer.KafkaConsumer] [main] [965] [INFO ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Subscribed to topic(s): ratingCommandFromEventSource
+[2022-01-27T10:25:16.016Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [main] [181] [INFO ] Initializing ExecutorService
+[2022-01-27T10:25:16.016Z] [org.socialsignin.spring.data.dynamodb.repository.util.Entity2DynamoDBTableSynchronizer] [main] [100] [INFO ] Checking repository classes with DynamoDB tables Rating for ContextRefreshedEvent
+[2022-01-27T10:25:16.016Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started AppTest in 9.046 seconds (JVM running for 10.968)
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:17.017Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:18.018Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:18.018Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:19.019Z] [org.apache.kafka.clients.NetworkClient] [fromEventSourcing-0-C-1] [757] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Connection to node -1 (localhost/127.0.0.1:9093) could not be established. Broker may not be available.
+[2022-01-27T10:25:19.019Z] [org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater] [fromEventSourcing-0-C-1] [1033] [WARN ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Bootstrap broker localhost:9093 (id: -1 rack: null) disconnected
+[2022-01-27T10:25:19.019Z] [org.socialsignin.spring.data.dynamodb.repository.util.Entity2DynamoDBTableSynchronizer] [SpringContextShutdownHook] [100] [INFO ] Checking repository classes with DynamoDB tables Rating for ContextClosedEvent
+[2022-01-27T10:25:19.019Z] [org.apache.kafka.clients.consumer.KafkaConsumer] [fromEventSourcing-0-C-1] [1074] [INFO ] [Consumer clientId=consumer-fromEventSourcing-1, groupId=fromEventSourcing] Unsubscribed all topics or patterns and assigned partitions
+[2022-01-27T10:25:19.019Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [fromEventSourcing-0-C-1] [218] [INFO ] Shutting down ExecutorService
+[2022-01-27T10:25:19.019Z] [org.springframework.core.log.LogAccessor] [fromEventSourcing-0-C-1] [292] [INFO ] fromEventSourcing: Consumer stopped
+[2022-01-27T10:25:19.019Z] [org.springframework.scheduling.concurrent.ExecutorConfigurationSupport] [SpringContextShutdownHook] [218] [INFO ] Shutting down ExecutorService 'applicationTaskExecutor'

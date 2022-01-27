@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Cache;
+package vn.datnguyen.recommender.Configurations;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

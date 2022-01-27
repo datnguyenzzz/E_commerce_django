@@ -1,3 +1,7 @@
+package:
+	docker-compose up -d dynamodb kafka redis postgresql dynamodb
+	mvn package
+
 testQueryService:
 	mvn clean 
 	docker-compose up -d dynamodb 
