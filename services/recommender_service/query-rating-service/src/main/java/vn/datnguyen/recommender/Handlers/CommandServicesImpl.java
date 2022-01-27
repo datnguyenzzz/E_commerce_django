@@ -36,7 +36,6 @@ public class CommandServicesImpl implements CommandServices, EventHandler {
     public void apply(AvroEvent event) {
         logger.info("QUERY-RATING-SERVICE: Consume event " + event);
     }
-
     /* 
         ADD NEW RATING 
     */
