@@ -1,17 +1,30 @@
 package vn.datnguyen.recommender;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import junit.framework.Assert;
 import vn.datnguyen.recommender.Models.Rating;
+import vn.datnguyen.recommender.Repositories.RatingRepository;
 
 /**
  * Unit test for simple App.
  */
-
 @SpringBootTest(classes = App.class)
+@WebAppConfiguration
 public class AppTest {
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    private final String neverExistClientId = "xxx-xxx-xxx";
+    private final String neverExistItemId = "xxx-xxx-xxx";
+    private final int score = 12343;
+
     @Test
     public void testRatingModel() {
         String clientId = "321-451-312";
@@ -35,6 +48,38 @@ public class AppTest {
         Assert.assertEquals(rating.getClientId(), newClientId);
         Assert.assertEquals(rating.getItemId(), newItemId);
         Assert.assertEquals(rating.getScore(), newScore);
+    }
+
+    @Test
+    public void addNewRecord() {
+        List<Rating> result = (List<Rating>)ratingRepository.findAll();
+
+        Assert.assertEquals(result.size(), 0);
+
+        Rating rating = new Rating(neverExistClientId, neverExistItemId, score);
+
+        ratingRepository.save(rating);
+        result = (List<Rating>)ratingRepository.findAll();
+
+        Assert.assertEquals(result.size(), 1);
+    }
+
+    @Test
+    public void deleteLastRecord() {
+        List<Rating> result = (List<Rating>)ratingRepository.findAll();
+
+        Assert.assertEquals(result.size(), 1);
+
+        Rating rating = result.get(result.size() - 1);
+        Assert.assertEquals(rating.getClientId(), neverExistClientId);
+        Assert.assertEquals(rating.getItemId(), neverExistItemId);
+        Assert.assertEquals(rating.getScore(), score);
+
+        ratingRepository.delete(rating);
+
+        result = (List<Rating>)ratingRepository.findAll();
+
+        Assert.assertEquals(result.size(), 0);
     }
     
 }
