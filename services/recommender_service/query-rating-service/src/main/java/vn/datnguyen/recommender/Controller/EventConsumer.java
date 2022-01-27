@@ -1,26 +1,38 @@
 package vn.datnguyen.recommender.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.Handlers.CommandServicesImpl;
+import vn.datnguyen.recommender.Handler.EventHandler;
 import vn.datnguyen.recommender.MessageQueue.Consumer;
 
-@Component
-public class EventConsumer implements Consumer {
+@Service
+public class EventConsumer implements Consumer, EventHandler {
 
-    private CommandServicesImpl commandServicesImpl;
+    private final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
-    @Autowired
-    public EventConsumer(CommandServicesImpl commandServicesImpl) {
-        this.commandServicesImpl = commandServicesImpl;
+    @Override
+    public CompletableFuture<Void> process(AvroEvent event) {
+        return CompletableFuture.runAsync(
+            () -> Stream.of(event)
+                .forEach(this::apply)
+        );
+    }
+
+    @Override
+    public void apply(AvroEvent event) {
+        logger.info("QUERY-RATING-SERVICE: consumed event = " + event);
     }
     
     @KafkaListener(topics = "${ConsumerKafka.topicConsumerFromEventSource}", id = "${ConsumerKafka.groupId}")
     @Override
     public void execute(AvroEvent event) {
-        commandServicesImpl.process(event);
+        process(event);
     }
 }

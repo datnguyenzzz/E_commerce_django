@@ -18,8 +18,6 @@
     <spring.kafka.version>2.6.5</spring.kafka.version>
     <aws.dynamodb.version>1.12.145</aws.dynamodb.version>
     <spring.dynamodb.version>5.1.0</spring.dynamodb.version>
-    <spring.redis.version>2.3.3.RELEASE</spring.redis.version>
-    <jedis.version>3.3.0</jedis.version>
   </properties>
 
   <dependencies>
@@ -76,18 +74,6 @@
       <groupId>com.github.derjust</groupId>
       <artifactId>spring-data-dynamodb</artifactId>
       <version>${spring.dynamodb.version}</version>
-    </dependency>
-    <!-- redis -->
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-redis</artifactId>
-      <version>${spring.redis.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>redis.clients</groupId>
-      <artifactId>jedis</artifactId>
-      <version>${jedis.version}</version>
-      <type>jar</type>
     </dependency>
 
   </dependencies>
