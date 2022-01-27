@@ -2,6 +2,8 @@ package vn.datnguyen.recommender.Handlers;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
@@ -9,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import vn.datnguyen.recommender.Models.Rating;
 
-public class CustomRatingRepositoryMethodsImpl implements CustomRatingRepositoryMethods {
+public class RatingRepositoryCustomImpl implements RatingRepositoryCustom {
     
     private AmazonDynamoDB amazonDynamoDB;
     private DynamoDBMapper dbMapper;
 
     @Autowired
-    public CustomRatingRepositoryMethodsImpl(AmazonDynamoDB amazonDynamoDB) {
+    public RatingRepositoryCustomImpl(AmazonDynamoDB amazonDynamoDB) {
         this.amazonDynamoDB = amazonDynamoDB;
         this.dbMapper = new DynamoDBMapper(amazonDynamoDB);
     }
@@ -23,7 +25,7 @@ public class CustomRatingRepositoryMethodsImpl implements CustomRatingRepository
     public AmazonDynamoDB getAmazonDynamoDB() {
         return this.amazonDynamoDB;
     }
-    
+
     @Override
     public List<Rating> findByClientId(String clientId) {
         return null;
