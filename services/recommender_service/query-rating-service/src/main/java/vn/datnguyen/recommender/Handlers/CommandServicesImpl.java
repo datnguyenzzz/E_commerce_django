@@ -46,6 +46,7 @@ public class CommandServicesImpl implements CommandServices, EventHandler {
         addNewClientRating(rating);
     }
 
+    @Override
     public void addNewClientRating(Rating rating) {
         clientRatingRepository.save(rating);
     }
@@ -62,6 +63,7 @@ public class CommandServicesImpl implements CommandServices, EventHandler {
     @Override
     public void deleteClientRating(String clientId, String itemId) {}
 
+    @Override
     public void deleteClientRating(Rating rating) {
         clientRatingRepository.delete(rating);
     }
