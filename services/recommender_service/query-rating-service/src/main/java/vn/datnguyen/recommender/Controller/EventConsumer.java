@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Controller;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -17,6 +18,7 @@ import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Handler.EventHandler;
 import vn.datnguyen.recommender.MessageQueue.Consumer;
+import vn.datnguyen.recommender.Models.Rating;
 import vn.datnguyen.recommender.Repositories.RatingRepository;
 
 @Service
@@ -61,6 +63,15 @@ public class EventConsumer implements Consumer, EventHandler {
         String clientId = payload.getClientId(); 
         String itemId = payload.getItemId(); 
         int score = payload.getScore();
+
+        List<Rating> result = ratingRepository.findByClientIdAndItemId(clientId, itemId); 
+
+        if (result.size() > 0) {
+            logger.warn("QUERY-RATING-SERVICE: Attemp posting an existance record");
+            return;
+        }
+
+        ratingRepository.save(new Rating(clientId, itemId, score));
     }
 
     @Transactional
@@ -68,6 +79,23 @@ public class EventConsumer implements Consumer, EventHandler {
         String clientId = payload.getClientId(); 
         String itemId = payload.getItemId(); 
         int score = payload.getScore();
+
+        List<Rating> result = ratingRepository.findByClientIdAndItemId(clientId, itemId); 
+
+        if (result.size() == 0) {
+            logger.warn("QUERY-RATING-SERVICE: Attemp updating a non-existance record");
+            return;
+        }
+
+        if (result.size() > 1) {
+            logger.warn("QUERY-RATING-SERVICE: Attemp updating a multiple-existance record");
+            return;
+        }
+
+        Rating rating = result.get(0); 
+        rating.setScore(score);
+
+        ratingRepository.save(rating);
     } 
 
     @Transactional
@@ -75,6 +103,20 @@ public class EventConsumer implements Consumer, EventHandler {
         String clientId = payload.getClientId(); 
         String itemId = payload.getItemId(); 
 
+        List<Rating> result = ratingRepository.findByClientIdAndItemId(clientId, itemId); 
+
+        if (result.size() == 0) {
+            logger.warn("QUERY-RATING-SERVICE: Attemp delete a non-existance record");
+            return;
+        }
+
+        if (result.size() > 1) {
+            logger.warn("QUERY-RATING-SERVICE: Attemp delete a multiple-existance record");
+            return;
+        }
+
+        Rating rating = result.get(0); 
+        ratingRepository.delete(rating);
     }
 
     @KafkaListener(topics = "${ConsumerKafka.topicConsumerFromEventSource}", id = "${ConsumerKafka.groupId}")
