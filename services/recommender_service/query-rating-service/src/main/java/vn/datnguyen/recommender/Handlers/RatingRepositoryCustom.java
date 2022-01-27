@@ -7,5 +7,5 @@ import vn.datnguyen.recommender.Models.Rating;
 public interface RatingRepositoryCustom {
     List<Rating> findByClientId(String clientId);
     List<Rating> findByItemId(String itemId);
-    Rating findByClientIdAndItemId(String clientId, String itemId);
+    List<Rating> findByClientIdAndItemId(String clientId, String itemId);
 }

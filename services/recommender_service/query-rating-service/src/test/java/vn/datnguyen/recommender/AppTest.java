@@ -65,16 +65,27 @@ public class AppTest {
     }
 
     @Test
-    public void deleteLastRecord() {
-        List<Rating> result = (List<Rating>)ratingRepository.findAll();
+    public void findRatingByClientAndItemIdAndDelete() {
+        String wrongClientId = "xxx";
+        String wrongItemId = "xxx";
+        List<Rating> result;
 
-        Assert.assertEquals(result.size(), 1);
+        result = ratingRepository.findByClientIdAndItemId(wrongClientId, neverExistItemId);
+        Assert.assertEquals("WRONG CLIENT ID", result.size(), 0);
 
-        Rating rating = result.get(result.size() - 1);
+        result = ratingRepository.findByClientIdAndItemId(neverExistClientId, wrongItemId);
+        Assert.assertEquals("WRONG ITEM ID", result.size(), 0);
+
+        result = ratingRepository.findByClientIdAndItemId(wrongClientId, wrongItemId);
+        Assert.assertEquals("WRONG CLIENT ID AND ITEM ID",result.size(), 0);
+
+        result = ratingRepository.findByClientIdAndItemId(neverExistClientId, neverExistItemId);
+        Assert.assertEquals("PROPER CLIENT ID AND ITEM ID", result.size(), 1);
+
+        Rating rating = result.get(0);
         Assert.assertEquals(rating.getClientId(), neverExistClientId);
         Assert.assertEquals(rating.getItemId(), neverExistItemId);
         Assert.assertEquals(rating.getScore(), score);
-
         ratingRepository.delete(rating);
 
         result = (List<Rating>)ratingRepository.findAll();
