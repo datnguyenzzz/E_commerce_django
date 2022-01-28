@@ -67,6 +67,12 @@
       <artifactId>spring-kafka</artifactId> 
       <version>${spring.kafka.version}</version>
     </dependency>
+    <!-- eureka client -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+      <version>${netflix.eureka.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

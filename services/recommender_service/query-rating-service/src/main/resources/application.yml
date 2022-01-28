@@ -2,13 +2,13 @@ server:
   port: 8010
 
 ConsumerKafka:
-  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
-  groupId: ${CONSUMER_GROUP}
-  topicConsumerFromEventSource: ${TOPIC_NAME}
+  bootstrapServers: kafka:9092
+  groupId: fromEventSourcing
+  topicConsumerFromEventSource: ratingCommandFromEventSource
 
 amazon:
   dynamodb:
-    endpoint: http://${DYNAMODB_HOST}:${DYNAMODB_PORT}
+    endpoint: http://dynamodb:8000
   aws:
     accesskey: aws-access-key
     secretkey: aws-secret-key
@@ -19,7 +19,7 @@ eureka:
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/
+      defaultZone: http://service-registry:8761/eureka/
   instance:
     appname: query-rating-service
     preferIpAddress: true

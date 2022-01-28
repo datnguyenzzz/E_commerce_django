@@ -19,9 +19,9 @@ spring.jpa.hibernate.ddl-auto: create
 spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
 redis:
-  host: ${REDIS_HOST}
-  port: ${REDIS_PORT}
-  expireTime: ${REDIS_LIFE_TIME}
+  host: redis
+  port: 6379
+  expireTime: 300
 
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
@@ -29,9 +29,9 @@ incomingEvent:
   avroDeleteRatingEvent: AvroDeleteRatingEvent
 
 ConsumerKafka:
-  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
-  groupId: ${CONSUMER_GROUP}
-  topicConsumerFromRatingCommand: ${TOPIC_NAME}
+  bootstrapServers: kafka:9092
+  groupId: eventSourcing
+  topicConsumerFromRatingCommand: ratingCommandToEventSource
 
 eureka:
   client:
@@ -39,7 +39,7 @@ eureka:
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/
+      defaultZone: http://service-registry:8761/eureka/
   instance:
     appname: event-source-storage
     preferIpAddress: true

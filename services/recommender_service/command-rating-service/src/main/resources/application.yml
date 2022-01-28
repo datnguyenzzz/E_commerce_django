@@ -1,5 +1,5 @@
 server:
-  port: 8011
+  port: 0
 
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
@@ -8,9 +8,9 @@ incomingEvent:
 
 transactionKafka:
   messageId: 1
-  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  bootstrapServers: kafka:9092
   transactionIdPrefix: ratingCommand
-  topic: ${TOPIC_NAME}
+  topic: ratingCommandToEventSource
 
 eureka:
   client:
@@ -18,7 +18,7 @@ eureka:
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/
+      defaultZone: http://service-registry:8761/eureka/
   instance:
     appname: command-rating-service
     preferIpAddress: true
