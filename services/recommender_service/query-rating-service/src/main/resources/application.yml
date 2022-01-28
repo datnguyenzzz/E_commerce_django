@@ -12,3 +12,14 @@ amazon:
   aws:
     accesskey: aws-access-key
     secretkey: aws-secret-key
+
+eureka:
+  client:
+    enabled: true
+    healthcheck:
+      enabled: true 
+    serviceUrl:
+      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/
+  instance:
+    appname: query-rating-service
+    preferIpAddress: true

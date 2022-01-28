@@ -1,6 +1,19 @@
 version: '3.8'
 services:
 
+## Registry services
+  serviceregistry:
+    container_name: service-registry
+    build: 
+      context: ./service-registry
+    ports:
+      - 8761:8761 
+    volumes:
+      - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
+    environment:
+      - HOST_NAME=service-registry
+    command: "java -Xmx256m -jar /recommender/service-registry.jar"
+
 # Message queue
   zookeeper:
     image: wurstmeister/zookeeper:latest
@@ -73,11 +86,14 @@ services:
       - 8011
     depends_on:
       - kafka
+      - serviceregistry
     volumes:
       - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
     environment:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandToEventSource
+      REGISTRY_HOST: service-registry
+      REGISTRY_PORT: 8761
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
 
 ## Query service  
@@ -92,6 +108,7 @@ services:
     depends_on:
       - kafka
       - dynamodb
+      - serviceregistry
     volumes:
       - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
     environment:
@@ -100,6 +117,8 @@ services:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandFromEventSource
       CONSUMER_GROUP: fromEventSourcing
+      REGISTRY_HOST: service-registry
+      REGISTRY_PORT: 8761
     command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
 
 ## EVENT SOURCE STORAGE 
@@ -113,6 +132,7 @@ services:
       - kafka
       - redis
       - postgresql
+      - serviceregistry
     volumes:
       - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
     environment:
@@ -122,6 +142,8 @@ services:
       REDIS_HOST: redis 
       REDIS_PORT: 6379
       REDIS_LIFE_TIME: 300
+      REGISTRY_HOST: service-registry
+      REGISTRY_PORT: 8761
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
   
   walminer:
@@ -133,21 +155,13 @@ services:
     depends_on:
       - postgresql
       - eventstorage
+      - serviceregistry
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     environment:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_TO_QUERY_SERVICE: ratingCommandFromEventSource
       TOPIC_TO_RECOMMENDER_SERVICE: ratingCommandForRecommendation
+      REGISTRY_HOST: service-registry
+      REGISTRY_PORT: 8761
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
-
-## Registry services
-  serviceregistry:
-    container_name: service-registry
-    build: 
-      context: ./service-registry
-    ports:
-      - 8761:8761 
-    volumes:
-      - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
-    command: "java -Xmx256m -jar /recommender/service-registry.jar"

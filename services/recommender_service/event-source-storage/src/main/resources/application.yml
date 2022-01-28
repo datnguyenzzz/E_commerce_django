@@ -32,3 +32,14 @@ ConsumerKafka:
   bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
   groupId: ${CONSUMER_GROUP}
   topicConsumerFromRatingCommand: ${TOPIC_NAME}
+
+eureka:
+  client:
+    enabled: true
+    healthcheck:
+      enabled: true 
+    serviceUrl:
+      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/
+  instance:
+    appname: event-source-storage
+    preferIpAddress: true
