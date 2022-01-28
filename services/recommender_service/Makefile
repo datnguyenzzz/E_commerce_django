@@ -1,5 +1,5 @@
 init:
-	docker-compose up -d dynamodb kafka redis postgresql dynamodb
+	docker-compose up -d dynamodb kafka redis postgresql dynamodb serviceregistry
 
 testQueryService:
 	mvn clean 

@@ -8,23 +8,14 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>vn.datnguyen.recommender</groupId>
-  <artifactId>transaction-log-tailling</artifactId>
+  <artifactId>service-registry</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>transaction-log-tailling</name>
+  <name>service-registry</name>
   <url>http://maven.apache.org</url>
-
   <properties>
-    <spring.version>5.3.3</spring.version>
-    <spring.kafka.version>2.6.5</spring.kafka.version>
+    <netflix.eureka.version>3.0.1</netflix.eureka.version>
   </properties>
-
   <dependencies>
-    <!-- internal dependencies -->
-    <dependency>
-      <groupId>vn.datnguyen.recommender</groupId>
-      <artifactId>serialization-service</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
     <!-- testing -->
     <dependency>
       <groupId>junit</groupId>
@@ -37,11 +28,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.kafka</groupId>
-      <artifactId>spring-kafka-test</artifactId>
-      <version>${spring.kafka.version}</version>
-    </dependency>
     <!-- spring boot-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -51,37 +37,20 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-    <!-- data base -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-    <!-- jackson marshal -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <!-- kafka -->
-    <dependency>
-      <groupId>org.springframework.kafka</groupId>
-      <artifactId>spring-kafka</artifactId> 
-      <version>${spring.kafka.version}</version>
-    </dependency>
-    <!-- eureka client -->
+    <!-- eureka service -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+      <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
       <version>${netflix.eureka.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
     </plugins>
   </build>
-  
 </project>

@@ -74,6 +74,12 @@
       <artifactId>spring-data-dynamodb</artifactId>
       <version>${spring.dynamodb.version}</version>
     </dependency>
+    <!-- eureka client -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+      <version>${netflix.eureka.version}</version>
+    </dependency>
 
   </dependencies>
 

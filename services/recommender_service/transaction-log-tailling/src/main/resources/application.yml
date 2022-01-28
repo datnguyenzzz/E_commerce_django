@@ -1,5 +1,5 @@
 server:
-  port: 8002
+  port: 0
 
 DBTable:
   clientIdCol: clientId
@@ -14,10 +14,10 @@ incomingEvent:
 
 transactionKafka:
   messageId: 1
-  bootstrapServers: ${KAFKA_INTERNAL_HOST}:9092
+  bootstrapServers: kafka:9092
   transactionIdPrefix: fromEventSource
-  topicToQueryService: ${TOPIC_TO_QUERY_SERVICE}
-  topicToRecommendSerivce: ${TOPIC_TO_RECOMMENDER_SERVICE}
+  topicToQueryService: ratingCommandFromEventSource
+  topicToRecommendSerivce: ratingCommandForRecommendation
 
 #Postgre setup 
 spring.datasource:
@@ -25,3 +25,14 @@ spring.datasource:
   username: postgres
   password: password
   initialization-mode: always
+
+eureka:
+  client:
+    enabled: true
+    healthcheck:
+      enabled: true 
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/
+  instance:
+    appname: wal-tailing-service
+    preferIpAddress: true
