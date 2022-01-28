@@ -140,3 +140,14 @@ services:
       TOPIC_TO_QUERY_SERVICE: ratingCommandFromEventSource
       TOPIC_TO_RECOMMENDER_SERVICE: ratingCommandForRecommendation
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
+
+## Registry services
+  serviceregistry:
+    container_name: service-registry
+    build: 
+      context: ./service-registry
+    ports:
+      - 8761:8761 
+    volumes:
+      - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
+    command: "java -Xmx256m -jar /recommender/service-registry.jar"

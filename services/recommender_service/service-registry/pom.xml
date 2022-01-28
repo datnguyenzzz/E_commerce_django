@@ -12,6 +12,9 @@
   <version>1.0-SNAPSHOT</version>
   <name>service-registry</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <netflix.eureka.version>3.0.1</netflix.eureka.version>
+  </properties>
   <dependencies>
     <!-- testing -->
     <dependency>
@@ -33,6 +36,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!-- eureka service -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+      <version>${netflix.eureka.version}</version>
     </dependency>
   </dependencies>
 
