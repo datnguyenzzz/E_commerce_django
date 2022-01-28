@@ -78,10 +78,6 @@ services:
     container_name: command-rating-service
     build: 
       context: ./command-rating-service
-    ports:
-      - 8011:8011
-    expose:
-      - 8011
     depends_on:
       - kafka
       - serviceregistry
@@ -94,10 +90,6 @@ services:
     container_name: query-rating-service 
     build: 
       context: ./query-rating-service
-    ports:
-      - 8010:8010
-    expose:
-      - 8010
     depends_on:
       - kafka
       - dynamodb
@@ -111,8 +103,6 @@ services:
     container_name: event-source-storage
     build:
       context: ./event-source-storage
-    ports:
-      - 8001
     depends_on:
       - kafka
       - redis
@@ -126,8 +116,6 @@ services:
     container_name: wal-miner
     build: 
       context: ./transaction-log-tailling
-    ports:
-      - 8002
     depends_on:
       - postgresql
       - eventstorage
