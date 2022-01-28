@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.dynamodb;
+package vn.datnguyen.recommender.Configurations;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -11,15 +11,19 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class LocalConfiguration {
+import vn.datnguyen.recommender.Repositories.RatingRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(LocalConfiguration.class);
+@Configuration
+@EnableDynamoDBRepositories(basePackageClasses = RatingRepository.class)
+public class DynamoDBConfiguration {
+
+    private final Logger logger = LoggerFactory.getLogger(DynamoDBConfiguration.class);
     
     @Value("${amazon.dynamodb.endpoint}")
     private String dynamoDBEndpoint;

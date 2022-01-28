@@ -1,3 +1,6 @@
+init:
+	docker-compose up -d dynamodb kafka redis postgresql dynamodb
+
 testQueryService:
 	mvn clean 
 	docker-compose up -d dynamodb 
@@ -8,8 +11,8 @@ testConsumer:
 	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic ratingCommandFromEventSource --from-beginning
 
 start:
-	docker-compose up -d dynamodb kafka redis postgresql dynamodb
-	mvn clean install
+	mvn clean
+	mvn install
 	docker-compose up -d
 	docker-compose ps
 

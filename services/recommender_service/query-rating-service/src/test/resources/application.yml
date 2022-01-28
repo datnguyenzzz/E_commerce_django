@@ -1,0 +1,14 @@
+server:
+  port: 8010
+
+ConsumerKafka:
+  bootstrapServers: localhost:9093
+  groupId: testingGroup
+  topicConsumerFromEventSource: testingTopic
+
+amazon:
+  dynamodb:
+    endpoint: http://localhost:8000
+  aws:
+    accesskey: testing-access-key
+    secretkey: testing-secret-key

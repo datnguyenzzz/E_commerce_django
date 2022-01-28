@@ -6,7 +6,6 @@ import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
 
-import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +25,6 @@ import vn.datnguyen.recommender.Models.Rating;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, // No JPA
     DataSourceTransactionManagerAutoConfiguration.class, 
     HibernateJpaAutoConfiguration.class})
-@EnableDynamoDBRepositories(basePackages = "vn.datnguyen.recommender.Repositories")
 public class App implements CommandLineRunner {
 
     private AmazonDynamoDB amazonDynamoDB;

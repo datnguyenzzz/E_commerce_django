@@ -36,7 +36,7 @@ services:
     container_name: redis
     image: redis:6.0.6
     ports:
-      - 6379
+      - 6379:6379
   
   postgresql:
     container_name: postgresql
@@ -100,9 +100,6 @@ services:
       KAFKA_INTERNAL_HOST: kafka
       TOPIC_NAME: ratingCommandFromEventSource
       CONSUMER_GROUP: fromEventSourcing
-      REDIS_HOST: redis 
-      REDIS_PORT: 6379
-      REDIS_LIFE_TIME: 300
     command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
 
 ## EVENT SOURCE STORAGE 

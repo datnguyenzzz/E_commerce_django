@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.MessageQueue;
+package vn.datnguyen.recommender.Configurations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +16,8 @@ import org.springframework.kafka.core.ProducerFactory;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Serialization.AvroEventSerializer;
 
-
 @Configuration
-public class TransactionFactoryProducerConfiguration {
+public class TransactionalProducerFactoryConfiguration {
 
     @Value("${transactionKafka.transactionIdPrefix}")
     private String transactionIdPrefix;
@@ -30,12 +29,12 @@ public class TransactionFactoryProducerConfiguration {
     public ProducerFactory<String, AvroEvent> producerFactory() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
-        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,AvroEventSerializer.class);
+        configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroEventSerializer.class);
 
         DefaultKafkaProducerFactory<String, AvroEvent> factory = new DefaultKafkaProducerFactory<>(configs);
         factory.setTransactionIdPrefix(transactionIdPrefix);
-
+        
         return factory;
     }
 
