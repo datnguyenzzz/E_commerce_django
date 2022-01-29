@@ -75,7 +75,6 @@ services:
     
 ## RATING COMMAND 
   commandrating:
-    container_name: command-rating-service
     build: 
       context: ./command-rating-service
     depends_on:
@@ -87,7 +86,6 @@ services:
 
 ## Query service  
   queryrating:
-    container_name: query-rating-service 
     build: 
       context: ./query-rating-service
     depends_on:

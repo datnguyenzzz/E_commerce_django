@@ -75,55 +75,33 @@
       </dependency>
             
       <!-- testing -->
-            
+      <!-- junit 4 -->
       <dependency>
-                
-        <groupId>org.junit.jupiter</groupId>
-                
-        <artifactId>junit-jupiter-api</artifactId>
-                
-        <version>${junit.jupiter.version}</version>
-                
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.2</version>
         <scope>test</scope>
-              
       </dependency>
-            
+      <!-- junit 5 -->
       <dependency>
-                
         <groupId>org.junit.jupiter</groupId>
-                
-        <artifactId>junit-jupiter-engine</artifactId>
-                
-        <version>${junit.jupiter.version}</version>
-                
+        <artifactId>junit-jupiter</artifactId>
         <scope>test</scope>
-              
       </dependency>
-            
+      <!-- mockito -->   
       <dependency>
-                
         <groupId>org.mockito</groupId>
-                
         <artifactId>mockito-core</artifactId>
-                
         <version>${mockito.version}</version>
-                
         <scope>test</scope>
-              
       </dependency>
             
       <dependency>
-                
         <groupId>org.mockito</groupId>
-                
         <artifactId>mockito-junit-jupiter</artifactId>
-                
         <version>${mockito.junit.version}</version>
-                
         <scope>test</scope>
-              
       </dependency>
-          
     </dependencies>
       
   </dependencyManagement>
@@ -137,73 +115,40 @@
         <!-- compile -->
                 
         <plugin>
-                    
           <groupId>org.apache.maven.plugins</groupId>
-                    
           <artifactId>maven-compiler-plugin</artifactId>
-                    
           <version>${plugin.compiler.version}</version>
-                    
           <configuration>
-                        
             <source>${maven.compiler.source}</source>
-                        
             <target>${maven.compiler.target}</target>
-                      
           </configuration>
-                  
         </plugin>
-                
         <plugin>
-                    
           <groupId>org.apache.maven.plugins</groupId>
-                    
           <artifactId>maven-surefire-plugin</artifactId>
-                    
           <version>${plugin.surefire.version}</version>
-                    
           <configuration>
-                        
             <includes>
-                              
               <include>**/*Test*.java</include>
-                          
             </includes>
-                      
           </configuration>
-                  
         </plugin>
-                
         <plugin>
-                    
           <groupId>org.apache.maven.plugins</groupId>
-                    
           <artifactId>maven-resources-plugin</artifactId>
-                    
           <version>3.1.0</version>
-                  
         </plugin>
-              
       </plugins>
-          
     </pluginManagement>
-      
   </build>
     
   <modules>
-        
     <module>serialization-service</module>
-        
     <module>command-rating-service</module>
-        
     <module>event-source-storage</module>
-        
     <module>transaction-log-tailling</module>
-        
     <module>query-rating-service</module>
-        
     <module>service-registry</module>
-      
   </modules>
   
 </project>
