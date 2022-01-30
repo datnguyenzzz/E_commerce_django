@@ -2,8 +2,8 @@ server:
   port: 8765
 
 services:
-  queryRating: lb://query-rating-service
-  commandRating: lb://command-rating-service
+  queryRating: lb://QUERY-RATING-SERVICE
+  commandRating: lb://COMMAND-RATING-SERVICE
 
 spring:
   application:
@@ -29,6 +29,6 @@ eureka:
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
+      defaultZone: http://serviceregistry:8761/eureka/
   instance:
     prefer-ip-address: true

@@ -20,21 +20,15 @@ public class GatewayConfiguration {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
             .route("query_rating",
-                r -> r.path("/rating**")
+                r -> r.path("/api/v/1.0.0/rating?**")
                     .and()
                     .method(HttpMethod.GET)
-                    .filters(
-                        f -> f.rewritePath("/rating(?<params>.*)", "/api/v/1.0.0/rating${params}")
-                    )
                     .uri(QueryRatingService)
             )
             .route("command_rating",
-                r -> r.path("/rating")
+                r -> r.path("/api/v/1.0.0/rating")
                     .and()
                     .method(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)
-                    .filters(
-                        f -> f.rewritePath("/rating", "/api/v/1.0.0/rating")
-                    )
                     .uri(CommandRatingService)
             )
             .build();

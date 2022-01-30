@@ -23,6 +23,6 @@ eureka:
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
+      defaultZone: http://serviceregistry:8761/eureka/
   instance:
     prefer-ip-address: true

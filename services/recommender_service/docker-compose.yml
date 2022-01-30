@@ -110,6 +110,8 @@ services:
       - redis
       - postgresql
       - serviceregistry
+    ports:
+      - 2222
     volumes:
       - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
@@ -122,6 +124,8 @@ services:
       - postgresql
       - eventstorage
       - serviceregistry
+    ports:
+      - 2222
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
