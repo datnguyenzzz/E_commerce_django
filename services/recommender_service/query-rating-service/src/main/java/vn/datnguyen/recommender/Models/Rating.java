@@ -7,7 +7,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Rating")
 public class Rating {
-    private String id; 
+    private String id;
     private String clientId;
     private String itemId;
     private int score; 

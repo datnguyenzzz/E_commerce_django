@@ -10,12 +10,15 @@ import javax.persistence.GenerationType;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 @RedisHash(value = "Query", timeToLive = 3600)
 public class CachedQuery implements Serializable {
 
     private long queryId;
+    @Indexed
     private String clientId; 
+    @Indexed
     private String itemId;
     private List<Rating> result;
 

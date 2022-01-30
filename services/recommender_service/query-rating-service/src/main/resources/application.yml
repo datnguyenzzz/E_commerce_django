@@ -1,6 +1,11 @@
 server:
   port: 0
 
+redis:
+  host: redis
+  port: 6379
+  expireTime: 300
+
 ConsumerKafka:
   bootstrapServers: kafka:9092
   groupId: fromEventSourcing
