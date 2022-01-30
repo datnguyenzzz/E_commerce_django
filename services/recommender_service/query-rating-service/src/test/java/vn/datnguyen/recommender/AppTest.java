@@ -17,7 +17,7 @@ public class AppTest {
     /*
     @Autowired
     private RatingRepository ratingRepository;
-
+    
     private final String neverExistClientId = "xxx-xxx-xxx";
     private final String neverExistItemId = "xxx-xxx-xxx";
     private final int score = 12343;
