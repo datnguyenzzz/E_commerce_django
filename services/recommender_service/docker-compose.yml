@@ -121,3 +121,16 @@ services:
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
+
+## API GATEWAY
+  apigateway:
+    container_name: api-gateway
+    build: 
+      context: ./api-gateway
+    ports:
+      - 8765:8765
+    depends_on:
+      - serviceregistry
+    volumes:
+      - ./api-gateway/target/api-gateway-1.0-SNAPSHOT.jar:/recommender/api-gateway.jar
+    command: "java -Xmx256m -jar /recommender/api-gateway.jar"

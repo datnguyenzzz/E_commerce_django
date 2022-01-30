@@ -1,0 +1,13 @@
+server:
+  port: 8765
+
+eureka:
+  client:
+    enabled: true
+    healthcheck:
+      enabled: true 
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/
+  instance:
+    appname: api-gateway
+    preferIpAddress: true
