@@ -80,6 +80,8 @@ services:
     depends_on:
       - kafka
       - serviceregistry
+    ports:
+      - "7000:2222"
     volumes:
       - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
@@ -92,6 +94,8 @@ services:
       - kafka
       - dynamodb
       - serviceregistry
+    ports:
+      - "7001:2222"
     volumes:
       - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
     command: "java -Xmx256m -jar /recommender/query-rating-service.jar"

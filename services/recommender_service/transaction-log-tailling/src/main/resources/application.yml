@@ -26,13 +26,17 @@ spring.datasource:
   password: password
   initialization-mode: always
 
+spring:
+  application:
+    name: log-miner
+
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
   instance:
-    appname: wal-tailing-service
-    preferIpAddress: true
+    prefer-ip-address: true

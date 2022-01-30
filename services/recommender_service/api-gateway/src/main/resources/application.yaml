@@ -1,13 +1,34 @@
 server:
   port: 8765
 
+services:
+  queryRating: lb://query-rating-service
+  commandRating: lb://command-rating-service
+
+spring:
+  application:
+    name: api-gateway 
+  cloud:
+    discovery:
+      enabled: true 
+      client:
+        health-indicator:
+          enabled: true 
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+management:
+  security:
+    enabled: true
+
 eureka:
   client:
-    enabled: true
+    register-with-eureka: false
     healthcheck:
       enabled: true 
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
   instance:
-    appname: api-gateway
-    preferIpAddress: true
+    prefer-ip-address: true

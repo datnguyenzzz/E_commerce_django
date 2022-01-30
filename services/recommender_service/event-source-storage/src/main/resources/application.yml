@@ -1,12 +1,15 @@
 server:
-  port: 0
+  port: 2222
 
 #Postgre setup 
-spring.datasource:
-  url: jdbc:postgresql://postgresql:5432/EventSource
-  username: postgres
-  password: password
-  initialization-mode: always
+spring:
+  application:
+    name: event-source-storage
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/EventSource
+    username: postgres
+    password: password
+    initialization-mode: always
 
 DBTable:
   clientIdCol: clientId
@@ -35,11 +38,11 @@ ConsumerKafka:
 
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
   instance:
-    appname: event-source-storage
-    preferIpAddress: true
+    prefer-ip-address: true

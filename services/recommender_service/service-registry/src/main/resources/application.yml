@@ -3,8 +3,7 @@ server:
   
 eureka:
   instance:
-    hostname: service-registry
-    preferIpAddress: true
+    hostname: serviceregistry
   client:
     registerWithEureka: false
     fetchRegistry: false

@@ -1,10 +1,5 @@
 server:
-  port: 0
-
-redis:
-  host: redis
-  port: 6379
-  expireTime: 300
+  port: 2222
 
 ConsumerKafka:
   bootstrapServers: kafka:9092
@@ -18,13 +13,17 @@ amazon:
     accesskey: aws-access-key
     secretkey: aws-secret-key
 
+spring:
+  application:
+    name: query-rating-service
+
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
   instance:
-    appname: query-rating-service
-    preferIpAddress: true
+    prefer-ip-address: true

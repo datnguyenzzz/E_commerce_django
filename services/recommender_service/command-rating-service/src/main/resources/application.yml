@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 2222
 
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
@@ -12,13 +12,17 @@ transactionKafka:
   transactionIdPrefix: ratingCommand
   topic: ratingCommandToEventSource
 
+spring:
+  application:
+    name: command-rating-service
+
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
   instance:
-    appname: command-rating-service
-    preferIpAddress: true
+    prefer-ip-address: true
