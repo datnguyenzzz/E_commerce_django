@@ -80,8 +80,8 @@ services:
     depends_on:
       - kafka
       - serviceregistry
-    ports:
-      - "7000:2222"
+    #ports:
+    #  - "7000:2222"
     volumes:
       - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
     command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
@@ -94,8 +94,8 @@ services:
       - kafka
       - dynamodb
       - serviceregistry
-    ports:
-      - "7001:2222"
+    #ports:
+    #  - "7001:2222"
     volumes:
       - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
     command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
@@ -110,8 +110,8 @@ services:
       - redis
       - postgresql
       - serviceregistry
-    ports:
-      - 2222
+    #ports:
+    #  - 2222
     volumes:
       - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
     command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
@@ -124,8 +124,8 @@ services:
       - postgresql
       - eventstorage
       - serviceregistry
-    ports:
-      - 2222
+    #ports:
+    #  - 2222
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"

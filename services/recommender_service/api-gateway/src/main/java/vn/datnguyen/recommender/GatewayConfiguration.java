@@ -21,12 +21,18 @@ public class GatewayConfiguration {
         return builder.routes()
             .route(r -> r.method(HttpMethod.GET)
                     .and()
-                    .path("/api/v/1.0.0/rating")
+                    .path("/rating")
+                    .filters(
+                        f -> f.rewritePath("/rating", "/api/v/1.0.0/rating")
+                    )
                     .uri(QueryRatingService)
             )
             .route(r -> r.method(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)
                     .and()
-                    .path("/api/v/1.0.0/rating")
+                    .path("/rating")
+                    .filters(
+                        f -> f.rewritePath("/rating", "/api/v/1.0.0/rating")
+                    )
                     .uri(CommandRatingService)
             )
             .build();
