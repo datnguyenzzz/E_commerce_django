@@ -79,9 +79,10 @@
     
     <mockito.junit.version>2.23.0</mockito.junit.version>
         
-    <!-- eureka -->
+    <!-- cloud -->
         
-    <netflix.eureka.version>3.0.1</netflix.eureka.version>
+    <spring.cloud.version>3.0.1</spring.cloud.version>
+    <webflux.version>2.4.2</webflux.version>
           
   
   </properties>
@@ -92,7 +93,26 @@
     
     <dependencies>
             
-      <!-- eureka -->
+      <!-- spring cloud -->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-gateway</artifactId>
+        <version>${spring.cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-webflux</artifactId>
+        <version>${webflux.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-gateway</artifactId>
+        <version>${spring.cloud.version}</version>
+      </dependency>
             
       <dependency>
                 
@@ -100,7 +120,7 @@
                 
         <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
                 
-        <version>${netflix.eureka.version}</version>
+        <version>${spring.cloud.version}</version>
               
       </dependency>
             
@@ -110,7 +130,7 @@
                 
         <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
                 
-        <version>${netflix.eureka.version}</version>
+        <version>${spring.cloud.version}</version>
               
       </dependency>
                   

@@ -36,6 +36,14 @@ ConsumerKafka:
   groupId: eventSourcing
   topicConsumerFromRatingCommand: ratingCommandToEventSource
 
+management:
+  security:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 eureka:
   client:
     fetch-registry: true

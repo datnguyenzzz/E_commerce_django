@@ -19,16 +19,14 @@ public class GatewayConfiguration {
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-            .route("query_rating",
-                r -> r.path("/api/v/1.0.0/rating?**")
+            .route(r -> r.method(HttpMethod.GET)
                     .and()
-                    .method(HttpMethod.GET)
+                    .path("/api/v/1.0.0/rating")
                     .uri(QueryRatingService)
             )
-            .route("command_rating",
-                r -> r.path("/api/v/1.0.0/rating")
+            .route(r -> r.method(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)
                     .and()
-                    .method(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)
+                    .path("/api/v/1.0.0/rating")
                     .uri(CommandRatingService)
             )
             .build();

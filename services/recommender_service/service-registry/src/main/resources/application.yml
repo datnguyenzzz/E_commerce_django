@@ -1,5 +1,13 @@
 server:
   port: 8761
+
+management:
+  security:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
   
 eureka:
   instance:

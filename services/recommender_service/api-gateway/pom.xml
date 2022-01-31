@@ -12,9 +12,6 @@
   <version>1.0-SNAPSHOT</version>
   <name>api-gateway</name>
   <url>http://maven.apache.org</url>
-  <properties>
-    <cloud.gateway.version>3.0.1</cloud.gateway.version>
-  </properties>
   <dependencies>
     <!-- testing -->
     <dependency>
@@ -34,14 +31,18 @@
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-gateway</artifactId>
-        <version>${cloud.gateway.version}</version>
     </dependency>
     <!-- eureka client -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-      <version>${netflix.eureka.version}</version>
     </dependency>
+    <!--  netflix eureka client needs this artifact -->
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-apache-client4</artifactId>
+			<version>1.19.4</version>
+		</dependency>
   </dependencies>
 
   <build>

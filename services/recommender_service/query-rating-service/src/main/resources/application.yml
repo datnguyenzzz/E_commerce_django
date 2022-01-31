@@ -17,6 +17,14 @@ spring:
   application:
     name: query-rating-service
 
+management:
+  security:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 eureka:
   client:
     fetch-registry: true
@@ -27,3 +35,7 @@ eureka:
       defaultZone: http://serviceregistry:8761/eureka/
   instance:
     prefer-ip-address: true
+    
+ribbon:
+  eureka:
+    enabled: true

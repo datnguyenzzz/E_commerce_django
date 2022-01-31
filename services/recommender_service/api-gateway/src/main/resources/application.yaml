@@ -7,25 +7,19 @@ services:
 
 spring:
   application:
-    name: api-gateway 
-  cloud:
-    discovery:
-      enabled: true 
-      client:
-        health-indicator:
-          enabled: true 
-    gateway:
-      discovery:
-        locator:
-          enabled: true
+    name: api-gateway
 
 management:
   security:
     enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 eureka:
   client:
-    register-with-eureka: false
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
