@@ -12,6 +12,25 @@ services:
       - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
     command: "java -Xmx256m -jar /recommender/service-registry.jar"
 
+## Prometheus and blackbox-exporter
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus-config/:/etc/prometheus/
+    ports:
+      - 9090:9090
+    restart: always
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter
+    ports:
+      - 9115:9115
+
 # Message queue
   zookeeper:
     image: wurstmeister/zookeeper:latest
