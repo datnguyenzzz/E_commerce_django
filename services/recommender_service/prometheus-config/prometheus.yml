@@ -21,8 +21,10 @@ scrape_configs:
   relabel_configs:
   - source_labels: [__meta_eureka_app_name]
     target_label: application
-  - source_labels: [__meta_eureka_app_instance_metadata_metrics_path]
+  - source_labels: [__meta_eureka_app_instance_metadata_prometheus_path]
+    action: replace
     target_label: __metrics_path__
+    regex: (.+)
   - source_labels: [__address__]
     target_label: instance
 # Discover targets from Eureka and probe the health endpoints via the Blackbox Exporter (Blackbox monitoring)
