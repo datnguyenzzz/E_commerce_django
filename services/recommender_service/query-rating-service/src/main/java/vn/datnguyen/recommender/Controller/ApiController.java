@@ -27,16 +27,22 @@ public class ApiController {
     @GetMapping
     public ResponseEntity<List<Rating>> getRating(@RequestParam(required = false) String clientId, @RequestParam(required = false) String itemId) {
         if (clientId != null && itemId != null) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ratingRepository.findByClientIdAndItemId(clientId, itemId));
+
+            List<Rating> result = ratingRepository.findByClientIdAndItemId(clientId, itemId);
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
         else if (clientId==null && itemId==null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         else if (clientId != null) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ratingRepository.findByClientId(clientId));
+
+            List<Rating> result = ratingRepository.findByClientId(clientId);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
         else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ratingRepository.findByItemId(itemId));
+            List<Rating> result = ratingRepository.findByItemId(itemId);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
     }
 

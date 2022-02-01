@@ -13,13 +13,36 @@ amazon:
     accesskey: aws-access-key
     secretkey: aws-secret-key
 
+spring:
+  application:
+    name: query-rating-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
+
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
+      defaultZone: http://serviceregistry:8761/eureka/
   instance:
-    appname: query-rating-service
-    preferIpAddress: true
+    prefer-ip-address: true
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
+    
+ribbon:
+  eureka:
+    enabled: true

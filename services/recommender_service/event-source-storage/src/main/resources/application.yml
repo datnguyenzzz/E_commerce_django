@@ -2,11 +2,14 @@ server:
   port: 0
 
 #Postgre setup 
-spring.datasource:
-  url: jdbc:postgresql://postgresql:5432/EventSource
-  username: postgres
-  password: password
-  initialization-mode: always
+spring:
+  application:
+    name: event-source-storage
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/EventSource
+    username: postgres
+    password: password
+    initialization-mode: always
 
 DBTable:
   clientIdCol: clientId
@@ -32,14 +35,29 @@ ConsumerKafka:
   bootstrapServers: kafka:9092
   groupId: eventSourcing
   topicConsumerFromRatingCommand: ratingCommandToEventSource
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
 
 eureka:
   client:
-    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
     healthcheck:
       enabled: true 
     serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
+      defaultZone: http://serviceregistry:8761/eureka/
   instance:
-    appname: event-source-storage
-    preferIpAddress: true
+    prefer-ip-address: true
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"

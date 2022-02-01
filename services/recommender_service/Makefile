@@ -13,7 +13,8 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
-	docker-compose up -d
+	docker-compose up -d --scale commandrating=2 --scale queryrating=2
+##	docker-compose up -d
 	docker-compose ps
 
 shutdown:

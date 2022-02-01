@@ -1,16 +1,13 @@
 server:
-  port: 0
+  port: 8765
 
-incomingEvent:
-  avroPublishRatingEvent: AvroPublishRatingEvent
-  avroUpdateRatingEvent: AvroUpdateRatingEvent
-  avroDeleteRatingEvent: AvroDeleteRatingEvent
+services:
+  queryRating: lb://QUERY-RATING-SERVICE
+  commandRating: lb://COMMAND-RATING-SERVICE
 
-transactionKafka:
-  messageId: 1
-  bootstrapServers: kafka:9092
-  transactionIdPrefix: ratingCommand
-  topic: ratingCommandToEventSource
+spring:
+  application:
+    name: api-gateway
 
 management:
   endpoints:
@@ -24,13 +21,8 @@ management:
       percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
       sla.http.server.requests: 500ms, 2000ms
 
-spring:
-  application:
-    name: command-rating-service
-
 eureka:
   client:
-    fetch-registry: true
     register-with-eureka: true
     healthcheck:
       enabled: true 
@@ -41,7 +33,3 @@ eureka:
     metadata-map:
       "prometheus.scrape": "true"
       "prometheus.path": "/actuator/prometheus"
-
-ribbon:
-  eureka:
-    enabled: true
