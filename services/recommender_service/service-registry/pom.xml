@@ -49,6 +49,11 @@
 			<artifactId>jersey-apache-client4</artifactId>
 			<version>1.19.4</version>
 		</dependency>
+    <!-- sleuth -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
   </dependencies>
 
   <build>

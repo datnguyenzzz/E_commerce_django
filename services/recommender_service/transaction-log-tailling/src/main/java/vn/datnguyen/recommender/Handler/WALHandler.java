@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Handler;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -106,7 +107,7 @@ public class WALHandler {
                 objectMapper.readValue(walPayload, new TypeReference<Map<String, Object>>(){} );
 
             return payload;
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
