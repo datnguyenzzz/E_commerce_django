@@ -16,6 +16,7 @@ start:
 	docker-compose up -d --scale commandrating=2 --scale queryrating=2
 ##	docker-compose up -d
 	docker-compose ps
+	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' recommender_service-prometheus-1
 
 shutdown:
 	docker stop $(shell docker ps -a -q)
