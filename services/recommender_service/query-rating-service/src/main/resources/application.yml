@@ -16,6 +16,8 @@ amazon:
 spring:
   application:
     name: query-rating-service
+  zipkin:
+    base-url: http://zipkin:9411/
 
 management:
   endpoints:

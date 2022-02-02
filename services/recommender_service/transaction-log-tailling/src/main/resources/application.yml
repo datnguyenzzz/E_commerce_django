@@ -29,6 +29,8 @@ spring.datasource:
 spring:
   application:
     name: log-miner
+  zipkin:
+    base-url: http://zipkin:9411/
 
 management:
   endpoints:

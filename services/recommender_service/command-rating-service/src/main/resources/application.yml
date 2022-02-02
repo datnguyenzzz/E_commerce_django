@@ -27,6 +27,8 @@ management:
 spring:
   application:
     name: command-rating-service
+  zipkin:
+    base-url: http://zipkin:9411/
 
 eureka:
   client:

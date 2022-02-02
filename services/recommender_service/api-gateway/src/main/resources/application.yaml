@@ -8,6 +8,8 @@ services:
 spring:
   application:
     name: api-gateway
+  zipkin:
+    base-url: http://zipkin:9411/
 
 management:
   endpoints:
