@@ -18,7 +18,8 @@ public class EventConsumer implements Consumer {
         this.eventSourceService = eventSourceService;
     }
 
-    @KafkaListener(topics = "${ConsumerKafka.topicConsumerFromRatingCommand}", id = "${ConsumerKafka.groupId}")
+    @KafkaListener(topics = {"${ConsumerKafka.topicConsumerFromRatingCommand}", "${ConsumerKafka.topicConsumerFromRatingQuery}"},
+                   id = "${ConsumerKafka.groupId}")
     @Override
     public void execute(AvroEvent event) {
         this.eventSourceService.process(event);

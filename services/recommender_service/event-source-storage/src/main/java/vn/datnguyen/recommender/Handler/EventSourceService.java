@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
+import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Controller.EventConsumer;
 import vn.datnguyen.recommender.Models.CachedEvent;
@@ -136,6 +137,10 @@ public class EventSourceService implements EventHandler {
             return payloadFrom((AvroDeleteRating) data);
         }
 
+        else if (data instanceof AvroQueryRating) {
+            return payloadFrom((AvroQueryRating) data);
+        }
+
         return null;
     }
 
@@ -162,6 +167,14 @@ public class EventSourceService implements EventHandler {
         payload.put(clientIdCol, data.getClientId());
         payload.put(itemIdCol, data.getItemId());
         logger.info("EVENT-SOURCE-STORAGE: load data from AvroDeleteRating: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroQueryRating data) {
+        Map<String, Object> payload = new HashMap<>(); 
+        payload.put(clientIdCol, data.getClientId());
+        payload.put(itemIdCol, data.getItemId());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroQueryRating: " + payload);
         return payload;
     }
 
