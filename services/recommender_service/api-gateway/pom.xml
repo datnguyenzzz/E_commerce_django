@@ -27,7 +27,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
-      <version>${webflux.version}</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -48,6 +47,16 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+    <!-- sleuth -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+    <!-- zipkin -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
 		</dependency>
   </dependencies>
 

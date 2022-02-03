@@ -14,8 +14,7 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <spring.version>5.3.3</spring.version>
-    <spring.kafka.version>2.6.5</spring.kafka.version>
+    <spring.kafka.version>2.7.1</spring.kafka.version>
     <aws.dynamodb.version>1.12.145</aws.dynamodb.version>
     <spring.dynamodb.version>5.1.0</spring.dynamodb.version>
   </properties>
@@ -72,7 +71,6 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-      <version>${spring.cloud.version}</version>
     </dependency>
     <!--  netflix eureka client needs this artifact -->
 		<dependency>
@@ -85,7 +83,16 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
-
+    <!-- sleuth -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+    <!-- zipkin -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+		</dependency>
   </dependencies>
 
   <build>
