@@ -11,6 +11,7 @@ incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
   avroUpdateRatingEvent: AvroUpdateRatingEvent
   avroDeleteRatingEvent: AvroDeleteRatingEvent
+  avroQueryRatingEvent: AvroQueryRatingEvent
 
 transactionKafka:
   messageId: 1

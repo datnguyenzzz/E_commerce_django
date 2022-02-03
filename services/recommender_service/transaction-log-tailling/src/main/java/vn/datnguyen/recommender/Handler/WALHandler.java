@@ -35,6 +35,9 @@ public class WALHandler {
     @Value("${incomingEvent.avroDeleteRatingEvent}")
     private String avroDeleteRatingEvent;
 
+    @Value("${incomingEvent.avroQueryRatingEvent}")
+    private String avroQueryRatingEvent;
+
     @Value("${DBTable.clientIdCol}")
     private String clientIdCol;
 
@@ -66,6 +69,7 @@ public class WALHandler {
                     .filter(this::isInsert)
                     .map(this::getPayload)
                     .map(this::toAvroEvent)
+                    .filter(this::isNotQueryRatingEvent)
                     .forEach(eventPublisher::execute)
 
         );
@@ -93,6 +97,10 @@ public class WALHandler {
         String insertMethod = "INSERT:";
         logger.debug("WAL-MINER" + wal[2]);
         return (wal[2].equals(insertMethod));
+    }
+
+    private boolean isNotQueryRatingEvent(AvroEvent event) {
+        return (!(event.getEventType().equals(avroQueryRatingEvent)));
     }
 
     private Map<String, Object> getPayload(String[] wal) {
