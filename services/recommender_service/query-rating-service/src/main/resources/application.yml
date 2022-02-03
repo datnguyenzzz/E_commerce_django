@@ -5,6 +5,7 @@ ConsumerKafka:
   bootstrapServers: kafka:9092
   groupId: fromEventSourcing
   topicConsumerFromEventSource: ratingCommandFromEventSource
+  topicProducerToEventSource: ratingQueryToEventSource
 
 amazon:
   dynamodb:
