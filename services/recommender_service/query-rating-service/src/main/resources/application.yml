@@ -6,6 +6,7 @@ ConsumerKafka:
   groupId: fromEventSourcing
   topicConsumerFromEventSource: ratingCommandFromEventSource
   topicProducerToEventSource: ratingQueryToEventSource
+  transactionPrefix: queryRating
 
 amazon:
   dynamodb:
