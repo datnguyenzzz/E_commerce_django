@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import vn.datnguyen.recommender.Handlers.QueryRatingService;
 import vn.datnguyen.recommender.Models.Rating;
-import vn.datnguyen.recommender.Repositories.RatingRepository;
 
 @RestController
 @RequestMapping("/api/v/1.0.0/rating")
 public class ApiController {
 
-    private RatingRepository ratingRepository;
+    private QueryRatingService queryRatingService;
 
     @Autowired
-    public ApiController(RatingRepository ratingRepository) {
-        this.ratingRepository = ratingRepository;
+    public ApiController(QueryRatingService queryRatingService) {
+        this.queryRatingService = queryRatingService;
     }
     
     @GetMapping
     public ResponseEntity<List<Rating>> getRating(@RequestParam(required = false) String clientId, @RequestParam(required = false) String itemId) {
         if (clientId != null && itemId != null) {
 
-            List<Rating> result = ratingRepository.findByClientIdAndItemId(clientId, itemId);
+            List<Rating> result = queryRatingService.process(clientId, itemId);
 
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
@@ -37,11 +37,11 @@ public class ApiController {
         }
         else if (clientId != null) {
 
-            List<Rating> result = ratingRepository.findByClientId(clientId);
+            List<Rating> result = queryRatingService.process(clientId, null);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
         else {
-            List<Rating> result = ratingRepository.findByItemId(itemId);
+            List<Rating> result = queryRatingService.process(null, itemId);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
         }
     }

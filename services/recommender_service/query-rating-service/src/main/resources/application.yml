@@ -1,11 +1,15 @@
 server:
   port: 0
 
+incomingEvent:
+  avroQueryRatingEvent: AvroQueryRatingEvent
+
 ConsumerKafka:
   bootstrapServers: kafka:9092
   groupId: fromEventSourcing
   topicConsumerFromEventSource: ratingCommandFromEventSource
   topicProducerToEventSource: ratingQueryToEventSource
+  topicProducerToEventSourcePartitionId: 1
   transactionPrefix: queryRating
 
 amazon:
