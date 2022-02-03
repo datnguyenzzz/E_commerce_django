@@ -69,6 +69,9 @@ public class WALHandler {
                     .filter(this::isInsert)
                     .map(this::getPayload)
                     .map(this::toAvroEvent)
+                    // Only publish commandRatingEventTo query-service
+                    // Future will remove this filter
+                    // because QueryRatingEvent need to publish to recommandation service
                     .filter(this::isNotQueryRatingEvent)
                     .forEach(eventPublisher::execute)
 
