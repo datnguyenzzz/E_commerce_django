@@ -14,8 +14,7 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <spring.version>5.3.3</spring.version>
-    <spring.kafka.version>2.6.5</spring.kafka.version>
+    <spring.kafka.version>2.7.1</spring.kafka.version>
     <aws.dynamodb.version>1.12.145</aws.dynamodb.version>
     <spring.dynamodb.version>5.1.0</spring.dynamodb.version>
   </properties>
@@ -89,7 +88,11 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
 		</dependency>
-
+    <!-- zipkin -->
+    <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+		</dependency>
   </dependencies>
 
   <build>

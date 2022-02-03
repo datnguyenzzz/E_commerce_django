@@ -40,16 +40,10 @@ services:
 
 ## zipkin
   zipkin:
+    image: openzipkin/zipkin
     container_name: zipkin
-    build: 
-      context: ./zipkin-service
     ports:
       - 9411:9411
-    depends_on:
-      - serviceregistry
-    volumes:
-      - ./zipkin-service/target/zipkin-service-1.0-SNAPSHOT.jar:/recommender/zipkin-service.jar
-    command: "java -Xmx256m -jar /recommender/zipkin-service.jar"
 
 # Message queue
   zookeeper:

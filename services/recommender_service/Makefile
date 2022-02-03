@@ -13,7 +13,7 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
-	docker-compose up -d --scale commandrating=2 --scale queryrating=2
+	docker-compose up -d --scale commandrating=1 --scale queryrating=1
 ##	docker-compose up -d
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
