@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import vn.datnguyen.recommender.Domain.AddToCartBehaviorCommand;
+import vn.datnguyen.recommender.Domain.BuyBehaviorCommand;
 import vn.datnguyen.recommender.Domain.DeleteRatingCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
 import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
@@ -79,12 +81,12 @@ public class ApiController {
     }
 
     @PostMapping("/buy")
-    public CompletableFuture<ResponseEntity<String>> buyItem(@RequestBody String command) {
+    public CompletableFuture<ResponseEntity<String>> buyItem(@RequestBody BuyBehaviorCommand command) {
         return null;
     }
 
     @PostMapping("/addToCart")
-    public CompletableFuture<ResponseEntity<String>> addToCart(@RequestBody String command) {
+    public CompletableFuture<ResponseEntity<String>> addToCart(@RequestBody AddToCartBehaviorCommand command) {
         return null;
     }
 }
