@@ -1,10 +1,12 @@
 init:
 	docker-compose up -d dynamodb kafka redis postgresql dynamodb serviceregistry
 
-testQueryService:
-	mvn clean 
-	docker-compose up -d dynamodb 
-	mvn package
+testRecommender:
+	docker-compose up -d zookeeper nimbus supervisor ui --scale supervisor=3
+	docker build -t wurstmeister/storm ./storm/storm-base
+	docker build -t wurstmeister/storm-nimbus ./storm/storm-nimbus
+	docker build -t wurstmeister/storm-supervisor ./storm/storm-supervisor
+	docker build -t wurstmeister/storm-ui ./storm/storm-ui
 
 testConsumer:
 	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093

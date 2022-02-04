@@ -175,3 +175,30 @@ services:
     volumes:
       - ./api-gateway/target/api-gateway-1.0-SNAPSHOT.jar:/recommender/api-gateway.jar
     command: "java -Xmx256m -jar /recommender/api-gateway.jar"
+
+## RECOMMENDER SERVICE
+  nimbus:
+    image: wurstmeister/storm-nimbus
+    ports:
+      - "49773:3773"
+      - "49772:3772"
+      - "49627:6627"
+      - "22"
+    links: 
+      - zookeeper:zk
+  supervisor:
+    image: wurstmeister/storm-supervisor
+    ports:
+      - "8000"
+      - "22"
+    links: 
+      - nimbus:nimbus
+      - zookeeper:zk
+  ui:
+    image: wurstmeister/storm-ui
+    ports:
+      - "49080:8080"
+      - "22"
+    links: 
+      - nimbus:nimbus
+      - zookeeper:zk
