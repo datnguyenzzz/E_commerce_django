@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
@@ -37,6 +39,12 @@ public class WALHandler {
 
     @Value("${incomingEvent.avroQueryRatingEvent}")
     private String avroQueryRatingEvent;
+
+    @Value("${incomingEvent.avroBuyBehaviorEvent}")
+    private String avroBuyBehaviorEvent;
+
+    @Value("${incomingEvent.avroAddToCartBehaviorEvent}")
+    private String avroAddToCartBehaviorEvent;
 
     @Value("${DBTable.clientIdCol}")
     private String clientIdCol;
@@ -69,10 +77,6 @@ public class WALHandler {
                     .filter(this::isInsert)
                     .map(this::getPayload)
                     .map(this::toAvroEvent)
-                    // Only publish commandRatingEventTo query-service
-                    // Future will remove this filter
-                    // because QueryRatingEvent need to publish to recommandation service
-                    .filter(this::isNotQueryRatingEvent)
                     .forEach(eventPublisher::execute)
 
         );
@@ -100,10 +104,6 @@ public class WALHandler {
         String insertMethod = "INSERT:";
         logger.debug("WAL-MINER" + wal[2]);
         return (wal[2].equals(insertMethod));
-    }
-
-    private boolean isNotQueryRatingEvent(AvroEvent event) {
-        return (!(event.getEventType().equals(avroQueryRatingEvent)));
     }
 
     private Map<String, Object> getPayload(String[] wal) {
@@ -139,8 +139,20 @@ public class WALHandler {
                         .setScore((int)walPayload.get(scoreCol))
                         .build();
         }
-        else {
+        else if (eventType.equals(avroDeleteRatingEvent)) {
             payload = (AvroDeleteRating)AvroDeleteRating.newBuilder()
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .build();
+        }
+        else if (eventType.equals(avroBuyBehaviorEvent)) {
+            payload = (AvroBuyBehavior)AvroBuyBehavior.newBuilder()
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .build();
+        }
+        else if (eventType.equals(avroAddToCartBehaviorEvent)) {
+            payload = (AvroAddToCartBehavior)AvroAddToCartBehavior.newBuilder()
                         .setClientId((String)walPayload.get(clientIdCol))
                         .setItemId((String)walPayload.get(itemIdCol))
                         .build();

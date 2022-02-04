@@ -20,6 +20,15 @@ public class TransactionalPublisher implements Publisher {
     @Value("${transactionKafka.topicToRecommendSerivce}")
     private String topicToRecommendSerivce;
 
+    @Value("${incomingEvent.avroPublishRatingEvent}")
+    private String avroPublishRatingEvent;
+
+    @Value("${incomingEvent.avroUpdateRatingEvent}")
+    private String avroUpdateRatingEvent;
+
+    @Value("${incomingEvent.avroDeleteRatingEvent}")
+    private String avroDeleteRatingEvent;
+
     private final Logger logger = LoggerFactory.getLogger(TransactionalPublisher.class);
     private KafkaTemplate<String, AvroEvent> kafkaTemplate;
     
@@ -28,14 +37,22 @@ public class TransactionalPublisher implements Publisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+    private boolean isCommandRatingEvent(AvroEvent event) {
+        return ((event.getEventType().equals(avroPublishRatingEvent)) || 
+                (event.getEventType().equals(avroUpdateRatingEvent)) || 
+                (event.getEventType().equals(avroDeleteRatingEvent)));
+    }
+
     @Override
     public void execute(AvroEvent event) {
         logger.info("EVENT-SOURCE: Transaction publish event " + event);
 
         kafkaTemplate.executeInTransaction(op -> {
-            op.send(topicToQueryService, Integer.toString(event.getPartitionId()), event)
-                .addCallback(this::onSuccessToQueryService, this::onFailureToQueryService);
-            
+
+            if (isCommandRatingEvent(event)) {
+                op.send(topicToQueryService, Integer.toString(event.getPartitionId()), event)
+                    .addCallback(this::onSuccessToQueryService, this::onFailureToQueryService);
+            }
             // send to recommendation service
             // op.send();
             return true;
