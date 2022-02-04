@@ -74,6 +74,30 @@
                             "name": "itemId", "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "AvroBuyBehavior",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroAddToCartBehavior",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
                 }
             ]
         }
