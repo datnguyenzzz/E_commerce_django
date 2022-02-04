@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
@@ -136,11 +138,15 @@ public class EventSourceService implements EventHandler {
         else if (data instanceof AvroDeleteRating) {
             return payloadFrom((AvroDeleteRating) data);
         }
-
         else if (data instanceof AvroQueryRating) {
             return payloadFrom((AvroQueryRating) data);
         }
-
+        else if (data instanceof AvroBuyBehavior) {
+            return payloadFrom((AvroBuyBehavior) data);
+        }
+        else if (data instanceof AvroAddToCartBehavior) {
+            return payloadFrom((AvroAddToCartBehavior) data);
+        }
         return null;
     }
 
@@ -175,6 +181,22 @@ public class EventSourceService implements EventHandler {
         payload.put(clientIdCol, data.getClientId());
         payload.put(itemIdCol, data.getItemId());
         logger.info("EVENT-SOURCE-STORAGE: load data from AvroQueryRating: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroBuyBehavior data) {
+        Map<String, Object> payload = new HashMap<>(); 
+        payload.put(clientIdCol, data.getClientId());
+        payload.put(itemIdCol, data.getItemId());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroBuyBehavior: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroAddToCartBehavior data) {
+        Map<String, Object> payload = new HashMap<>(); 
+        payload.put(clientIdCol, data.getClientId());
+        payload.put(itemIdCol, data.getItemId());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroAddToCartBehavior: " + payload);
         return payload;
     }
 
