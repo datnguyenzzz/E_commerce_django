@@ -21,7 +21,7 @@ import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
 import vn.datnguyen.recommender.Handler.RatingService;
 
 @RestController
-@RequestMapping("/api/v/1.0.0/rating")
+@RequestMapping("/api/v/1.0.0")
 public class ApiController {
 
     private final Logger logger = LoggerFactory.getLogger(ApiController.class);
@@ -33,7 +33,7 @@ public class ApiController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping()
+    @PostMapping("/rating")
     public CompletableFuture<ResponseEntity<String>> PublishRating(@Validated @RequestBody PublishRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "published rating command = " + command.toString());
         return ratingService.process(command)
@@ -48,7 +48,7 @@ public class ApiController {
                             });
     }
 
-    @PutMapping() 
+    @PutMapping("/rating") 
     public CompletableFuture<ResponseEntity<String>> UpdateRating(@Validated @RequestBody UpdateRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "updated rating command = "+ command.toString());
         return ratingService.process(command)
@@ -63,7 +63,7 @@ public class ApiController {
                             });
     }
 
-    @DeleteMapping() 
+    @DeleteMapping("/rating") 
     public CompletableFuture<ResponseEntity<String>> DeleteRating(@Validated @RequestBody DeleteRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "deleted rating command = "+ command.toString());
         return ratingService.process(command)
@@ -76,5 +76,15 @@ public class ApiController {
                                 String bodyRes = "Deleted not sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
+    }
+
+    @PostMapping("/buy")
+    public CompletableFuture<ResponseEntity<String>> buyItem(@RequestBody String command) {
+        return null;
+    }
+
+    @PostMapping("/addToCart")
+    public CompletableFuture<ResponseEntity<String>> addToCart(@RequestBody String command) {
+        return null;
     }
 }
