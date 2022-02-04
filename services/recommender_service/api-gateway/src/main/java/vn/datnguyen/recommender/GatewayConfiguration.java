@@ -35,6 +35,22 @@ public class GatewayConfiguration {
                     )
                     .uri(CommandRatingService)
             )
+            .route(r -> r.method(HttpMethod.POST)
+                    .and()
+                    .path("/buy")
+                    .filters(
+                        f -> f.rewritePath("/buy", "/api/v/1.0.0/buy")
+                    )
+                    .uri(CommandRatingService)
+            )
+            .route(r -> r.method(HttpMethod.POST)
+                    .and()
+                    .path("/addToCart")
+                    .filters(
+                        f -> f.rewritePath("/addToCart", "/api/v/1.0.0/addToCart")
+                    )
+                    .uri(CommandRatingService)
+            )
             .build();
     }
 }
