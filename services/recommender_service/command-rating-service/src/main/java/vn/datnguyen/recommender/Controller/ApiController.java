@@ -82,11 +82,31 @@ public class ApiController {
 
     @PostMapping("/buy")
     public CompletableFuture<ResponseEntity<String>> buyItem(@RequestBody BuyBehaviorCommand command) {
-        return null;
+        logger.info("COMMAND-RATING-SERVICE: " + "buy behavior = "+ command.toString());
+        return ratingService.process(command)
+                            .thenApply(result -> {
+                                String bodyRes = "Buy sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
+                            .exceptionally(e -> {
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
+                                String bodyRes = "Buy not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
+                            });
     }
 
     @PostMapping("/addToCart")
     public CompletableFuture<ResponseEntity<String>> addToCart(@RequestBody AddToCartBehaviorCommand command) {
-        return null;
+        logger.info("COMMAND-RATING-SERVICE: " + "add to cart behavior = "+ command.toString());
+        return ratingService.process(command)
+                            .thenApply(result -> {
+                                String bodyRes = "Add to cart sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
+                            .exceptionally(e -> {
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
+                                String bodyRes = "Add to cart not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
+                            });
     }
 }

@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
+import vn.datnguyen.recommender.Domain.AddToCartBehaviorCommand;
+import vn.datnguyen.recommender.Domain.BuyBehaviorCommand;
 import vn.datnguyen.recommender.Domain.Command;
 import vn.datnguyen.recommender.Domain.DeleteRatingCommand;
 import vn.datnguyen.recommender.Domain.ErrorRatingCommand;
@@ -34,6 +38,12 @@ public class RatingService implements CommandHandler, EventHandler {
 
     @Value("${incomingEvent.avroDeleteRatingEvent}")
     private String avroDeleteRatingEvent;
+
+    @Value("${incomingEvent.avroBuyBehaviorEvent}")
+    private String avroBuyBehaviorEvent;
+
+    @Value("${incomingEvent.avroAddToCartBehaviorEvent}")
+    private String avroAddToCartBehaviorEvent;
 
     @Autowired
     public RatingService(RatingTransactionalPublisher ratingPublisher) {
@@ -64,6 +74,12 @@ public class RatingService implements CommandHandler, EventHandler {
         else if (command instanceof DeleteRatingCommand) {
             return validate((DeleteRatingCommand) command);
         }
+        else if (command instanceof BuyBehaviorCommand) {
+            return validate((BuyBehaviorCommand) command);
+        }
+        else if (command instanceof AddToCartBehaviorCommand) {
+            return validate((AddToCartBehaviorCommand) command);
+        }
         return new ErrorRatingCommand("Undefined error RATING-COMMAND-SERVICE");
     }
 
@@ -74,9 +90,17 @@ public class RatingService implements CommandHandler, EventHandler {
         else if (command instanceof UpdateRatingCommand) {
             return toAvroEvent((UpdateRatingCommand) command);
         }
-        else {
+        else if (command instanceof DeleteRatingCommand) {
             return toAvroEvent((DeleteRatingCommand) command);
         }
+        else if (command instanceof BuyBehaviorCommand) {
+            return toAvroEvent((BuyBehaviorCommand) command);
+        }
+        else if (command instanceof AddToCartBehaviorCommand) {
+            return toAvroEvent((AddToCartBehaviorCommand) command);
+        }
+
+        return null;
     }
 
     private Command validate(PublishRatingCommand command) {
@@ -109,6 +133,26 @@ public class RatingService implements CommandHandler, EventHandler {
         return new ErrorRatingCommand(command.getClientId(), command.getItemId(), "Unacceptable delete rating");
     }
 
+    private Command validate(AddToCartBehaviorCommand command) {
+        boolean acceptable = true;
+        
+        if (acceptable) {
+            return command;
+        }
+        
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId(), "Unacceptable add to cart behavior");
+    }
+
+    private Command validate(BuyBehaviorCommand command) {
+        boolean acceptable = true;
+        
+        if (acceptable) {
+            return command;
+        }
+        
+        return new ErrorRatingCommand(command.getClientId(), command.getItemId(), "Unacceptable buy behavior");
+    }
+
     private AvroEvent toAvroEvent(PublishRatingCommand command) {
         AvroPublishRating eventPayload = AvroPublishRating.newBuilder()
             .setClientId(command.getClientId())
@@ -136,6 +180,24 @@ public class RatingService implements CommandHandler, EventHandler {
             .build();
         
         return wrap(eventPayload, avroDeleteRatingEvent);
+    }
+
+    private AvroEvent toAvroEvent(BuyBehaviorCommand command) {
+        AvroBuyBehavior eventPayload = AvroBuyBehavior.newBuilder()
+            .setClientId(command.getClientId())
+            .setItemId(command.getItemId())
+            .build();
+        
+        return wrap(eventPayload, avroBuyBehaviorEvent);
+    }
+
+    private AvroEvent toAvroEvent(AddToCartBehaviorCommand command) {
+        AvroAddToCartBehavior eventPayload = AvroAddToCartBehavior.newBuilder()
+            .setClientId(command.getClientId())
+            .setItemId(command.getItemId())
+            .build();
+        
+        return wrap(eventPayload, avroAddToCartBehaviorEvent);
     }
 
     private AvroEvent wrap(Object payload, String payloadType) {
