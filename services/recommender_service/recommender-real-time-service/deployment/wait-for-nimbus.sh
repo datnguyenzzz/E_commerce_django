@@ -21,8 +21,9 @@ USAGE
 
 wait_for() {
  if ! command -v nc >/dev/null; then
-    echoerr 'nc command is missing!'
-    exit 1
+    echo 'nc command is missing!'
+    apt-get update && apt-get install -y netcat
+    echo 'nc is ready'
   fi
 
   for i in `seq $TIMEOUT` ; do
@@ -80,5 +81,10 @@ if [ "$HOST" = "" -o "$PORT" = "" ]; then
   echoerr "Error: you need to provide a host and port to test."
   usage 2
 fi
+
+echo $HOST 
+echo $PORT 
+echo $TIMEOUT
+echo $@
 
 wait_for "$@"

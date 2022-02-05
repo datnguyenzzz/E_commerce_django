@@ -57,6 +57,11 @@
       <artifactId>storm-clojure</artifactId>
       <version>${storm.client.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.storm</groupId>
+      <artifactId>storm-metrics</artifactId>
+      <version>${storm.client.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
