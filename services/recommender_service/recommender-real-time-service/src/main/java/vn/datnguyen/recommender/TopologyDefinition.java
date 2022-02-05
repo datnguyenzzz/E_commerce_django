@@ -15,6 +15,7 @@ public class TopologyDefinition {
     private static final String KAFKA_SPOUT_THREAD = customProperties.getProp("KAFKA_SPOUT_THREAD");
     private static final String TOPOLOGY_WORKERS = customProperties.getProp("TOPOLOGY_WORKERS");
     private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
+    private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
     private static SpoutCreator spoutCreator = new SpoutCreator();
     private static LoggerBolt loggerBolt = new LoggerBolt();
@@ -32,7 +33,7 @@ public class TopologyDefinition {
         topologyBuilder.setSpout("kafka-spout", spoutCreator.kafkaSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
 
         topologyBuilder.setBolt("logger-bolt", loggerBolt, Integer.parseInt(LOGGER_BOLT_THREADS))
-            .shuffleGrouping("kafka-spout");
+            .shuffleGrouping("kafka-spout", EVENTSOURCE_STREAM);
 
         StormSubmitter.submitTopology("Recommender-Realtime-Topology", getConfig(), topologyBuilder.createTopology());
     }
