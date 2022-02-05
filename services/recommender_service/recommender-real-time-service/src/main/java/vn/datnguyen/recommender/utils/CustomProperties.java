@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class GetCustomProperties {
+public class CustomProperties {
 
     private InputStream inputStream;
     private String value;
 
-    public String getProp(String key) throws IOException {
+    public String getProp(String key) {
         try {
             Properties props = new Properties();
             String propFile = "custom-config.properties";
@@ -29,7 +29,12 @@ public class GetCustomProperties {
             System.out.println(e.getMessage());
         }
         finally {
-            inputStream.close();
+            try {
+                inputStream.close();
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return value;

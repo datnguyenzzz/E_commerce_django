@@ -15,6 +15,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
 public class TopologyDefinition {
+
     public static class ExampleBolt extends BaseRichBolt {
 
         private OutputCollector collector;
@@ -26,13 +27,6 @@ public class TopologyDefinition {
     
         @Override
         public void execute(Tuple tuple) {
-            String word = tuple.getString(0); 
-    
-            StringBuilder sb = new StringBuilder();
-            sb.append(word).append(">_<");
-    
-            collector.emit(tuple, new Values(sb.toString()));
-            collector.ack(tuple);
         }
     
         @Override
