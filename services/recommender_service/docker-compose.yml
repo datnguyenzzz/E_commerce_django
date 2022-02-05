@@ -177,3 +177,34 @@ services:
     command: "java -Xmx256m -jar /recommender/api-gateway.jar"
 
 ## RECOMMENDER SERVICE
+  nimbus:
+    image: storm:latest
+    container_name: nimbus
+    depends_on:
+      - zookeeper
+    restart: always
+    ports:
+      - 6627:6627
+    volumes:
+      - ./storm/nimbus:/conf
+    command: storm nimbus
+  
+  supervisor:
+    image: storm:latest
+    depends_on:
+      - zookeeper
+      - nimbus
+    restart: always
+    volumes:
+      - ./storm/supervisor:/conf
+    command: storm supervisor
+  
+  ui:
+    image: storm:latest
+    container_name: ui
+    depends_on:
+      - nimbus
+    restart: always
+    ports:
+      - 8080:8080
+    command: storm ui
