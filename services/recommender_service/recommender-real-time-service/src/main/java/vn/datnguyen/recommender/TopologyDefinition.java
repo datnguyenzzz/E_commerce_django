@@ -46,16 +46,16 @@ public class TopologyDefinition {
 
         topologyBuilder.setSpout("mew-test-spout", new TestWordSpout(), 1);
 
-        topologyBuilder.setBolt("bolt-test-1", new ExampleBolt(), 3)
+        topologyBuilder.setBolt("bolt-test-1", new ExampleBolt(), 1)
             .shuffleGrouping("mew-test-spout");
         
-        topologyBuilder.setBolt("bolt-test-2", new ExampleBolt(), 2)
+        topologyBuilder.setBolt("bolt-test-2", new ExampleBolt(), 1)
             .shuffleGrouping("bolt-test-1");
 
         Config config = new Config();
         config.setDebug(true);
-        //3 supervisor - 5 worker each
-        config.setNumWorkers(5);
+        //3 supervisor - 4 worker each
+        config.setNumWorkers(4);
 
         StormSubmitter.submitTopology("Recommender-Realtime-Topology", config, topologyBuilder.createTopology());
 
