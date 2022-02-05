@@ -186,7 +186,7 @@ services:
     ports:
       - 6627:6627
     volumes:
-      - ./storm/nimbus:/conf
+      - ./storm/nimbus/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
     command: storm nimbus
   
   supervisor:
@@ -196,7 +196,7 @@ services:
       - nimbus
     restart: always
     volumes:
-      - ./storm/supervisor:/conf
+      - ./storm/supervisor/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
     command: storm supervisor
   
   ui:
@@ -208,3 +208,14 @@ services:
     ports:
       - 8080:8080
     command: storm ui
+  
+  recommenderrealtimeservice:
+    image: storm:latest
+    container_name: recommender-real-time-service
+    depends_on:
+      - nimbus
+    volumes:
+      - ./recommender-real-time-service/target:/topology-definition
+      - ./recommender-real-time-service/deployment:/topology-deployment
+      - ./recommender-real-time-service/deployment/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
+    command: /topology-deployment/deploy-topology.sh

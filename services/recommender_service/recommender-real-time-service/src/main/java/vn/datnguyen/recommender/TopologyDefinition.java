@@ -14,7 +14,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
-public class App {
+public class TopologyDefinition {
     public static class ExampleBolt extends BaseRichBolt {
 
         private OutputCollector collector;
@@ -57,7 +57,7 @@ public class App {
         //3 supervisor - 5 worker each
         config.setNumWorkers(5);
 
-        StormSubmitter.submitTopology("Example-Topology", config, topologyBuilder.createTopology());
+        StormSubmitter.submitTopology("Recommender-Realtime-Topology", config, topologyBuilder.createTopology());
 
     }
 }

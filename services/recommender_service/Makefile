@@ -2,7 +2,9 @@ init:
 	docker-compose up -d dynamodb kafka redis postgresql dynamodb serviceregistry
 
 testRecommender:
-	docker-compose up -d zookeeper nimbus supervisor ui --scale supervisor=3
+	mvn clean 
+	mvn package
+	docker-compose up -d zookeeper nimbus supervisor ui recommenderrealtimeservice --scale supervisor=3
 
 testConsumer:
 	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093
