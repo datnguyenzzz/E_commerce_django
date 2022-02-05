@@ -27,8 +27,14 @@ public class RatingService implements CommandHandler, EventHandler {
 
     private RatingTransactionalPublisher ratingPublisher;
 
-    @Value("${transactionKafka.messageId}")
-    private String partitionId;
+    @Value("${transactionKafka.partitionIdCommandRating}")
+    private String partitionIdCommandRating;
+
+    @Value("${transactionKafka.partitionIdBuyBehavior}")
+    private String partitionIdBuyBehavior;
+
+    @Value("${transactionKafka.partitionIdAddToCartBehavior}")
+    private String partitionIdAddToCartBehavior;
 
     @Value("${incomingEvent.avroPublishRatingEvent}")
     private String avroPublishRatingEvent;
@@ -201,9 +207,24 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private AvroEvent wrap(Object payload, String payloadType) {
+
+        int partitionId = 1;
+        if (payloadType.equals(avroUpdateRatingEvent) || 
+            payloadType.equals(avroPublishRatingEvent) ||
+            payloadType.equals(avroDeleteRatingEvent)) {
+                partitionId = Integer.parseInt(partitionIdCommandRating);
+        }
+        else if (payloadType.equals(avroBuyBehaviorEvent)) {
+            partitionId = Integer.parseInt(partitionIdBuyBehavior);
+        }
+
+        else if (payloadType.equals(avroAddToCartBehaviorEvent)) {
+            partitionId = Integer.parseInt(partitionIdAddToCartBehavior);
+        }
+
         return AvroEvent.newBuilder()
                         .setEventId(UUID.randomUUID().toString())
-                        .setPartitionId(Integer.parseInt(partitionId))
+                        .setPartitionId(partitionId)
                         .setTimestamp(System.currentTimeMillis())
                         .setEventType(payloadType)
                         .setData(payload)

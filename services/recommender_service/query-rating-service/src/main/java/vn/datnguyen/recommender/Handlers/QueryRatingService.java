@@ -18,8 +18,8 @@ public class QueryRatingService {
     private RatingTransactionalPublisher ratingTransactionalPublisher;
     private RatingRepository ratingRepository;
 
-    @Value("${ConsumerKafka.topicProducerToEventSourcePartitionId}")
-    private String partitionId;
+    @Value("${ConsumerKafka.partitionIdQueryRating}")
+    private String partitionIdQueryRating;
 
     @Value("${incomingEvent.avroQueryRatingEvent}")
     private String avroQueryRatingEvent;
@@ -59,7 +59,7 @@ public class QueryRatingService {
 
         AvroEvent queryEvent = AvroEvent.newBuilder()
             .setEventId(UUID.randomUUID().toString())
-            .setPartitionId(Integer.parseInt(partitionId))
+            .setPartitionId(Integer.parseInt(partitionIdQueryRating))
             .setTimestamp(System.currentTimeMillis())
             .setEventType(avroQueryRatingEvent)
             .setData(eventPayload)
