@@ -54,7 +54,10 @@ public class TransactionalPublisher implements Publisher {
                     .addCallback(this::onSuccessToQueryService, this::onFailureToQueryService);
             }
             // send to recommendation service
-            // op.send();
+            
+            op.send(topicToRecommendSerivce, Integer.toString(event.getPartitionId()), event)
+                .addCallback(this::onSuccessToRecommenderService, this::onFailureToRecommenderService);
+                
             return true;
         });
     }
@@ -66,5 +69,14 @@ public class TransactionalPublisher implements Publisher {
 
     private void onFailureToQueryService(final Throwable t) {
         logger.warn("EVENT-SOURCE: Unable publish event to QUERY-RATING-SERVICE =" + t.getMessage());
+    }
+
+    private void onSuccessToRecommenderService(final SendResult<String, AvroEvent> res) {
+        logger.info("EVENT-SOURCE: Sucessfully publish event to RECOMMENDER-SERVICE = " 
+                    + res.getProducerRecord().toString());
+    }
+
+    private void onFailureToRecommenderService(final Throwable t) {
+        logger.warn("EVENT-SOURCE: Unable publish event to RECOMMENDER-SERVICE =" + t.getMessage());
     }
 }

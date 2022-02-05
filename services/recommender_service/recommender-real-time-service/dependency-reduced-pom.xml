@@ -80,14 +80,6 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>log4j-api</artifactId>
-          <groupId>org.apache.logging.log4j</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>log4j-core</artifactId>
           <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
@@ -114,10 +106,6 @@
         <exclusion>
           <artifactId>jakarta.xml.bind-api</artifactId>
           <groupId>jakarta.xml.bind</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>javax.annotation-api</artifactId>
-          <groupId>javax.annotation</groupId>
         </exclusion>
         <exclusion>
           <artifactId>metrics-core</artifactId>
@@ -152,10 +140,6 @@
           <groupId>javax.servlet</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>log4j-api</artifactId>
-          <groupId>org.apache.logging.log4j</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>log4j-core</artifactId>
           <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
@@ -174,10 +158,6 @@
         <exclusion>
           <artifactId>metrics-graphite</artifactId>
           <groupId>io.dropwizard.metrics</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -204,20 +184,8 @@
           <groupId>jakarta.xml.bind</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>javax.annotation-api</artifactId>
-          <groupId>javax.annotation</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>metrics-jvm</artifactId>
           <groupId>io.dropwizard.metrics</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>log4j-api</artifactId>
-          <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
         <exclusion>
           <artifactId>log4j-core</artifactId>
