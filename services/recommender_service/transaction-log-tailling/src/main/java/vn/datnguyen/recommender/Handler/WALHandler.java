@@ -20,13 +20,23 @@ import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
+import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 
 @Component
 public class WALHandler {
 
-    @Value("${transactionKafka.messageId}")
-    private String partitionId;
+    @Value("${transactionKafka.partitionIdCommandRating}")
+    private String partitionIdCommandRating;
+
+    @Value("${transactionKafka.partitionIdQueryRating}")
+    private String partitionIdQueryRating;
+
+    @Value("${transactionKafka.partitionIdBuyBehavior}")
+    private String partitionIdBuyBehavior;
+
+    @Value("${transactionKafka.partitionIdAddToCartBehavior}")
+    private String partitionIdAddToCartBehavior;
 
     @Value("${incomingEvent.avroPublishRatingEvent}")
     private String avroPublishRatingEvent;
@@ -145,6 +155,12 @@ public class WALHandler {
                         .setItemId((String)walPayload.get(itemIdCol))
                         .build();
         }
+        else if (eventType.equals(avroQueryRatingEvent)) {
+            payload = (AvroQueryRating)AvroQueryRating.newBuilder()
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .build();
+        }
         else if (eventType.equals(avroBuyBehaviorEvent)) {
             payload = (AvroBuyBehavior)AvroBuyBehavior.newBuilder()
                         .setClientId((String)walPayload.get(clientIdCol))
@@ -162,9 +178,27 @@ public class WALHandler {
     }
 
     private AvroEvent wrapper(Object payload, String eventType) {
+        int partitionId = 0; 
+
+        if (eventType.equals(avroUpdateRatingEvent) || 
+            eventType.equals(avroPublishRatingEvent) ||
+            eventType.equals(avroDeleteRatingEvent)) {
+                partitionId = Integer.parseInt(partitionIdCommandRating);
+        }
+        else if (eventType.equals(avroQueryRatingEvent)) {
+            partitionId = Integer.parseInt(partitionIdQueryRating);
+        }
+        else if (eventType.equals(avroBuyBehaviorEvent)) {
+            partitionId = Integer.parseInt(partitionIdBuyBehavior);
+        }
+
+        else if (eventType.equals(avroAddToCartBehaviorEvent)) {
+            partitionId = Integer.parseInt(partitionIdAddToCartBehavior);
+        }
+
         return AvroEvent.newBuilder()
                         .setEventId(UUID.randomUUID().toString())
-                        .setPartitionId(Integer.parseInt(partitionId))
+                        .setPartitionId(partitionId)
                         .setTimestamp(System.currentTimeMillis())
                         .setEventType(eventType)
                         .setData(payload)

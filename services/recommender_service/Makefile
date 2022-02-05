@@ -8,12 +8,12 @@ testRecommender:
 
 testConsumer:
 	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093
-	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic ratingCommandFromEventSource --from-beginning
+	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation --from-beginning
 
 start:
 	mvn clean
 	mvn install
-	docker-compose up -d --scale commandrating=1 --scale queryrating=1
+	docker-compose up -d --scale commandrating=1 --scale queryrating=1 --scale supervisor=3
 ##	docker-compose up -d
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
