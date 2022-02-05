@@ -4,7 +4,7 @@ init:
 testRecommender:
 	mvn clean 
 	mvn package
-	docker-compose up -d zookeeper nimbus supervisor ui recommenderrealtimeservice --scale supervisor=3
+	docker-compose up -d zookeeper kafka nimbus supervisor ui recommenderrealtimeservice --scale supervisor=1
 
 testConsumer:
 	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093
@@ -13,7 +13,7 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
-	docker-compose up -d --scale commandrating=1 --scale queryrating=1 --scale supervisor=1
+	docker-compose up -d serviceregistry zookeeper kafka redis postgresql dynamodb commandrating queryrating eventstorage walminer apigateway nimbus supervisor ui recommenderrealtimeservice --scale commandrating=1 --scale queryrating=1 --scale supervisor=2
 ##	docker-compose up -d
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus

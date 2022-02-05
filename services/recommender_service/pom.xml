@@ -8,40 +8,6 @@
   <modelVersion>4.0.0</modelVersion>
             
   
-  
-  
-  
-  <parent>
-                        
-    
-    
-    
-    
-    <groupId>org.springframework.boot</groupId>
-                        
-    
-    
-    
-    
-    <artifactId>spring-boot-starter-parent</artifactId>
-                        
-    
-    
-    
-    
-    <version>2.5.4</version>
-                        
-    
-    
-    
-    
-    <relativePath/>
-                      
-  
-  
-  
-  
-  </parent>
             
   
   
@@ -165,7 +131,6 @@
     
     
     
-    <cloud.dependencies.version>2020.0.3</cloud.dependencies.version>
                       
   
   
@@ -192,31 +157,6 @@
                         
       
       
-      <dependency>
-                        				
-        
-        
-        <groupId>org.springframework.cloud</groupId>
-                        				
-        
-        
-        <artifactId>spring-cloud-dependencies</artifactId>
-                        				
-        
-        
-        <version>${cloud.dependencies.version}</version>
-                        				
-        
-        
-        <type>pom</type>
-                        				
-        
-        
-        <scope>import</scope>
-                        			
-      
-      
-      </dependency>
                         
       
       
@@ -266,28 +206,6 @@
       
       
       
-      <dependency>
-                                        
-        
-        
-        
-        <groupId>org.junit.jupiter</groupId>
-                                        
-        
-        
-        
-        <artifactId>junit-jupiter</artifactId>
-                                        
-        
-        
-        
-        <scope>test</scope>
-                                      
-      
-      
-      
-      </dependency>
-                              
       
       
       
@@ -297,64 +215,10 @@
       
       
       
-      <dependency>
-                                        
-        
-        
-        
-        <groupId>org.mockito</groupId>
-                                        
-        
-        
-        
-        <artifactId>mockito-core</artifactId>
-                                        
-        
-        
-        
-        <version>${mockito.version}</version>
-                                        
-        
-        
-        
-        <scope>test</scope>
+      
                                       
       
-      
-      
-      </dependency>
-                                    
-      
-      
-      
-      
-      <dependency>
-                                        
-        
-        
-        
-        <groupId>org.mockito</groupId>
-                                        
-        
-        
-        
-        <artifactId>mockito-junit-jupiter</artifactId>
-                                        
-        
-        
-        
-        <version>${mockito.junit.version}</version>
-                                        
-        
-        
-        
-        <scope>test</scope>
-                                      
-      
-      
-      
-      </dependency>
-                            
+           
     
     
     

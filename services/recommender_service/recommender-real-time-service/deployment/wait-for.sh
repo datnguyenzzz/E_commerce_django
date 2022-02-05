@@ -82,9 +82,4 @@ if [ "$HOST" = "" -o "$PORT" = "" ]; then
   usage 2
 fi
 
-echo $HOST 
-echo $PORT 
-echo $TIMEOUT
-echo $@
-
 wait_for "$@"
