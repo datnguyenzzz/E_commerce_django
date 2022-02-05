@@ -19,20 +19,20 @@ public class SpoutCreator {
     private final Logger logger = LoggerFactory.getLogger(SpoutCreator.class);
     private final static CustomProperties customProperties = new CustomProperties();
 
-    private final static String bootstrapServer = customProperties.getProp("bootstrapServers");
-    private final static String listenFromTopic = customProperties.getProp("listenFromTopic");
+    private final static String BOOTSTRAP_SERVER = customProperties.getProp("BOOTSTRAP_SERVER");
+    private final static String LISTEN_FROM_TOPIC = customProperties.getProp("LISTEN_FROM_TOPIC");
 
     public SpoutCreator() {}
 
     public KafkaSpout<?,?> kafkaSpout() {
-        logger.info("RECOMMENDER-SERVICE: " + "kakfa spout from host = " + bootstrapServer 
-            + "with topic = " + listenFromTopic);
+        logger.info("RECOMMENDER-SERVICE: " + "kakfa spout from host = " + BOOTSTRAP_SERVER 
+            + "with topic = " + LISTEN_FROM_TOPIC);
 
         return new KafkaSpout<>(kafkaSpoutConfig());
     }
 
     private KafkaSpoutConfig<String, String> kafkaSpoutConfig() {
-        return KafkaSpoutConfig.builder(bootstrapServer, listenFromTopic)
+        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, LISTEN_FROM_TOPIC)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
             .setProp(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AvroEventDeserializer.class)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.EARLIEST)
