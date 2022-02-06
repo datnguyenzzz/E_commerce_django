@@ -112,6 +112,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!--Kryo-->
+    <dependency>
+      <groupId>com.esotericsoftware</groupId>
+      <artifactId>kryo</artifactId>
+      <version>4.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>

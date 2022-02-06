@@ -1,6 +1,7 @@
 package vn.datnguyen.recommender.Spout;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.storm.kafka.spout.ByTopicRecordTranslator;
 import org.apache.storm.kafka.spout.FirstPollOffsetStrategy;
 import org.apache.storm.kafka.spout.KafkaSpout;
@@ -23,40 +24,26 @@ public class SpoutCreator {
     private final static String CONSUMER_GROUP = customProperties.getProp("CONSUMER_GROUP");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
+    private final static String TOPIC_FIELD = customProperties.getProp("TOPIC_FIELD");
+    private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
+
     public SpoutCreator() {}
 
-    public KafkaSpout<?,?> kafkaStringSpout() {
-        return new KafkaSpout<>(kafkaStringSpoutConfig());
+    public KafkaSpout<?,?> kafkaAvroEventSpout() {
+        return new KafkaSpout<>(kafkaAvroEventSpoutConfig());
     }
-
-    /*
-    private KafkaSpoutConfig<String, AvroEvent> kafkaSpoutConfig() {
-        ByTopicRecordTranslator<String, AvroEvent> byTopicTranslator = new ByTopicRecordTranslator<>(
-            (r) -> new Values(r.topic(),r.value()), 
-            new Fields("topic", "value"),
+    
+    private KafkaSpoutConfig<String, String> kafkaAvroEventSpoutConfig() {
+        ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
+            (r) -> new Values(r.topic(), r.value()), 
+            new Fields(TOPIC_FIELD, VALUE_FIELD),
             EVENTSOURCE_STREAM);
         
-        KafkaSpoutConfig.Builder<String, AvroEvent> kafkaBuilder = new KafkaSpoutConfig.Builder<String, AvroEvent>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});
+        //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});
 
-        return kafkaBuilder
-            .setProp(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP)
-            .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
-            .setProp(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AvroEventDeserializer.class)
-            .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
-            .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_LATEST)
-            .setRetry(kafkaSpoutRetryService())
-            .setEmitNullTuples(false)
-            .setRecordTranslator(byTopicTranslator)
-            .build();
-    }*/
-
-    private KafkaSpoutConfig<String, String> kafkaStringSpoutConfig() {
-        ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
-            (r) -> new Values(r.topic(),r.value()), 
-            new Fields("topic", "value"), EVENTSOURCE_STREAM);
-        
         return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC})
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP)
+            .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.EARLIEST)
             .setRetry(kafkaSpoutRetryService())
