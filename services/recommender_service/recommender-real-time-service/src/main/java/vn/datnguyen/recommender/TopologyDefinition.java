@@ -18,7 +18,6 @@ public class TopologyDefinition {
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
     private static SpoutCreator spoutCreator = new SpoutCreator();
-    private static LoggerBolt loggerBolt = new LoggerBolt();
 
     private static Config getConfig() {
         Config config = new Config();
@@ -30,11 +29,12 @@ public class TopologyDefinition {
     public static void main( String[] args ) throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
-        topologyBuilder.setSpout("kafka-spout", spoutCreator.kafkaSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
+        topologyBuilder.setSpout("kafka-spout", spoutCreator.kafkaStringSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
 
-        topologyBuilder.setBolt("logger-bolt", loggerBolt, Integer.parseInt(LOGGER_BOLT_THREADS))
+        topologyBuilder.setBolt("logger-bolt", new LoggerBolt(), Integer.parseInt(LOGGER_BOLT_THREADS))
             .shuffleGrouping("kafka-spout", EVENTSOURCE_STREAM);
 
-        StormSubmitter.submitTopology("Recommender-Realtime-Topology", getConfig(), topologyBuilder.createTopology());
+        Config tpConfig = getConfig();
+        StormSubmitter.submitTopology("Recommender-Realtime-Topology", tpConfig, topologyBuilder.createTopology());
     }
 }

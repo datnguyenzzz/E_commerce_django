@@ -8,9 +8,12 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoggerBolt extends BaseRichBolt {
-    
+
+    private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
     
     @Override
@@ -20,8 +23,7 @@ public class LoggerBolt extends BaseRichBolt {
     
     @Override
     public void execute(Tuple tuple) {
-        System.out.println(tuple.toString());
-        collector.ack(tuple);
+        logger.info("********* LOGGER BOLT **********", tuple);
     }
     
     @Override

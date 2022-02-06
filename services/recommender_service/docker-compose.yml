@@ -178,29 +178,25 @@ services:
 
 ## RECOMMENDER SERVICE
   nimbus:
-    image: storm:latest
+    image: storm:1.2.4
     container_name: nimbus
     depends_on:
       - zookeeper
     restart: always
     ports:
       - 6627:6627
-    volumes:
-      - ./storm/nimbus/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
-    command: storm nimbus
+    command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
   
   supervisor:
-    image: storm:latest
+    image: storm:1.2.4
     depends_on:
       - zookeeper
       - nimbus
     restart: always
-    volumes:
-      - ./storm/supervisor/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
-    command: storm supervisor
+    command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
   
   ui:
-    image: storm:latest
+    image: storm:1.2.4
     container_name: ui
     depends_on:
       - nimbus
@@ -210,12 +206,11 @@ services:
     command: storm ui
   
   recommenderrealtimeservice:
-    image: storm:latest
+    image: storm:1.2.4
     container_name: recommender-real-time-service
     depends_on:
       - nimbus
     volumes:
       - ./recommender-real-time-service/target:/topology-definition
       - ./recommender-real-time-service/deployment:/topology-deployment
-      - ./recommender-real-time-service/deployment/storm.yaml:/apache-storm-2.3.0/conf/storm.yaml
     command: /topology-deployment/deploy-topology.sh

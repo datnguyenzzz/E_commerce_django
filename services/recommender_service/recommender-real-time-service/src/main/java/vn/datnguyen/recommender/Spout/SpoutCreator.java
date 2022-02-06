@@ -1,7 +1,6 @@
 package vn.datnguyen.recommender.Spout;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.storm.kafka.spout.ByTopicRecordTranslator;
 import org.apache.storm.kafka.spout.FirstPollOffsetStrategy;
 import org.apache.storm.kafka.spout.KafkaSpout;
@@ -13,8 +12,6 @@ import org.apache.storm.kafka.spout.KafkaSpoutRetryExponentialBackoff.TimeInterv
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 
-import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.Serialization.AvroEventDeserializer;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class SpoutCreator {
@@ -28,10 +25,11 @@ public class SpoutCreator {
 
     public SpoutCreator() {}
 
-    public KafkaSpout<?,?> kafkaSpout() {
-        return new KafkaSpout<>(kafkaSpoutConfig());
+    public KafkaSpout<?,?> kafkaStringSpout() {
+        return new KafkaSpout<>(kafkaStringSpoutConfig());
     }
 
+    /*
     private KafkaSpoutConfig<String, AvroEvent> kafkaSpoutConfig() {
         ByTopicRecordTranslator<String, AvroEvent> byTopicTranslator = new ByTopicRecordTranslator<>(
             (r) -> new Values(r.topic(),r.value()), 
@@ -46,6 +44,21 @@ public class SpoutCreator {
             .setProp(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AvroEventDeserializer.class)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_LATEST)
+            .setRetry(kafkaSpoutRetryService())
+            .setEmitNullTuples(false)
+            .setRecordTranslator(byTopicTranslator)
+            .build();
+    }*/
+
+    private KafkaSpoutConfig<String, String> kafkaStringSpoutConfig() {
+        ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
+            (r) -> new Values(r.topic(),r.value()), 
+            new Fields("topic", "value"), EVENTSOURCE_STREAM);
+        
+        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC})
+            .setProp(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP)
+            .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
+            .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.EARLIEST)
             .setRetry(kafkaSpoutRetryService())
             .setEmitNullTuples(false)
             .setRecordTranslator(byTopicTranslator)
