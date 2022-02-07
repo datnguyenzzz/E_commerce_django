@@ -60,7 +60,7 @@ public class QueryRatingService {
         AvroEvent queryEvent = AvroEvent.newBuilder()
             .setEventId(UUID.randomUUID().toString())
             .setPartitionId(Integer.parseInt(partitionIdQueryRating))
-            .setTimestamp(System.currentTimeMillis())
+            .setTimestamp(Long.toString(System.currentTimeMillis()))
             .setEventType(avroQueryRatingEvent)
             .setData(eventPayload)
             .build();

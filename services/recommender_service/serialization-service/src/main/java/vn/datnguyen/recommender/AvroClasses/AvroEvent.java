@@ -10,12 +10,12 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 3203958137026775587L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroEvent\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"partitionId\",\"type\":\"int\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"eventType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroDeleteRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroQueryRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroBuyBehavior\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroAddToCartBehavior\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
+  private static final long serialVersionUID = -1012760693322629435L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroEvent\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"eventId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"partitionId\",\"type\":\"int\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"eventType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"data\",\"type\":[{\"type\":\"record\",\"name\":\"AvroPublishRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroUpdateRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"score\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"AvroDeleteRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroQueryRating\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroBuyBehavior\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"AvroAddToCartBehavior\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String eventId;
   @Deprecated public int partitionId;
-  @Deprecated public long timestamp;
+  @Deprecated public java.lang.String timestamp;
   @Deprecated public java.lang.String eventType;
   @Deprecated public java.lang.Object data;
 
@@ -34,7 +34,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
    * @param eventType The new value for eventType
    * @param data The new value for data
    */
-  public AvroEvent(java.lang.String eventId, java.lang.Integer partitionId, java.lang.Long timestamp, java.lang.String eventType, java.lang.Object data) {
+  public AvroEvent(java.lang.String eventId, java.lang.Integer partitionId, java.lang.String timestamp, java.lang.String eventType, java.lang.Object data) {
     this.eventId = eventId;
     this.partitionId = partitionId;
     this.timestamp = timestamp;
@@ -61,7 +61,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
     switch (field$) {
     case 0: eventId = (java.lang.String)value$; break;
     case 1: partitionId = (java.lang.Integer)value$; break;
-    case 2: timestamp = (java.lang.Long)value$; break;
+    case 2: timestamp = (java.lang.String)value$; break;
     case 3: eventType = (java.lang.String)value$; break;
     case 4: data = (java.lang.Object)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
@@ -104,7 +104,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'timestamp' field.
    * @return The value of the 'timestamp' field.
    */
-  public java.lang.Long getTimestamp() {
+  public java.lang.String getTimestamp() {
     return timestamp;
   }
 
@@ -112,7 +112,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
    * Sets the value of the 'timestamp' field.
    * @param value the value to set.
    */
-  public void setTimestamp(java.lang.Long value) {
+  public void setTimestamp(java.lang.String value) {
     this.timestamp = value;
   }
 
@@ -182,7 +182,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
 
     private java.lang.String eventId;
     private int partitionId;
-    private long timestamp;
+    private java.lang.String timestamp;
     private java.lang.String eventType;
     private java.lang.Object data;
 
@@ -328,7 +328,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
       * Gets the value of the 'timestamp' field.
       * @return The value.
       */
-    public java.lang.Long getTimestamp() {
+    public java.lang.String getTimestamp() {
       return timestamp;
     }
 
@@ -337,7 +337,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'timestamp'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.AvroClasses.AvroEvent.Builder setTimestamp(long value) {
+    public vn.datnguyen.recommender.AvroClasses.AvroEvent.Builder setTimestamp(java.lang.String value) {
       validate(fields()[2], value);
       this.timestamp = value;
       fieldSetFlags()[2] = true;
@@ -358,6 +358,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public vn.datnguyen.recommender.AvroClasses.AvroEvent.Builder clearTimestamp() {
+      timestamp = null;
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -446,7 +447,7 @@ public class AvroEvent extends org.apache.avro.specific.SpecificRecordBase imple
         AvroEvent record = new AvroEvent();
         record.eventId = fieldSetFlags()[0] ? this.eventId : (java.lang.String) defaultValue(fields()[0]);
         record.partitionId = fieldSetFlags()[1] ? this.partitionId : (java.lang.Integer) defaultValue(fields()[1]);
-        record.timestamp = fieldSetFlags()[2] ? this.timestamp : (java.lang.Long) defaultValue(fields()[2]);
+        record.timestamp = fieldSetFlags()[2] ? this.timestamp : (java.lang.String) defaultValue(fields()[2]);
         record.eventType = fieldSetFlags()[3] ? this.eventType : (java.lang.String) defaultValue(fields()[3]);
         record.data = fieldSetFlags()[4] ? this.data : (java.lang.Object) defaultValue(fields()[4]);
         return record;

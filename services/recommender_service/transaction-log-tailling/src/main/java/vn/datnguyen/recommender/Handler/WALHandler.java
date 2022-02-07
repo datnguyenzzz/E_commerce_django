@@ -199,7 +199,7 @@ public class WALHandler {
         return AvroEvent.newBuilder()
                         .setEventId(UUID.randomUUID().toString())
                         .setPartitionId(partitionId)
-                        .setTimestamp(System.currentTimeMillis())
+                        .setTimestamp(Long.toString(System.currentTimeMillis()))
                         .setEventType(eventType)
                         .setData(payload)
                         .build();

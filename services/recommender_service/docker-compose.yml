@@ -193,6 +193,8 @@ services:
       - zookeeper
       - nimbus
     restart: always
+    volumes:
+      - ./storm/supervisor/logs:/logs
     command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
   
   ui:

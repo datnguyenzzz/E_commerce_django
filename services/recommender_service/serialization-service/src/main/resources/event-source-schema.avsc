@@ -10,7 +10,7 @@
             "name": "partitionId", "type": "int"
         },
         {
-            "name": "timestamp","type": "long"
+            "name": "timestamp","type": "string"
         },
         {
             "name": "eventType", "type": "string"

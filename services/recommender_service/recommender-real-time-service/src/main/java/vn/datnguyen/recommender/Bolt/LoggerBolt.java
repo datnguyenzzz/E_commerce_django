@@ -49,7 +49,7 @@ public class LoggerBolt extends BaseRichBolt {
     public void execute(Tuple tuple) {
         String avroEventStr = (String) tuple.getValueByField(VALUE_FIELD);
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
-        logger.info("********* LOGGER BOLT **********", event);
+        logger.info("********* LOGGER BOLT **********" + event);
         collector.ack(tuple);
     }
     
