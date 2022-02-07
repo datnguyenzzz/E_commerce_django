@@ -22,9 +22,9 @@ public class LoggerBolt extends BaseRichBolt {
     }
     
     @Override
-    public void execute(Tuple tuple) {
-        logger.info("********* LOGGER BOLT **********" + tuple);
-        collector.ack(tuple);
+    public void execute(Tuple input) {
+        logger.info("********* LOGGER BOLT **********" + input);
+        collector.ack(input);
     }
     
     @Override

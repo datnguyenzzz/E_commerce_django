@@ -36,6 +36,8 @@ public class WeightApplierBolt extends BaseRichBolt {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
+    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
+    private final static String TIMESTAMP_FIELD = customProperties.getProp("TIMESTAMP_FIELD");
     private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
     private final static String EVENT_TYPE_FIELD = customProperties.getProp("EVENT_TYPE_FIELD");
     private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
@@ -57,7 +59,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
     private AvroEventScheme avroEventScheme = new AvroEventScheme();
-    private String eventType, clientId, itemId;
+    private String eventId, timestamp, eventType, clientId, itemId;
     private int weight;
     
     @Override
@@ -73,7 +75,9 @@ public class WeightApplierBolt extends BaseRichBolt {
       }
 
     private void applyWeight(AvroEvent event) {
+        this.eventId = event.getEventId();
         this.eventType = event.getEventType();
+        this.timestamp = event.getTimestamp();
 
         if (eventType.equals(avroPublishRatingEvent)) {
             AvroPublishRating payload = (AvroPublishRating) event.getData();
@@ -125,13 +129,13 @@ public class WeightApplierBolt extends BaseRichBolt {
 
         applyWeight(event);
 
-        Values values = new Values(this.eventType, this.clientId, this.itemId, this.weight);
+        Values values = new Values(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
 
         collector.emit(values);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_TYPE_FIELD, CLIENT_ID_FIELD, ITEM_ID_FIELD, WEIGHT_FIELD));
+        declarer.declare(new Fields(EVENT_ID_FIELD, TIMESTAMP_FIELD, EVENT_TYPE_FIELD, CLIENT_ID_FIELD, ITEM_ID_FIELD, WEIGHT_FIELD));
     }
 }

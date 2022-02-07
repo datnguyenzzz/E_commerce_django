@@ -4,7 +4,7 @@ init:
 testRecommender:
 	mvn clean 
 	mvn package
-	docker-compose up -d zookeeper kafka nimbus supervisor ui recommenderrealtimeservice --scale supervisor=1
+	docker-compose up -d zookeeper kafka redis nimbus supervisor ui recommenderrealtimeservice testingrating --scale supervisor=1
 
 testProducer:
 	docker exec -it kafka kafka-console-producer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation

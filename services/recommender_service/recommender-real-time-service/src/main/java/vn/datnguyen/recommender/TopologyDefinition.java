@@ -7,7 +7,6 @@ import org.apache.storm.topology.TopologyBuilder;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Bolt.BoltFactory;
-import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Spout.SpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -19,14 +18,14 @@ public class TopologyDefinition {
     private static final String TOPOLOGY_WORKERS = customProperties.getProp("TOPOLOGY_WORKERS");
     private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
     private static final String WEIGHT_APPLIER_BOLT_THREADS = customProperties.getProp("WEIGHT_APPLIER_BOLT_THREADS");
-    private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
+    //private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
     //STREAM
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
     //IDs
     private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
     private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
     private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
-    private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
+    //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
 
     private static SpoutCreator spoutCreator = new SpoutCreator();
@@ -45,11 +44,8 @@ public class TopologyDefinition {
 
         topologyBuilder.setSpout(KAFKA_SPOUT, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
 
-        topologyBuilder.setBolt(DUPLICATE_FILTER_BOLT, boltFactory.createDuplicateFilterBolt(), Integer.parseInt(DUPLICATE_FILTER_BOLT_THREADS))
-            .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
-
         topologyBuilder.setBolt(WEIGHT_APPLIER_BOLT, boltFactory.createWeightApplierBolt(), Integer.parseInt(WEIGHT_APPLIER_BOLT_THREADS))
-            .shuffleGrouping(DUPLICATE_FILTER_BOLT);
+            .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
 
         topologyBuilder.setBolt(LOGGER_BOLT, boltFactory.creatLoggerBolt(), Integer.parseInt(LOGGER_BOLT_THREADS))
             .shuffleGrouping(WEIGHT_APPLIER_BOLT);

@@ -1,133 +1,154 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-            
+              
+  
   
   
   
   
   <modelVersion>4.0.0</modelVersion>
-            
+              
   
             
+  
   
   
   
   
   <groupId>vn.datnguyen.recommender</groupId>
-            
+              
+  
   
   
   
   
   <artifactId>recommender-root</artifactId>
-            
+              
+  
   
   
   
   
   <version>1.0-SNAPSHOT</version>
-            
+              
+  
   
   
   
   
   <packaging>pom</packaging>
-            
+              
+  
   
   
   
   
   <name>recommender-root</name>
-            
+              
+  
   
   
   
   
   <!-- FIXME change it to the project's website -->
-            
+              
+  
   
   
   
   
   <url>http://www.example.com</url>
-            
+              
+  
   
   
   
   
   <properties>
-                        
+                            
+    
     
     
     
     
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-                        
+                            
+    
     
     
     
     
     <!-- maven compiler version-->
-                        
+                            
+    
     
     
     
     
     <maven.compiler.source>1.11</maven.compiler.source>
-                        
+                            
+    
     
     
     
     
     <maven.compiler.target>1.11</maven.compiler.target>
-                        
+                            
+    
     
     
     
     
     <!-- plugin version-->
-                        
+                            
+    
     
     
     
     
     <plugin.compiler.version>3.5</plugin.compiler.version>
-                        
+                            
+    
     
     
     
     
     <plugin.surefire.version>2.22.0</plugin.surefire.version>
-                        
+                            
+    
     
     
     
     
     <!-- testing version -->
-                        
+                            
+    
     
     
     
     
     <junit.jupiter.version>5.3.1</junit.jupiter.version>
-                        
+                            
+    
     
     
     
     
     <mockito.version>2.21.0</mockito.version>
-                        
+                            
+    
     
     
     
     
     <mockito.junit.version>2.23.0</mockito.junit.version>
-                    
+                        
+    
     
     
     
     <!-- cloud -->
-                    
+                        
     
     
     
@@ -136,73 +157,87 @@
   
   
   
+  
   </properties>
-            
+              
+  
   
   
   
   
   <dependencyManagement>
-                        
+                            
+    
     
     
     
     
     <dependencies>
-                              
+                                    
+      
       
       
       
       <!-- spring cloud -->
-                        
+                              
       
       
                         
+      
       
       
       
       <!-- testing -->
-                              
+                                    
+      
       
       
       
       <!-- junit 4 -->
-                              
+                                    
+      
       
       
       
       <dependency>
-                                        
+                                                
+        
         
         
         
         <groupId>junit</groupId>
-                                        
+                                                
+        
         
         
         
         <artifactId>junit</artifactId>
-                                        
+                                                
+        
         
         
         
         <version>4.13.2</version>
-                                        
+                                                
+        
         
         
         
         <scope>test</scope>
-                                      
+                                              
+      
       
       
       
       </dependency>
-                              
+                                    
+      
       
       
       
       <!-- junit 5 -->
-                              
+                                    
+      
       
       
       
@@ -210,7 +245,7 @@
       
       
       <!-- mockito -->
-                           
+                                 
       
       
       
@@ -222,227 +257,274 @@
     
     
     
+    
     </dependencies>
-                      
+                          
+  
   
   
   
   
   </dependencyManagement>
-            
+              
+  
   
   
   
   
   <build>
-                        
+                            
+    
     
     
     
     
     <pluginManagement>
-                                    
+                                          
+      
       
       
       
       
       <plugins>
-                                                
+                                                        
+        
         
         
         
         
         <!-- compile -->
-                                                
+                                                        
+        
         
         
         
         
         <plugin>
-                                                  
+                                                            
+          
           
           
           
           <groupId>org.apache.maven.plugins</groupId>
-                                                  
+                                                            
+          
           
           
           
           <artifactId>maven-compiler-plugin</artifactId>
-                                                  
+                                                            
+          
           
           
           
           <version>${plugin.compiler.version}</version>
-                                                  
+                                                            
+          
           
           
           
           <configuration>
-                                                            
+                                                                        
+            
             
             
             
             <source>${maven.compiler.source}</source>
-                                                            
+                                                                        
+            
             
             
             
             <target>${maven.compiler.target}</target>
-                                                          
+                                                                      
+          
           
           
           
           </configuration>
-                                                
+                                                          
+        
         
         
         
         </plugin>
-                                        
+                                                
+        
         
         
         
         <plugin>
-                                                  
+                                                            
+          
           
           
           
           <groupId>org.apache.maven.plugins</groupId>
-                                                  
+                                                            
+          
           
           
           
           <artifactId>maven-surefire-plugin</artifactId>
-                                                  
+                                                            
+          
           
           
           
           <version>${plugin.surefire.version}</version>
-                                                  
+                                                            
+          
           
           
           
           <configuration>
-                                                            
+                                                                        
+            
             
             
             
             <includes>
-                                                                      
+                                                                                    
+              
               
               
               
               <include>**/Test*.java</include>
-                                                                      
+                                                                                    
+              
               
               
               
               <include>**/*Test.java</include>
-                                                                    
+                                                                                  
+            
             
             
             
             </includes>
-                                                          
+                                                                      
+          
           
           
           
           </configuration>
-                                                
+                                                          
+        
         
         
         
         </plugin>
-                                        
+                                                
+        
         
         
         
         <plugin>
-                                                  
+                                                            
+          
           
           
           
           <groupId>org.apache.maven.plugins</groupId>
-                                                  
+                                                            
+          
           
           
           
           <artifactId>maven-resources-plugin</artifactId>
-                                                  
+                                                            
+          
           
           
           
           <version>3.1.0</version>
-                                                
+                                                          
+        
         
         
         
         </plugin>
-                                      
+                                              
+      
       
       
       
       </plugins>
-                            
+                                  
+    
     
     
     
     </pluginManagement>
-                  
+                      
+  
   
   
   
   </build>
-            
+              
+  
   
   
   
   
   <modules>
-                    
+                        
+    
     
     
     
     <module>serialization-service</module>
-                    
+                        
+    
     
     
     
     <module>command-rating-service</module>
-                    
+                        
+    
     
     
     
     <module>event-source-storage</module>
-                    
+                        
+    
     
     
     
     <module>transaction-log-tailling</module>
-                    
+                        
+    
     
     
     
     <module>query-rating-service</module>
-                    
+                        
+    
     
     
     
     <module>service-registry</module>
-                    
+                        
+    
     
     
     
     <module>api-gateway</module>
-                  
+                      
+    
     
     
     
     <module>recommender-real-time-service</module>
+          
+    
+    <module>test-recommender-api</module>
       
   </modules>
-          
+            
+
 
 
 

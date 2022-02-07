@@ -212,7 +212,20 @@ services:
     container_name: recommender-real-time-service
     depends_on:
       - nimbus
+      - kafka 
+      - redis
     volumes:
       - ./recommender-real-time-service/target:/topology-definition
       - ./recommender-real-time-service/deployment:/topology-deployment
     command: /topology-deployment/deploy-topology.sh
+
+  testingrating:
+    build: 
+      context: ./test-recommender-api
+    depends_on:
+      - kafka
+    ports:
+      - "3456:3456"
+    volumes:
+      - ./test-recommender-api/target/test-recommender-api-1.0-SNAPSHOT.jar:/recommender/test-recommender-api.jar
+    command: "java -Xmx256m -jar /recommender/test-recommender-api.jar"
