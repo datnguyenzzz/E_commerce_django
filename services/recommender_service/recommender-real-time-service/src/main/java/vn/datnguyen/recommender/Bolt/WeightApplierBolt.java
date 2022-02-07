@@ -9,14 +9,22 @@ import java.util.Map;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.FailedException;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
+import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
+import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.utils.AvroEventScheme;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -33,29 +41,93 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
     private final static String WEIGHT_FIELD = customProperties.getProp("WEIGHT_FIELD");
+    //INCOME EVENT
+    private final static String avroPublishRatingEvent = customProperties.getProp("avroPublishRatingEvent");
+    private final static String avroUpdateRatingEvent = customProperties.getProp("avroUpdateRatingEvent");
+    private final static String avroDeleteRatingEvent = customProperties.getProp("avroDeleteRatingEvent");
+    private final static String avroQueryRatingEvent = customProperties.getProp("avroQueryRatingEvent");
+    private final static String avroBuyBehaviorEvent = customProperties.getProp("avroBuyBehaviorEvent");
+    private final static String avroAddToCartBehaviorEvent = customProperties.getProp("avroAddToCartBehaviorEvent");
+    //WEIGHT VALUEs
+    private final static String DELETE_RATING_EVENT_WEIGHT = customProperties.getProp("DELETE_RATING_EVENT_WEIGHT");
+    private final static String QUERY_RATING_EVENT_WEIGHT = customProperties.getProp("QUERY_RATING_EVENT_WEIGHT");
+    private final static String BUY_EVENT_WEIGHT = customProperties.getProp("BUY_EVENT_WEIGHT");
+    private final static String ADD_TO_CART_WEIGHT = customProperties.getProp("ADD_TO_CART_WEIGHT");
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
     private AvroEventScheme avroEventScheme = new AvroEventScheme();
+    private String eventType, clientId, itemId;
+    private int weight;
     
     @Override
     public void prepare(Map map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
     }
 
-    public static ByteBuffer str_to_bb(String msg){
+    private static ByteBuffer str_to_bb(String msg){
         try{
           return encoder.encode(CharBuffer.wrap(msg));
         }catch(Exception e){e.printStackTrace();}
         return null;
       }
+
+    private void applyWeight(AvroEvent event) {
+        this.eventType = event.getEventType();
+
+        if (eventType.equals(avroPublishRatingEvent)) {
+            AvroPublishRating payload = (AvroPublishRating) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = payload.getScore();
+        }
+        else if (eventType.equals(avroUpdateRatingEvent)) {
+            AvroUpdateRating payload = (AvroUpdateRating) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = payload.getScore();
+        }
+        else if (eventType.equals(avroDeleteRatingEvent)) {
+            AvroDeleteRating payload = (AvroDeleteRating) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = Integer.parseInt(DELETE_RATING_EVENT_WEIGHT);
+        }
+        else if (eventType.equals(avroQueryRatingEvent)) {
+            AvroQueryRating payload = (AvroQueryRating) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = Integer.parseInt(QUERY_RATING_EVENT_WEIGHT);
+        }
+        else if (eventType.equals(avroBuyBehaviorEvent)) {
+            AvroBuyBehavior payload = (AvroBuyBehavior) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = Integer.parseInt(BUY_EVENT_WEIGHT);
+        }
+        else if (eventType.equals(avroAddToCartBehaviorEvent)) {
+            AvroAddToCartBehavior payload = (AvroAddToCartBehavior) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
+            this.weight = Integer.parseInt(ADD_TO_CART_WEIGHT);
+        }
+        else {
+            logger.error("NOT EXIST EVENT");
+            throw new FailedException("NOT EXIST EVENT");
+        }
+    }
     
     @Override
     public void execute(Tuple tuple) {
         String avroEventStr = (String) tuple.getValueByField(VALUE_FIELD);
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* APPLY WEIGHT BOLT **********" + event);
-        collector.ack(tuple);
+
+        applyWeight(event);
+
+        Values values = new Values(this.eventType, this.clientId, this.itemId, this.weight);
+
+        collector.emit(values);
     }
     
     @Override
