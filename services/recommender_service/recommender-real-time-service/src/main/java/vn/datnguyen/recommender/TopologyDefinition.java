@@ -6,6 +6,7 @@ import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Bolt.BoltFactory;
 import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Spout.SpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
@@ -17,8 +18,13 @@ public class TopologyDefinition {
     private static final String TOPOLOGY_WORKERS = customProperties.getProp("TOPOLOGY_WORKERS");
     private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
+    private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
+    private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
+    private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
+    private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
 
     private static SpoutCreator spoutCreator = new SpoutCreator();
+    private static BoltFactory boltFactory = new BoltFactory();
 
     private static Config getConfig() {
         Config config = new Config();
@@ -31,12 +37,12 @@ public class TopologyDefinition {
     public static void main( String[] args ) throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
-        topologyBuilder.setSpout("kafka-spout", spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
+        topologyBuilder.setSpout(KAFKA_SPOUT, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD));
 
-        topologyBuilder.setBolt("logger-bolt", new LoggerBolt(), Integer.parseInt(LOGGER_BOLT_THREADS))
-            .shuffleGrouping("kafka-spout", EVENTSOURCE_STREAM);
+        topologyBuilder.setBolt(LOGGER_BOLT, boltFactory.creatLoggerBolt(), Integer.parseInt(LOGGER_BOLT_THREADS))
+            .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
 
         Config tpConfig = getConfig();
-        StormSubmitter.submitTopology("Recommender-Realtime-Topology", tpConfig, topologyBuilder.createTopology());
+        StormSubmitter.submitTopology(TOPO_ID, tpConfig, topologyBuilder.createTopology());
     }
 }

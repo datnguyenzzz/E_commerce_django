@@ -39,6 +39,6 @@ public class LoggerBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("test-output-bolt"));
+        declarer.declare(new Fields("sink-bolt"));
     }
 }
