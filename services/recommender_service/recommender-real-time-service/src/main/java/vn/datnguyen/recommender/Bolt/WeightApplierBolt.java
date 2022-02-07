@@ -27,7 +27,12 @@ public class WeightApplierBolt extends BaseRichBolt {
     public static CharsetDecoder decoder = charset.newDecoder();
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
+    //VALUE FIELDS
     private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
+    private final static String EVENT_TYPE_FIELD = customProperties.getProp("EVENT_TYPE_FIELD");
+    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
+    private final static String WEIGHT_FIELD = customProperties.getProp("WEIGHT_FIELD");
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
@@ -55,6 +60,6 @@ public class WeightApplierBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("test-output-bolt"));
+        declarer.declare(new Fields(EVENT_TYPE_FIELD, CLIENT_ID_FIELD, ITEM_ID_FIELD, WEIGHT_FIELD));
     }
 }
