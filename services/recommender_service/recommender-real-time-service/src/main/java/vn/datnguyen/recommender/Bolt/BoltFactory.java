@@ -11,4 +11,8 @@ public class BoltFactory {
     public WeightApplierBolt createWeightApplierBolt() {
         return new WeightApplierBolt();
     }
+
+    public DuplicateFilterBolt createDuplicateFilterBolt() {
+        return new DuplicateFilterBolt();
+    }
 }
