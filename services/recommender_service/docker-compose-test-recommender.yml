@@ -2,6 +2,7 @@ version: '3.8'
 services:
 
 # Message queue
+  
   kafka:
     image: wurstmeister/kafka:latest
     hostname: kafka 
@@ -83,44 +84,6 @@ services:
       - 8080:8080
     command: storm ui
 
-## Registry services
-  serviceregistry:
-    container_name: service-registry
-    build: 
-      context: ./service-registry
-    ports:
-      - 8761:8761 
-    volumes:
-      - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
-    command: "java -Xmx256m -jar /recommender/service-registry.jar"
-    
-## RATING COMMAND 
-  commandrating:
-    build: 
-      context: ./command-rating-service
-    depends_on:
-      - kafka
-      - serviceregistry
-    #ports:
-    #  - "7000:2222"
-    volumes:
-      - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
-    command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
-
-## Query service  
-  queryrating:
-    build: 
-      context: ./query-rating-service
-    depends_on:
-      - kafka
-      - dynamodb
-      - serviceregistry
-    #ports:
-    #  - "7001:2222"
-    volumes:
-      - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
-    command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
-
 ## EVENT SOURCE STORAGE 
   eventstorage:
     container_name: event-source-storage
@@ -150,19 +113,6 @@ services:
     volumes:
       - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
     command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
-
-## API GATEWAY
-  apigateway:
-    container_name: api-gateway
-    build: 
-      context: ./api-gateway
-    ports:
-      - 8765:8765
-    depends_on:
-      - serviceregistry
-    volumes:
-      - ./api-gateway/target/api-gateway-1.0-SNAPSHOT.jar:/recommender/api-gateway.jar
-    command: "java -Xmx256m -jar /recommender/api-gateway.jar"
 
   recommenderrealtimeservice:
     image: storm:1.2.4
