@@ -25,6 +25,7 @@ import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
+import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.utils.AvroEventScheme;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -36,13 +37,8 @@ public class WeightApplierBolt extends BaseRichBolt {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
-    private final static String TIMESTAMP_FIELD = customProperties.getProp("TIMESTAMP_FIELD");
     private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
-    private final static String EVENT_TYPE_FIELD = customProperties.getProp("EVENT_TYPE_FIELD");
-    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
-    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
-    private final static String WEIGHT_FIELD = customProperties.getProp("WEIGHT_FIELD");
+    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     //INCOME EVENT
     private final static String avroPublishRatingEvent = customProperties.getProp("avroPublishRatingEvent");
     private final static String avroUpdateRatingEvent = customProperties.getProp("avroUpdateRatingEvent");
@@ -129,13 +125,15 @@ public class WeightApplierBolt extends BaseRichBolt {
 
         applyWeight(event);
 
-        Values values = new Values(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
+        Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
+
+        Values values = new Values(ouputEvent);
 
         collector.emit(values);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_ID_FIELD, TIMESTAMP_FIELD, EVENT_TYPE_FIELD, CLIENT_ID_FIELD, ITEM_ID_FIELD, WEIGHT_FIELD));
+        declarer.declare(new Fields(EVENT_FIELD));
     }
 }

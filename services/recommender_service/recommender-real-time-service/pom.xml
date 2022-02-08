@@ -18,6 +18,7 @@
     <storm.version>1.2.4</storm.version>
     <storm.client.version>2.3.0</storm.client.version>
     <kafka.client.version>3.1.0</kafka.client.version>
+    <cassandra.version>4.13.0</cassandra.version>
   </properties>
   <dependencies>
     <!-- internal dependencies -->
@@ -122,6 +123,17 @@
       <groupId>com.esotericsoftware</groupId>
       <artifactId>kryo</artifactId>
       <version>4.0.1</version>
+    </dependency>
+    <!-- Cassandra -->
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
+      <version>${cassandra.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-query-builder</artifactId>
+      <version>${cassandra.version}</version>
     </dependency>
   </dependencies>
 

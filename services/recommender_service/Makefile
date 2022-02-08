@@ -8,8 +8,7 @@ init:
 testRecommender:
 	mvn clean
 	mvn install
-	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
-	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
+	docker-compose -f docker-compose-test-recommender.yml up -d
 	docker-compose -f docker-compose-test-recommender.yml ps
 
 testProducer:

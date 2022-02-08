@@ -1,6 +1,14 @@
 version: '3.8'
 services:
-
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    hostname: zookeeper 
+    container_name: zookeeper 
+    ports:
+      - "2181:2181"  
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181 
+      ZOOKEEPER_TICK_TIME: 2000
 # Message queue
   
   kafka:
@@ -28,30 +36,7 @@ services:
     image: redis:6.0.6
     ports:
       - 6379:6379
-  
-  postgresql:
-    container_name: postgresql
-    image: postgres:latest
-    ports:
-      - 5432:5432
-    volumes:
-      - ./postgrepsql-custom-config:/custom_config
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-      POSTGRES_DB: EventSource
-    command: "postgres -c config_file=/custom_config/postgresql.conf"
-## Dynamo
-  dynamodb:
-    image:  amazon/dynamodb-local
-    container_name: dynamodb
-    hostname: dynamodb
-    restart: always
-    volumes:
-      -  ./my-dynamodb-data:/home/dynamodblocal/data
-    ports:
-      - 8000:8000
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+
 
   cassandra1:
     image: cassandra:latest
@@ -112,34 +97,6 @@ services:
     command: storm ui
 
 ## EVENT SOURCE STORAGE 
-  eventstorage:
-    container_name: event-source-storage
-    build:
-      context: ./event-source-storage
-    depends_on:
-      - kafka
-      - redis
-      - postgresql
-      - serviceregistry
-    #ports:
-    #  - 2222
-    volumes:
-      - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
-    command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
-  
-  walminer:
-    container_name: wal-miner
-    build: 
-      context: ./transaction-log-tailling
-    depends_on:
-      - postgresql
-      - eventstorage
-      - serviceregistry
-    #ports:
-    #  - 2222
-    volumes:
-      - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
-    command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
 
   recommenderrealtimeservice:
     image: storm:1.2.4
