@@ -16,6 +16,7 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
+	docker-compose -f docker-compose-extra-services.yml -f docker-compose-hbase-local-distributed.yml -f docker-compose-main-services up -d --scale supervisor=1 --scale commandrating=1 --scale queryrating=1
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
 
