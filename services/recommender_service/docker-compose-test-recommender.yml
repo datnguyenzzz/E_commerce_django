@@ -53,6 +53,16 @@ services:
       - 8000:8000
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
 
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    restart: always 
+    ports: 
+      - 9042:9042
+    volumes:
+      - ./cassandra/data:/var/lib/cassandra/data
+      - ./cassandra/logs:/var/log/cassandra
+
 ## RECOMMENDER SERVICE
   nimbus:
     image: storm:1.2.4

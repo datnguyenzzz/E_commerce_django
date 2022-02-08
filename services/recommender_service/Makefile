@@ -8,12 +8,9 @@ init:
 testRecommender:
 	mvn clean
 	mvn install
-#	docker build -t bde2020/hbase-base:$(hbase_branch) ./hadoop/hbase
-#   docker build -t bde2020/hbase-master:$(hbase_branch) ./hadoop/hmaster
-#	docker build -t bde2020/hbase-regionserver:$(hbase_branch) ./hadoop/hregionserver
-#	docker build -t bde2020/hbase-pseudo-distributed:$(hbase_branch) ./hadoop/pseudo-distributed
-	docker-compose -f docker-compose-hbase-local-distributed.yml -f docker-compose-test-recommender.yml up -d --scale supervisor=1
+	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
+	docker-compose -f docker-compose-test-recommender.yml ps
 
 testProducer:
 	docker exec -it kafka kafka-console-producer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation
@@ -25,11 +22,7 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
-	docker build -t bde2020/hbase-base:latest ./hbase
-	docker build -t bde2020/hbase-master:latest ./hmaster
-	docker build -t bde2020/hbase-regionserver:latest ./hregionserver
-	docker build -t bde2020/hbase-standalone:latest ./pseudo-distributed
-	docker-compose -f docker-compose-extra-services.yml -f docker-compose-hbase-local-distributed.yml -f docker-compose-main-services up -d --scale supervisor=1 --scale commandrating=1 --scale queryrating=1
+	docker-compose -f docker-compose-extra-services.yml -f docker-compose-main-services up -d --scale supervisor=1 --scale commandrating=1 --scale queryrating=1
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
 
