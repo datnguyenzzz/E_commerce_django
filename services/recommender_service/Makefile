@@ -16,8 +16,6 @@ testConsumer:
 start:
 	mvn clean
 	mvn install
-	docker-compose up -d serviceregistry zookeeper kafka redis postgresql dynamodb commandrating queryrating eventstorage walminer apigateway nimbus supervisor ui recommenderrealtimeservice --scale commandrating=1 --scale queryrating=1 --scale supervisor=1
-##	docker-compose up -d
 	docker-compose ps
 	docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' prometheus
 
