@@ -29,7 +29,7 @@ start:
 shutdown:
 	docker stop $(shell docker ps -a -q)
 
-	docker-compose  -f docker-compose-hbase-local-distributed.yml -f docker-compose-test-recommender.yml down
+	docker-compose -f docker-compose-test-recommender.yml down
 
 	docker volume prune  -f
 	docker container prune  -f
