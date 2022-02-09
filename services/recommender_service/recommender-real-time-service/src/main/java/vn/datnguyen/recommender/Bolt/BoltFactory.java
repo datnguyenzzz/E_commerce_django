@@ -30,7 +30,7 @@ public class BoltFactory {
         return new DuplicateFilterBolt(poolConfig);
     }
 
-    public ItemCountBolt createItemCountBolt() {
-        return new ItemCountBolt();
+    public ClientRatingBolt createClientRatingBolt() {
+        return new ClientRatingBolt();
     }
 }

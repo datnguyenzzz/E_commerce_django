@@ -1,24 +1,21 @@
 package vn.datnguyen.recommender.Repository;
 
-import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 
 public class RepositoryFactory {
 
-    private CompletionStage<CqlSession> sessionStage; 
     private CqlSession session;
 
-    public RepositoryFactory(CqlSession session, CompletionStage<CqlSession> sessionStage) {
+    public RepositoryFactory(CqlSession session) {
         this.session = session;
-        this.sessionStage = sessionStage;
     }
 
     public KeyspaceRepository getKeyspaceRepository() {
-        return new KeyspaceRepository(session, sessionStage);
+        return new KeyspaceRepository(session);
     }
 
     public UserRatingRepository getUserRatingRepository() {
-        return new UserRatingRepository();
+        return new UserRatingRepository(session);
     }
 }
