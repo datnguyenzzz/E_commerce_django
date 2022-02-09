@@ -19,7 +19,7 @@ public class LoggerBolt extends BaseRichBolt {
     private OutputCollector collector;
     
     @Override
-    public void prepare(Map map, TopologyContext TopologyContext, OutputCollector collector) {
+    public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
     }
     

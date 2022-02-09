@@ -69,6 +69,7 @@ services:
       - 9042:9042
     environment:
       CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
+      CASSANDRA_DC: some_where_in_Docker
     volumes:
       - ./cassandra/1/data:/var/lib/cassandra/data
       - ./cassandra/1/logs:/var/log/cassandra
@@ -84,6 +85,7 @@ services:
     environment:
       CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
       CASSANDRA_SEEDS: cassandra1
+      CASSANDRA_DC: some_where_in_Docker
     volumes:
       - ./cassandra/2/data:/var/lib/cassandra/data
       - ./cassandra/2/logs:/var/log/cassandra
