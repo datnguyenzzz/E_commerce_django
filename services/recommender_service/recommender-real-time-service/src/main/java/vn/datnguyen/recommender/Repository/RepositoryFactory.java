@@ -6,13 +6,19 @@ import com.datastax.oss.driver.api.core.CqlSession;
 
 public class RepositoryFactory {
 
-    private CompletionStage<CqlSession> session; 
+    private CompletionStage<CqlSession> sessionStage; 
+    private CqlSession session;
 
-    public RepositoryFactory(CompletionStage<CqlSession> session) {
+    public RepositoryFactory(CqlSession session, CompletionStage<CqlSession> sessionStage) {
         this.session = session;
+        this.sessionStage = sessionStage;
     }
 
-    public CompletionStage<CqlSession> getSession() {
-        return session;
+    public KeyspaceRepository getKeyspaceRepository() {
+        return new KeyspaceRepository(session, sessionStage);
+    }
+
+    public UserRatingRepository getUserRatingRepository() {
+        return new UserRatingRepository();
     }
 }

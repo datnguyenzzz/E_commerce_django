@@ -14,27 +14,32 @@ public class CassandraConnector {
 
     private Logger logger = LoggerFactory.getLogger(CassandraConnector.class);
 
-    private CompletionStage<CqlSession> session;
+    private CompletionStage<CqlSession> sessionStage;
+
+    private CqlSession session;
 
     public CassandraConnector () {}
 
     public void connect(String node, int port, String dataCenter) {
         CqlSessionBuilder builder = CqlSession.builder()
-            .addContactPoint(new InetSocketAddress(node, port))
-            .withLocalDatacenter(dataCenter);
+            .addContactPoint(new InetSocketAddress(node, port));
 
-        session = builder.buildAsync();
+        sessionStage = builder.buildAsync();
 
         logger.info("Cassandra open !!!");
     }
 
-    public CompletionStage<CqlSession> getSession() {
+    public CompletionStage<CqlSession> getSessionStage() {
+        return sessionStage;
+    }
+
+    public CqlSession getSession() {
         return session;
     }
 
     public void close() throws Exception {
-        session.thenAccept(CqlSession::close);
-        ((CompletableFuture<CqlSession>) session).get();
+        sessionStage.thenAccept(CqlSession::close);
+        ((CompletableFuture<CqlSession>) sessionStage).get();
 
         logger.info("Cassandra closed successfully");
     }

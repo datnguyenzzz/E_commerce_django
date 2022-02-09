@@ -29,4 +29,8 @@ public class BoltFactory {
             .build();
         return new DuplicateFilterBolt(poolConfig);
     }
+
+    public ItemCountBolt createItemCountBolt() {
+        return new ItemCountBolt();
+    }
 }
