@@ -29,7 +29,7 @@ public class RatingTransactionalPublisher implements Publisher {
 
     @Override
     public void execute(AvroEvent event) {
-        logger.info("Attempt publishing raw event: " + event.toString());
+        logger.info("Attempt publishing raw event: " + event.toString() + " to topic" + topicName + "-" + Integer.toString(event.getPartitionId()));
 
         kafkaTemplate.executeInTransaction(op -> {
             op.send(topicName, Integer.toString(event.getPartitionId()), event)
@@ -40,7 +40,9 @@ public class RatingTransactionalPublisher implements Publisher {
 
     private void onSuccess(final SendResult<String, AvroEvent> res) {
         logger.info("COMMAND-RATING-SERVICE: Sucessfully publish event = " 
-                    + res.getProducerRecord().toString());
+                    + res.getProducerRecord().toString()
+                    + "onto topic: "
+                    + topicName);
     }
 
     private void onFailure(final Throwable t) {

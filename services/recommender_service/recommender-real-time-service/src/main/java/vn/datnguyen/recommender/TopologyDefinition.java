@@ -7,6 +7,7 @@ import org.apache.storm.topology.TopologyBuilder;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Bolt.BoltFactory;
+import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Spout.SpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -36,6 +37,7 @@ public class TopologyDefinition {
         config.setDebug(true);
         config.setNumWorkers(Integer.parseInt(TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
+        config.registerSerialization(Event.class);
         return config;
     }
 

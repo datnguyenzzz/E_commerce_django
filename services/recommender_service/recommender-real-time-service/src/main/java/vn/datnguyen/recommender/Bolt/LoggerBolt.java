@@ -11,6 +11,8 @@ import org.apache.storm.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.Models.Event;
+
 public class LoggerBolt extends BaseRichBolt {
     
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
@@ -23,7 +25,8 @@ public class LoggerBolt extends BaseRichBolt {
     
     @Override
     public void execute(Tuple input) {
-        logger.info("********* LOGGER BOLT **********" + input);
+        Event incomeEvent = (Event) input.getValue(0);
+        logger.info("********* LOGGER BOLT **********" + incomeEvent);
         collector.ack(input);
     }
     

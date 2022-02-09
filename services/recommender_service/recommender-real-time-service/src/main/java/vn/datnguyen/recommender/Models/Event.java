@@ -1,8 +1,10 @@
 package vn.datnguyen.recommender.Models;
     
 public class Event {
-    private final String eventId, timestamp, eventType, clientId, itemId; 
-    private final int weight;
+    private String eventId, timestamp, eventType, clientId, itemId; 
+    private int weight;
+
+    public Event() {}
 
     public Event(String eventId, String timestamp, String eventType, String clientId, String itemId, int weight) {
         this.eventId = eventId;
