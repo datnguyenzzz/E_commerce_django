@@ -126,7 +126,6 @@ public class WeightApplierBolt extends BaseRichBolt {
         applyWeight(event);
 
         Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
-
         Values values = new Values(ouputEvent);
 
         collector.emit(values);

@@ -24,7 +24,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
+    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
@@ -34,35 +34,36 @@ public class ClientRatingBolt extends BaseRichBolt {
 
     private RepositoryFactory repositoryFactory;
     private OutputCollector collector;
-    private CqlSession session;
+
+    private void launchCassandraKeyspace() {
+        CassandraConnector connector = new CassandraConnector();
+        connector.connect(CASS_NODE, Integer.parseInt(CASS_PORT), CASS_DATA_CENTER);
+        CqlSession session = connector.getSession();
+
+        this.repositoryFactory = new RepositoryFactory(session);
+        KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
+        keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
+    }
 
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
-        
-        CassandraConnector connector = new CassandraConnector();
-        connector.connect(CASS_NODE, Integer.parseInt(CASS_PORT), CASS_DATA_CENTER);
-        session = connector.getSession();
-
-        repositoryFactory = new RepositoryFactory(session);
-        KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
-        keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
+        launchCassandraKeyspace();
     }
     
     @Override
     public void execute(Tuple input) {
-        Event incomeEvent = (Event) input.getValue(0);
-        logger.info("********* ClientRatingBolt BOLT **********" + incomeEvent);
+        Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
         UserRatingRepository userRatingRepository = repositoryFactory.getUserRatingRepository();
 
-        logger.info("********* ClientRatingBolt BOLT session **********" + userRatingRepository.getSession());
+        logger.info("********* ClientRatingBolt BOLT session **********" + incomeEvent + " -- " + userRatingRepository.getSession().toString());
         collector.ack(input);
 
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(VALUE_FIELD));
+        declarer.declare(new Fields(EVENT_FIELD));
     }
 }
