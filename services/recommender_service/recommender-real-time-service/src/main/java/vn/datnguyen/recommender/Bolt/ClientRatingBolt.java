@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
+import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -72,7 +73,29 @@ public class ClientRatingBolt extends BaseRichBolt {
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
-        logger.info("********* ClientRatingBolt BOLT session **********" + incomeEvent + " -- " + clientRatingRepository.getSession().toString());
+        ClientRating clientRating = new ClientRating(incomeEvent.getClientId(), incomeEvent.getItemId(), incomeEvent.getWeight());
+
+        SimpleStatement findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
+            clientRating.getClientId(), clientRating.getItemId());
+
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        if (findOneResult.all().size() > 0) {
+            SimpleStatement updateIfRatingGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(
+                clientRating);
+            
+            ResultSet updateIfRatingGreaterResult = this.repositoryFactory.executeStatement(
+                updateIfRatingGreaterStatement, KEYSPACE_FIELD);
+            
+            logger.info("Update new client rating: " + updateIfRatingGreaterResult.toString());
+        } else {
+            SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(clientRating);
+            ResultSet insertNewResult = this.repositoryFactory.executeStatement(
+                insertNewStatement, KEYSPACE_FIELD);
+
+            logger.info("Insert new client rating: " + insertNewResult.toString());
+        }
+
         collector.ack(input);
 
     }

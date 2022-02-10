@@ -112,7 +112,7 @@ services:
     volumes:
       - ./recommender-real-time-service/target:/topology-definition
       - ./recommender-real-time-service/deployment:/topology-deployment
-    command: /topology-deployment/deploy-topology.sh
+    command: "dos2unix /topology-deployment/deploy-topology.sh"
 
   testingrating:
     build: 
