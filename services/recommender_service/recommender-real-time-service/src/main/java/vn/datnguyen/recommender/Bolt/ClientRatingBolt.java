@@ -50,7 +50,7 @@ public class ClientRatingBolt extends BaseRichBolt {
     }
 
     public void createTableIfNotExists() {
-        SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfExists();
+        SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfNotExists();
         ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
         logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.toString());
 
