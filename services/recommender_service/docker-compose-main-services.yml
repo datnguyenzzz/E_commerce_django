@@ -1,0 +1,217 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    hostname: zookeeper 
+    container_name: zookeeper 
+    ports:
+      - "2181:2181"  
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181 
+      ZOOKEEPER_TICK_TIME: 2000
+
+# Message queue
+  kafka:
+    image: wurstmeister/kafka:latest
+    hostname: kafka 
+    container_name: kafka 
+    depends_on:
+      - zookeeper 
+    ports:
+      - "9092:9092" 
+    expose:
+      - "9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+# database
+  redis:
+    container_name: redis
+    image: redis:6.0.6
+    ports:
+      - 6379:6379
+  
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgrepsql-custom-config:/custom_config
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: EventSource
+    command: "postgres -c config_file=/custom_config/postgresql.conf"
+
+  dynamodb:
+    image:  amazon/dynamodb-local
+    container_name: dynamodb
+    hostname: dynamodb
+    restart: always
+    volumes:
+      -  ./my-dynamodb-data:/home/dynamodblocal/data
+    ports:
+      - 8000:8000
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+
+  cassandra1:
+    image: cassandra:latest
+    container_name: cassandra-1
+    restart: always 
+    ports: 
+      - 9042:9042
+    environment:
+      CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_DC: datacenter1
+    volumes:
+      - ./cassandra/1/data:/var/lib/cassandra/data
+      - ./cassandra/1/logs:/var/log/cassandra
+
+  cassandra2:
+    image: cassandra:latest
+    container_name: cassandra-2
+    restart: always 
+    ports: 
+      - 9043:9042
+    depends_on:
+      - cassandra1
+    environment:
+      CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_SEEDS: cassandra1
+      CASSANDRA_DC: datacenter1
+    volumes:
+      - ./cassandra/2/data:/var/lib/cassandra/data
+      - ./cassandra/2/logs:/var/log/cassandra
+
+## RECOMMENDER SERVICE
+  nimbus:
+    image: storm:1.2.4
+    container_name: nimbus
+    depends_on:
+      - zookeeper
+    restart: always
+    ports:
+      - 6627:6627
+    command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
+  
+  supervisor:
+    image: storm:1.2.4
+    depends_on:
+      - zookeeper
+      - nimbus
+    restart: always
+    volumes:
+      - ./storm/supervisor/logs:/logs
+    command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
+  
+  ui:
+    image: storm:1.2.4
+    container_name: ui
+    depends_on:
+      - nimbus
+    restart: always
+    ports:
+      - 8080:8080
+    command: storm ui
+
+## Registry services
+  serviceregistry:
+    container_name: service-registry
+    build: 
+      context: ./service-registry
+    ports:
+      - 8761:8761 
+    volumes:
+      - ./service-registry/target/service-registry-1.0-SNAPSHOT.jar:/recommender/service-registry.jar
+    command: "java -Xmx256m -jar /recommender/service-registry.jar"
+    
+## RATING COMMAND 
+  commandrating:
+    build: 
+      context: ./command-rating-service
+    depends_on:
+      - kafka
+      - serviceregistry
+    #ports:
+    #  - "7000:2222"
+    volumes:
+      - ./command-rating-service/target/command-rating-service-1.0-SNAPSHOT.jar:/recommender/command-rating-service.jar
+    command: "java -Xmx256m -jar /recommender/command-rating-service.jar"
+
+## Query service  
+  queryrating:
+    build: 
+      context: ./query-rating-service
+    depends_on:
+      - kafka
+      - dynamodb
+      - serviceregistry
+    #ports:
+    #  - "7001:2222"
+    volumes:
+      - ./query-rating-service/target/query-rating-service-1.0-SNAPSHOT.jar:/recommender/query-rating-service.jar
+    command: "java -Xmx256m -jar /recommender/query-rating-service.jar"
+
+## EVENT SOURCE STORAGE 
+  eventstorage:
+    container_name: event-source-storage
+    build:
+      context: ./event-source-storage
+    depends_on:
+      - kafka
+      - redis
+      - postgresql
+      - serviceregistry
+    #ports:
+    #  - 2222
+    volumes:
+      - ./event-source-storage/target/event-source-storage-1.0-SNAPSHOT.jar:/recommender/event-source-storage.jar
+    command: "java -Xmx256m -jar /recommender/event-source-storage.jar"
+  
+  walminer:
+    container_name: wal-miner
+    build: 
+      context: ./transaction-log-tailling
+    depends_on:
+      - postgresql
+      - eventstorage
+      - serviceregistry
+    #ports:
+    #  - 2222
+    volumes:
+      - ./transaction-log-tailling/target/transaction-log-tailling-1.0-SNAPSHOT.jar:/recommender/transaction-log-tailling.jar
+    command: "java -Xmx256m -jar /recommender/transaction-log-tailling.jar"
+
+## API GATEWAY
+  apigateway:
+    container_name: api-gateway
+    build: 
+      context: ./api-gateway
+    ports:
+      - 8765:8765
+    depends_on:
+      - serviceregistry
+    volumes:
+      - ./api-gateway/target/api-gateway-1.0-SNAPSHOT.jar:/recommender/api-gateway.jar
+    command: "java -Xmx256m -jar /recommender/api-gateway.jar"
+
+  recommenderrealtimeservice:
+    image: storm:1.2.4
+    container_name: recommender-real-time-service
+    depends_on:
+      - nimbus
+      - kafka 
+      - redis
+    volumes:
+      - ./recommender-real-time-service/target:/topology-definition
+      - ./recommender-real-time-service/deployment:/topology-deployment
+    command: /topology-deployment/deploy-topology.sh

@@ -3,9 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>vn.datnguyen.recommender</groupId>
-    <artifactId>recommender-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.4</version>
+    <relativePath/>
   </parent>
   <groupId>vn.datnguyen.recommender</groupId>
   <artifactId>event-source-storage</artifactId>
@@ -17,7 +18,19 @@
     <spring.kafka.version>2.7.1</spring.kafka.version>
     <spring.redis.version>2.3.3.RELEASE</spring.redis.version>
     <jedis.version>3.3.0</jedis.version>
+    <cloud.dependencies.version>2020.0.3</cloud.dependencies.version>
   </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>  
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${cloud.dependencies.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- internal dependencies -->
@@ -51,6 +64,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-dependencies</artifactId>
+      <version>${cloud.dependencies.version}</version>
+      <type>pom</type>
+      <scope>import</scope>
     </dependency>
     <!-- kafka -->
     <dependency>

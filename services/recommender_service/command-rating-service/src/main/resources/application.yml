@@ -5,9 +5,15 @@ incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
   avroUpdateRatingEvent: AvroUpdateRatingEvent
   avroDeleteRatingEvent: AvroDeleteRatingEvent
+  avroBuyBehaviorEvent: AvroBuyBehaviorEvent
+  avroAddToCartBehaviorEvent: AvroAddToCartBehaviorEvent
+
 
 transactionKafka:
-  messageId: 1
+  partitionIdCommandRating: 1
+  partitionIdQueryRating: 2 
+  partitionIdBuyBehavior: 3 
+  partitionIdAddToCartBehavior: 4
   bootstrapServers: kafka:9092
   transactionIdPrefix: ratingCommand
   topic: ratingCommandToEventSource

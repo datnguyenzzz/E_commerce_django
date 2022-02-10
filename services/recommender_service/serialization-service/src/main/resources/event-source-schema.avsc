@@ -10,7 +10,7 @@
             "name": "partitionId", "type": "int"
         },
         {
-            "name": "timestamp","type": "long"
+            "name": "timestamp","type": "string"
         },
         {
             "name": "eventType", "type": "string"
@@ -52,6 +52,43 @@
 
                 {
                     "name": "AvroDeleteRating",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
+                },
+
+                {
+                    "name": "AvroQueryRating",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroBuyBehavior",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroAddToCartBehavior",
                     "type": "record",
                     "fields": [
                         {

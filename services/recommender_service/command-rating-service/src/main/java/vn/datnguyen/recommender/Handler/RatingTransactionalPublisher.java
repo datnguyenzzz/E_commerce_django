@@ -9,7 +9,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.MessageQueue.Publisher;
 
 @Component
 public class RatingTransactionalPublisher implements Publisher {

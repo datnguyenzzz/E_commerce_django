@@ -5,8 +5,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.Handler.Consumer;
 import vn.datnguyen.recommender.Handler.EventSourceService;
-import vn.datnguyen.recommender.MessageQueue.Consumer;
 
 @Component
 public class EventConsumer implements Consumer {
@@ -18,7 +18,8 @@ public class EventConsumer implements Consumer {
         this.eventSourceService = eventSourceService;
     }
 
-    @KafkaListener(topics = "${ConsumerKafka.topicConsumerFromRatingCommand}", id = "${ConsumerKafka.groupId}")
+    @KafkaListener(topics = {"${ConsumerKafka.topicConsumerFromRatingCommand}", "${ConsumerKafka.topicConsumerFromRatingQuery}"},
+                   id = "${ConsumerKafka.groupId}")
     @Override
     public void execute(AvroEvent event) {
         this.eventSourceService.process(event);

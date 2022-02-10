@@ -15,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import vn.datnguyen.recommender.Domain.AddToCartBehaviorCommand;
+import vn.datnguyen.recommender.Domain.BuyBehaviorCommand;
 import vn.datnguyen.recommender.Domain.DeleteRatingCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
 import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
 import vn.datnguyen.recommender.Handler.RatingService;
 
 @RestController
-@RequestMapping("/api/v/1.0.0/rating")
+@RequestMapping("/api/v/1.0.0")
 public class ApiController {
 
     private final Logger logger = LoggerFactory.getLogger(ApiController.class);
@@ -33,7 +35,7 @@ public class ApiController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping()
+    @PostMapping("/rating")
     public CompletableFuture<ResponseEntity<String>> PublishRating(@Validated @RequestBody PublishRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "published rating command = " + command.toString());
         return ratingService.process(command)
@@ -48,7 +50,7 @@ public class ApiController {
                             });
     }
 
-    @PutMapping() 
+    @PutMapping("/rating") 
     public CompletableFuture<ResponseEntity<String>> UpdateRating(@Validated @RequestBody UpdateRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "updated rating command = "+ command.toString());
         return ratingService.process(command)
@@ -63,7 +65,7 @@ public class ApiController {
                             });
     }
 
-    @DeleteMapping() 
+    @DeleteMapping("/rating") 
     public CompletableFuture<ResponseEntity<String>> DeleteRating(@Validated @RequestBody DeleteRatingCommand command) {
         logger.info("COMMAND-RATING-SERVICE: " + "deleted rating command = "+ command.toString());
         return ratingService.process(command)
@@ -74,6 +76,36 @@ public class ApiController {
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
                                 String bodyRes = "Deleted not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
+                            });
+    }
+
+    @PostMapping("/buy")
+    public CompletableFuture<ResponseEntity<String>> buyItem(@RequestBody BuyBehaviorCommand command) {
+        logger.info("COMMAND-RATING-SERVICE: " + "buy behavior = "+ command.toString());
+        return ratingService.process(command)
+                            .thenApply(result -> {
+                                String bodyRes = "Buy sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
+                            .exceptionally(e -> {
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
+                                String bodyRes = "Buy not sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
+                            });
+    }
+
+    @PostMapping("/addToCart")
+    public CompletableFuture<ResponseEntity<String>> addToCart(@RequestBody AddToCartBehaviorCommand command) {
+        logger.info("COMMAND-RATING-SERVICE: " + "add to cart behavior = "+ command.toString());
+        return ratingService.process(command)
+                            .thenApply(result -> {
+                                String bodyRes = "Add to cart sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
+                            .exceptionally(e -> {
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
+                                String bodyRes = "Add to cart not sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
     }

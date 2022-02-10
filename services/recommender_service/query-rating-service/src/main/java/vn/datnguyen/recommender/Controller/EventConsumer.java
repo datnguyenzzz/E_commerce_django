@@ -16,8 +16,8 @@ import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
+import vn.datnguyen.recommender.Handler.Consumer;
 import vn.datnguyen.recommender.Handler.EventHandler;
-import vn.datnguyen.recommender.MessageQueue.Consumer;
 import vn.datnguyen.recommender.Models.Rating;
 import vn.datnguyen.recommender.Repositories.RatingRepository;
 

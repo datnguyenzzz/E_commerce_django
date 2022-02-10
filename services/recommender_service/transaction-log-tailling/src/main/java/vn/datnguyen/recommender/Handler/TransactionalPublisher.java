@@ -10,7 +10,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.MessageQueue.Publisher;
 
 @Component
 public class TransactionalPublisher implements Publisher {
@@ -21,6 +20,15 @@ public class TransactionalPublisher implements Publisher {
     @Value("${transactionKafka.topicToRecommendSerivce}")
     private String topicToRecommendSerivce;
 
+    @Value("${incomingEvent.avroPublishRatingEvent}")
+    private String avroPublishRatingEvent;
+
+    @Value("${incomingEvent.avroUpdateRatingEvent}")
+    private String avroUpdateRatingEvent;
+
+    @Value("${incomingEvent.avroDeleteRatingEvent}")
+    private String avroDeleteRatingEvent;
+
     private final Logger logger = LoggerFactory.getLogger(TransactionalPublisher.class);
     private KafkaTemplate<String, AvroEvent> kafkaTemplate;
     
@@ -29,16 +37,27 @@ public class TransactionalPublisher implements Publisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+    private boolean isCommandRatingEvent(AvroEvent event) {
+        return ((event.getEventType().equals(avroPublishRatingEvent)) || 
+                (event.getEventType().equals(avroUpdateRatingEvent)) || 
+                (event.getEventType().equals(avroDeleteRatingEvent)));
+    }
+
     @Override
     public void execute(AvroEvent event) {
         logger.info("EVENT-SOURCE: Transaction publish event " + event);
 
         kafkaTemplate.executeInTransaction(op -> {
-            op.send(topicToQueryService, Integer.toString(event.getPartitionId()), event)
-                .addCallback(this::onSuccessToQueryService, this::onFailureToQueryService);
-            
+
+            if (isCommandRatingEvent(event)) {
+                op.send(topicToQueryService, Integer.toString(event.getPartitionId()), event)
+                    .addCallback(this::onSuccessToQueryService, this::onFailureToQueryService);
+            }
             // send to recommendation service
-            // op.send();
+            
+            op.send(topicToRecommendSerivce, Integer.toString(event.getPartitionId()), event)
+                .addCallback(this::onSuccessToRecommenderService, this::onFailureToRecommenderService);
+                
             return true;
         });
     }
@@ -50,5 +69,14 @@ public class TransactionalPublisher implements Publisher {
 
     private void onFailureToQueryService(final Throwable t) {
         logger.warn("EVENT-SOURCE: Unable publish event to QUERY-RATING-SERVICE =" + t.getMessage());
+    }
+
+    private void onSuccessToRecommenderService(final SendResult<String, AvroEvent> res) {
+        logger.info("EVENT-SOURCE: Sucessfully publish event to RECOMMENDER-SERVICE = " 
+                    + res.getProducerRecord().toString());
+    }
+
+    private void onFailureToRecommenderService(final Throwable t) {
+        logger.warn("EVENT-SOURCE: Unable publish event to RECOMMENDER-SERVICE =" + t.getMessage());
     }
 }

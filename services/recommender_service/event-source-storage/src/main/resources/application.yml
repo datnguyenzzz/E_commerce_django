@@ -38,11 +38,13 @@ incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
   avroUpdateRatingEvent: AvroUpdateRatingEvent
   avroDeleteRatingEvent: AvroDeleteRatingEvent
+  avroQueryRatingEvent: AvroQueryRatingEvent
 
 ConsumerKafka:
   bootstrapServers: kafka:9092
   groupId: eventSourcing
   topicConsumerFromRatingCommand: ratingCommandToEventSource
+  topicConsumerFromRatingQuery: ratingQueryToEventSource
   
 management:
   endpoints:
