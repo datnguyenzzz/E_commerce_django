@@ -2,6 +2,9 @@ package vn.datnguyen.recommender.Bolt;
 
 import java.util.Map;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -15,7 +18,7 @@ import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
-import vn.datnguyen.recommender.Repository.UserRatingRepository;
+import vn.datnguyen.recommender.Repository.ClientRatingRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class ClientRatingBolt extends BaseRichBolt {
@@ -33,6 +36,7 @@ public class ClientRatingBolt extends BaseRichBolt {
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
 
     private RepositoryFactory repositoryFactory;
+    private ClientRatingRepository clientRatingRepository;
     private OutputCollector collector;
 
     private void launchCassandraKeyspace() {
@@ -45,19 +49,30 @@ public class ClientRatingBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
     }
 
+    public void createTableIfNotExists() {
+        SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfExists();
+        ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.toString());
+
+        SimpleStatement indexCreationStatement = this.clientRatingRepository.createIndexOnItemId();
+        result = this.repositoryFactory.executeStatement(indexCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** ClientRatingBolt ****: " + "index creation status " + result.toString());
+    }
+
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
         launchCassandraKeyspace();
+
+        this.clientRatingRepository = repositoryFactory.getClientRatingRepository();
+        createTableIfNotExists();
     }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
-        UserRatingRepository userRatingRepository = repositoryFactory.getUserRatingRepository();
-
-        logger.info("********* ClientRatingBolt BOLT session **********" + incomeEvent + " -- " + userRatingRepository.getSession().toString());
+        logger.info("********* ClientRatingBolt BOLT session **********" + incomeEvent + " -- " + clientRatingRepository.getSession().toString());
         collector.ack(input);
 
     }
