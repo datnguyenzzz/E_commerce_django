@@ -11,6 +11,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
-        logger.info(" ***** find result: ***** " + findOneResult.all());
+        logger.info(" ***** find on result: ***** " + findOneResult.all());
 
         if (findOneResult.all().size() == 0) {
             SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(
@@ -104,18 +105,14 @@ public class ClientRatingBolt extends BaseRichBolt {
                     updateIfGreaterStatement, KEYSPACE_FIELD);
 
                 logger.info("Insert new client rating: " + updateIfGreaterResult.all());
+
+                logger.info("****** Client Rating Bolt *****:" + "emit only  trigger updated event");
+                Values value = new Values(incomeEvent);
+                collector.emit(value);
             }
         }
 
-        findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
-            clientRating.getClientId(), clientRating.getItemId());
-
-        findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
-
-        logger.info(" ***** find result: ***** " + findOneResult.all().get(0).getInt("rating"));
-
         collector.ack(input);
-
     }
     
     @Override
