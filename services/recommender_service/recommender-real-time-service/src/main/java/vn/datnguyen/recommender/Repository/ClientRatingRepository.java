@@ -31,7 +31,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
         return SchemaBuilder.createTable(CLIENT_RATING_ROW)
             .ifNotExists()
             .withPartitionKey(CLIENT_ID, DataTypes.TEXT)
-            .withColumn(ITEM_ID, DataTypes.TEXT)
+            .withClusteringColumn(ITEM_ID, DataTypes.TEXT)
             .withColumn(RATING, DataTypes.INT)
             .build();
     }
@@ -70,8 +70,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
             .setColumn(RATING, QueryBuilder.literal(clientRating.getRating()))
             .where(
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientRating.getClientId())),
-                Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(clientRating.getItemId())),
-                Relation.column(RATING).isLessThan(QueryBuilder.literal(clientRating.getRating()))
+                Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(clientRating.getItemId()))
             )
             .build();
     }

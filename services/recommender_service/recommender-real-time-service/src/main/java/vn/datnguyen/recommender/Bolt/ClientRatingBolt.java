@@ -53,11 +53,11 @@ public class ClientRatingBolt extends BaseRichBolt {
     public void createTableIfNotExists() {
         SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfNotExists();
         ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.toString());
+        logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.all());
 
         SimpleStatement indexCreationStatement = this.clientRatingRepository.createIndexOnItemId();
         result = this.repositoryFactory.executeStatement(indexCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "index creation status " + result.toString());
+        logger.info("*** ClientRatingBolt ****: " + "index creation status " + result.all());
     }
 
     @Override
@@ -80,21 +80,39 @@ public class ClientRatingBolt extends BaseRichBolt {
 
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
-        if (findOneResult.all().size() > 0) {
-            SimpleStatement updateIfRatingGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(
+        logger.info(" ***** find result: ***** " + findOneResult.all());
+
+        if (findOneResult.all().size() == 0) {
+            SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(
                 clientRating);
             
-            ResultSet updateIfRatingGreaterResult = this.repositoryFactory.executeStatement(
-                updateIfRatingGreaterStatement, KEYSPACE_FIELD);
-            
-            logger.info("Update new client rating: " + updateIfRatingGreaterResult.toString());
-        } else {
-            SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(clientRating);
             ResultSet insertNewResult = this.repositoryFactory.executeStatement(
                 insertNewStatement, KEYSPACE_FIELD);
+            
+            logger.info("Update new client rating: " + insertNewResult.all());
+        } else {
+            if (findOneResult.all().size() > 1) {
+                logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + findOneResult.all().get(0));
+            }
+            int currRating = ((ClientRating) findOneResult.all().get(0)).getRating();
+            logger.info("***** current rating result: *****: " + currRating);
 
-            logger.info("Insert new client rating: " + insertNewResult.toString());
+            if (clientRating.getRating() > currRating) {
+
+                SimpleStatement updateIfGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(clientRating);
+                ResultSet updateIfGreaterResult = this.repositoryFactory.executeStatement(
+                    updateIfGreaterStatement, KEYSPACE_FIELD);
+
+                logger.info("Insert new client rating: " + updateIfGreaterResult.all());
+            }
         }
+
+        findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
+            clientRating.getClientId(), clientRating.getItemId());
+
+        findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        logger.info(" ***** find result: ***** " + findOneResult.all().get(0).getInt("rating"));
 
         collector.ack(input);
 

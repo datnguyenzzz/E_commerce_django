@@ -48,9 +48,9 @@ services:
       CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
       CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
       CASSANDRA_DC: datacenter1
-    volumes:
-      - ./cassandra/1/data:/var/lib/cassandra/data
-      - ./cassandra/1/logs:/var/log/cassandra
+    #volumes:
+    #  - ./cassandra/1/data:/var/lib/cassandra/data
+    #  - ./cassandra/1/logs:/var/log/cassandra
 
   cassandra2:
     image: cassandra:latest
@@ -65,9 +65,9 @@ services:
       CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
       CASSANDRA_SEEDS: cassandra1
       CASSANDRA_DC: datacenter1
-    volumes:
-      - ./cassandra/2/data:/var/lib/cassandra/data
-      - ./cassandra/2/logs:/var/log/cassandra
+    #volumes:
+    #  - ./cassandra/2/data:/var/lib/cassandra/data
+    #  - ./cassandra/2/logs:/var/log/cassandra
 
 ## RECOMMENDER SERVICE
   nimbus:
@@ -112,7 +112,7 @@ services:
     volumes:
       - ./recommender-real-time-service/target:/topology-definition
       - ./recommender-real-time-service/deployment:/topology-deployment
-    command: "dos2unix /topology-deployment/deploy-topology.sh"
+    command: /topology-deployment/deploy-topology.sh
 
   testingrating:
     build: 
