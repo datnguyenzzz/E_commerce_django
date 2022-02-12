@@ -52,7 +52,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId)),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build();
+            .build().setExecutionProfileName("olap");
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
             .value(CLIENT_ID, QueryBuilder.literal(clientRating.getClientId()))
             .value(ITEM_ID, QueryBuilder.literal(clientRating.getItemId()))
             .value(RATING, QueryBuilder.literal(clientRating.getRating()))
-            .build();
+            .build().setExecutionProfileName("olap");
     }
 
     @Override
@@ -72,6 +72,6 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientRating.getClientId())),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(clientRating.getItemId()))
             )
-            .build();
+            .build().setExecutionProfileName("olap");
     }
 }

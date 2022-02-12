@@ -100,7 +100,7 @@ public class ClientRatingBolt extends BaseRichBolt {
             if (findOneResult.all().size() > 1) {
                 logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + findOneResult.all().get(0));
             }
-            int currRating = ((ClientRating) findOneResult.all().get(0)).getRating();
+            int currRating = ((ClientRating) findOneResult.one()).getRating();
             logger.info("***** current rating result: *****: " + currRating);
 
             if (clientRating.getRating() > currRating) {
@@ -111,7 +111,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
                 logger.info("Update current client rating: " + updateIfGreaterResult.all());
 
-                logger.info("****** Client Rating Bolt *****:" + "emit only  trigger updated event");
+                logger.info("****** Client Rating Bolt *****:" + "emit only triggered update event");
                 Values value = new Values(incomeEvent, clientRating.getRating() - currRating);
                 collector.emit(value);
             }

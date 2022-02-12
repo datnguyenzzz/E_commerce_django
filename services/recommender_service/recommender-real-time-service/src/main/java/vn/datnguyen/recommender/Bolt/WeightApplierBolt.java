@@ -124,12 +124,16 @@ public class WeightApplierBolt extends BaseRichBolt {
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* APPLY WEIGHT BOLT **********" + event);
 
-        applyWeight(event);
+        if (event.getEventId() != null && event.getEventId() != "") {
+            applyWeight(event);
 
-        Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
-        Values values = new Values(this.clientId, ouputEvent);
+            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
+            Values values = new Values(this.clientId, ouputEvent);
 
-        collector.emit(values);
+            collector.emit(values);
+        }
+
+        collector.ack(tuple);
     }
     
     @Override
