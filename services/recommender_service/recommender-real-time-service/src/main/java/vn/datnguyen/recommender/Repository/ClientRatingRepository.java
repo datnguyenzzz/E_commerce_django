@@ -61,7 +61,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
             .value(CLIENT_ID, QueryBuilder.literal(clientRating.getClientId()))
             .value(ITEM_ID, QueryBuilder.literal(clientRating.getItemId()))
             .value(RATING, QueryBuilder.literal(clientRating.getRating()))
-            .build().setExecutionProfileName("olap");
+            .build();
     }
 
     @Override
