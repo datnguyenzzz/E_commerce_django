@@ -35,6 +35,14 @@ public class RepositoryFactory {
 
     /**
      * 
+     * @return Cassandra ItemCount DAO
+     */
+    public ItemCountRepository getItemCountRepository() {
+        return new ItemCountRepository(session);
+    }
+
+    /**
+     * 
      * @param statement
      * @param keyspaceName
      * @return execute cassandra statement within keyspace

@@ -50,6 +50,7 @@ public class ClientRatingBolt extends BaseRichBolt {
         this.repositoryFactory = new RepositoryFactory(session);
         KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
+        logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
 
     public void createTableIfNotExists() {
