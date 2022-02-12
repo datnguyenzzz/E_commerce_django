@@ -12,11 +12,13 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Models.ItemCount;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -28,6 +30,7 @@ public class ItemCountBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String DELTA_RATING = customProperties.getProp("DELTA_RATING");
+    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -74,11 +77,35 @@ public class ItemCountBolt extends BaseRichBolt {
         int deltaRating = (int) input.getValueByField(DELTA_RATING);
 
         logger.info("********* ItemCountBolt **********" + incomeEvent + " with delta = " + deltaRating);
+
+        SimpleStatement findOneStatement = this.itemCountRepository.findByItemId(incomeEvent.getItemId());
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        if (findOneResult.all().size() == 0) {
+            ItemCount itemCount = new ItemCount(incomeEvent.getItemId(), incomeEvent.getWeight());
+            SimpleStatement insertNewScoreStatement = this.itemCountRepository.insertNewScore(itemCount);
+            ResultSet insertNewResult = this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId() + insertNewResult.all());
+            // emit to similarity
+            Values values = new Values(incomeEvent, incomeEvent.getWeight());
+            collector.emit(values);
+        } else {
+            int currItemCount = ((ItemCount) findOneResult.one()).getScore();
+            SimpleStatement updateScoreStatement = this.itemCountRepository.updateIncrScore(
+                incomeEvent.getItemId(), deltaRating);
+            
+            ResultSet updateScoreResult = this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + updateScoreResult.all());
+            // emit to similarity
+            Values values = new Values(incomeEvent, currItemCount + deltaRating);
+            collector.emit(values);
+        }
+
         collector.ack(input);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sink-bolt"));
+        declarer.declare(new Fields(EVENT_FIELD, NEW_ITEM_COUNT));
     }
 }
