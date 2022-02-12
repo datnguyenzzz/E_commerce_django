@@ -3,6 +3,7 @@ package vn.datnguyen.recommender;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.tuple.Fields;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Bolt.BoltFactory;
@@ -28,6 +29,7 @@ public class TopologyDefinition {
     private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
     private final static String CLIENT_RATING_BOLT = customProperties.getProp("ITEM_COUNT_BOLT");
     private static final String ITEM_COUNT_BOLT = customProperties.getProp("ITEM_COUNT_BOLT");
+    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
     //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
@@ -53,7 +55,7 @@ public class TopologyDefinition {
             .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
 
         topologyBuilder.setBolt(CLIENT_RATING_BOLT, boltFactory.createClientRatingBolt(), Integer.parseInt(CLIENT_RATING_BOLT_THREADS))
-            .shuffleGrouping(WEIGHT_APPLIER_BOLT);
+            .fieldsGrouping(WEIGHT_APPLIER_BOLT, new Fields(CLIENT_ID_FIELD));
 
         topologyBuilder.setBolt(ITEM_COUNT_BOLT, boltFactory.createItemCountBolt(), Integer.parseInt(ITEM_COUNT_THREADS))
             .shuffleGrouping(CLIENT_RATING_BOLT);
