@@ -29,7 +29,7 @@ public class ItemCountBolt extends BaseRichBolt {
     private final Logger logger = LoggerFactory.getLogger(ItemCountBolt.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String DELTA_RATING = customProperties.getProp("DELTA_RATING");
+    private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
     private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
@@ -74,9 +74,10 @@ public class ItemCountBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
-        int deltaRating = (int) input.getValueByField(DELTA_RATING);
+        int oldRating = (int) input.getValueByField(OLD_RATING);
+        int deltaRating = incomeEvent.getWeight() - oldRating;
 
-        logger.info("********* ItemCountBolt **********" + incomeEvent + " with delta = " + deltaRating);
+        logger.info("********* ItemCountBolt **********" + incomeEvent + " with old value = " + oldRating);
 
         SimpleStatement findOneStatement = this.itemCountRepository.findByItemId(incomeEvent.getItemId());
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);

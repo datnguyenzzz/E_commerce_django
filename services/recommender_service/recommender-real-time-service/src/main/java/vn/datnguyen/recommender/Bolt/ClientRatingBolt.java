@@ -29,7 +29,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String DELTA_RATING = customProperties.getProp("DELTA_RATING");
+    private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -94,7 +94,7 @@ public class ClientRatingBolt extends BaseRichBolt {
             
             logger.info("Insert new client rating: " + insertNewResult.all());
 
-            Values value = new Values(incomeEvent, clientRating.getRating());
+            Values value = new Values(incomeEvent, 0);
             collector.emit(value);
         } else {
             if (findOneResult.all().size() > 1) {
@@ -112,7 +112,7 @@ public class ClientRatingBolt extends BaseRichBolt {
                 logger.info("Update current client rating: " + updateIfGreaterResult.all());
 
                 logger.info("****** Client Rating Bolt *****:" + "emit only triggered update event");
-                Values value = new Values(incomeEvent, clientRating.getRating() - currRating);
+                Values value = new Values(incomeEvent, currRating);
                 collector.emit(value);
             }
         }
@@ -122,6 +122,6 @@ public class ClientRatingBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, DELTA_RATING));
+        declarer.declare(new Fields(EVENT_FIELD, OLD_RATING));
     }
 }
