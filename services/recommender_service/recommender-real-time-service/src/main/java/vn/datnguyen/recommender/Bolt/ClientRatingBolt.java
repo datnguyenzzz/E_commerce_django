@@ -92,7 +92,10 @@ public class ClientRatingBolt extends BaseRichBolt {
             ResultSet insertNewResult = this.repositoryFactory.executeStatement(
                 insertNewStatement, KEYSPACE_FIELD);
             
-            logger.info("Update new client rating: " + insertNewResult.all());
+            logger.info("Insert new client rating: " + insertNewResult.all());
+
+            Values value = new Values(incomeEvent, clientRating.getRating());
+            collector.emit(value);
         } else {
             if (findOneResult.all().size() > 1) {
                 logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + findOneResult.all().get(0));
@@ -106,7 +109,7 @@ public class ClientRatingBolt extends BaseRichBolt {
                 ResultSet updateIfGreaterResult = this.repositoryFactory.executeStatement(
                     updateIfGreaterStatement, KEYSPACE_FIELD);
 
-                logger.info("Insert new client rating: " + updateIfGreaterResult.all());
+                logger.info("Update current client rating: " + updateIfGreaterResult.all());
 
                 logger.info("****** Client Rating Bolt *****:" + "emit only  trigger updated event");
                 Values value = new Values(incomeEvent, clientRating.getRating() - currRating);

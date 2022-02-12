@@ -44,6 +44,7 @@ public class SpoutCreator {
         return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC})
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+            .setProp(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_LATEST)
             .setRetry(kafkaSpoutRetryService())
