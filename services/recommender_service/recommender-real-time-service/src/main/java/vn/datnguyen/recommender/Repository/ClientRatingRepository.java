@@ -1,6 +1,8 @@
 package vn.datnguyen.recommender.Repository;
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
@@ -52,7 +54,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId)),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setExecutionProfileName("olap");
+            .build().setConsistencyLevel(ConsistencyLevel.ONE);
     }
 
     @Override
@@ -72,6 +74,15 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientRating.getClientId())),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(clientRating.getItemId()))
             )
-            .build().setExecutionProfileName("olap");
+            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+    }
+
+    @Override
+    public ClientRating convertRowToPojo(Row row) {
+        return new ClientRating(
+            row.getString(CLIENT_ID),
+            row.getString(ITEM_ID),
+            row.getInt(RATING)
+        );
     }
 }

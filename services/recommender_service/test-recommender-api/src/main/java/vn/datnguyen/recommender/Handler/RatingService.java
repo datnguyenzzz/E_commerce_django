@@ -120,8 +120,8 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private Command validate(PublishRatingCommand command) {
-        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore() <= MAX_SCORE) ? true: false;
-
+        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore()<=MAX_SCORE) ? true: false;
+        logger.info("PublishRatingCommand acceptable=" + acceptable);
         if (acceptable) {
             return command;
         }
@@ -130,7 +130,7 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private Command validate(UpdateRatingCommand command) {
-        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore() <= MAX_SCORE) ? true: false;
+        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore()<=MAX_SCORE) ? true: false;
         
         if (acceptable) {
             return command;

@@ -1,6 +1,8 @@
 package vn.datnguyen.recommender.Repository;
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
@@ -40,7 +42,7 @@ public class ItemCountRepository implements ItemCountInterface {
             .where(
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setExecutionProfileName("olap");
+            .build().setConsistencyLevel(ConsistencyLevel.ONE);
     }
 
     @Override
@@ -59,6 +61,14 @@ public class ItemCountRepository implements ItemCountInterface {
             .where(
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setExecutionProfileName("olap");
+            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+    }
+
+    @Override
+    public ItemCount convertToPojo(Row row) {
+        return new ItemCount(
+            row.getString(ITEM_ID),
+            row.getInt(SCORE)
+        );
     }
 }

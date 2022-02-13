@@ -6,7 +6,9 @@ init:
 	docker-compose up -d dynamodb kafka redis postgresql dynamodb serviceregistry
 
 testRecommender:
+	mvn -pl test-recommender-api -am clean
 	mvn -pl recommender-real-time-service -am clean
+	mvn -pl test-recommender-api -am install
 	mvn -pl recommender-real-time-service -am install
 #	mvn clean 
 #	mvn install

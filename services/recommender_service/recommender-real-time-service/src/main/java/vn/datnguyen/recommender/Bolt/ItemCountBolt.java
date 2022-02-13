@@ -82,21 +82,26 @@ public class ItemCountBolt extends BaseRichBolt {
         SimpleStatement findOneStatement = this.itemCountRepository.findByItemId(incomeEvent.getItemId());
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
-        if (findOneResult.all().size() == 0) {
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+
+        logger.info("********* ItemCountBolt **********" + " rows found size = " + rowFound);
+
+        if (rowFound == 0) {
             ItemCount itemCount = new ItemCount(incomeEvent.getItemId(), incomeEvent.getWeight());
             SimpleStatement insertNewScoreStatement = this.itemCountRepository.insertNewScore(itemCount);
-            ResultSet insertNewResult = this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId() + insertNewResult.all());
+            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId());
             // emit to similarity
             Values values = new Values(incomeEvent, incomeEvent.getWeight());
             collector.emit(values);
         } else {
-            int currItemCount = ((ItemCount) findOneResult.one()).getScore();
+            int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
+            logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
             SimpleStatement updateScoreStatement = this.itemCountRepository.updateIncrScore(
                 incomeEvent.getItemId(), deltaRating);
             
-            ResultSet updateScoreResult = this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + updateScoreResult.all());
+            this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId());
             // emit to similarity
             Values values = new Values(incomeEvent, currItemCount + deltaRating);
             collector.emit(values);
@@ -104,7 +109,7 @@ public class ItemCountBolt extends BaseRichBolt {
 
         collector.ack(input);
     }
-    
+
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(EVENT_FIELD, NEW_ITEM_COUNT));

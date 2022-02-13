@@ -77,41 +77,37 @@ public class ClientRatingBolt extends BaseRichBolt {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
         ClientRating clientRating = new ClientRating(incomeEvent.getClientId(), incomeEvent.getItemId(), incomeEvent.getWeight());
-
         SimpleStatement findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
             clientRating.getClientId(), clientRating.getItemId());
-
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
-        logger.info(" ***** find on result: ***** " + findOneResult.all());
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+        logger.info(" ******* ClientRatingBolt ******** find on result: " + " size = " + rowFound);
 
-        if (findOneResult.all().size() == 0) {
+        if (rowFound == 0) {
             SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(
                 clientRating);
             
-            ResultSet insertNewResult = this.repositoryFactory.executeStatement(
-                insertNewStatement, KEYSPACE_FIELD);
+            this.repositoryFactory.executeStatement(insertNewStatement, KEYSPACE_FIELD);
             
-            logger.info("Insert new client rating: " + insertNewResult.all());
+            logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
 
             Values value = new Values(incomeEvent, 0);
             collector.emit(value);
         } else {
-            if (findOneResult.all().size() > 1) {
-                logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + findOneResult.all().get(0));
+            if (rowFound > 1) {
+                logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + rowFound);
             }
-            int currRating = ((ClientRating) findOneResult.one()).getRating();
-            logger.info("***** current rating result: *****: " + currRating);
+            int currRating = clientRatingRepository.convertRowToPojo(findOneResult.one()).getRating();
+            logger.info("******* ClientRatingBolt ******** current rating result: " + currRating);
 
             if (clientRating.getRating() > currRating) {
 
                 SimpleStatement updateIfGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(clientRating);
-                ResultSet updateIfGreaterResult = this.repositoryFactory.executeStatement(
-                    updateIfGreaterStatement, KEYSPACE_FIELD);
+                this.repositoryFactory.executeStatement(updateIfGreaterStatement, KEYSPACE_FIELD);
 
-                logger.info("Update current client rating: " + updateIfGreaterResult.all());
-
-                logger.info("****** Client Rating Bolt *****:" + "emit only triggered update event");
+                logger.info("******* ClientRatingBolt ******** Update current client rating: ");
+                logger.info("******* ClientRatingBolt ********:" + "emit only triggered update event");
                 Values value = new Values(incomeEvent, currRating);
                 collector.emit(value);
             }
@@ -119,6 +115,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
         collector.ack(input);
     }
+
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
