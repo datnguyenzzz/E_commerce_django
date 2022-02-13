@@ -61,6 +61,7 @@ services:
     ports:
       - 6627:6627
     command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
+    #command: storm nimbus
   
   supervisor:
     image: storm:1.2.4
@@ -71,6 +72,7 @@ services:
     volumes:
       - ./storm/supervisor/logs:/logs
     command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
+    #command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m
   
   ui:
     image: storm:1.2.4

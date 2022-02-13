@@ -37,4 +37,8 @@ public class BoltFactory {
     public ItemCountBolt createItemCountBolt() {
         return new ItemCountBolt();
     }
+
+    public CoRatingBolt createCoRatingBolt() {
+        return new CoRatingBolt();
+    }
 }
