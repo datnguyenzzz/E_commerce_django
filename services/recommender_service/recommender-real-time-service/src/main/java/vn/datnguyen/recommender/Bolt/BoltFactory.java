@@ -33,4 +33,12 @@ public class BoltFactory {
     public ClientRatingBolt createClientRatingBolt() {
         return new ClientRatingBolt();
     }
+
+    public ItemCountBolt createItemCountBolt() {
+        return new ItemCountBolt();
+    }
+
+    public CoRatingBolt createCoRatingBolt() {
+        return new CoRatingBolt();
+    }
 }

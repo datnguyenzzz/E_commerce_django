@@ -1,6 +1,7 @@
 package vn.datnguyen.recommender.Bolt;
 
 import java.util.Map;
+
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
@@ -16,20 +17,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
-import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Models.ItemCount;
+import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
-import vn.datnguyen.recommender.Repository.ClientRatingRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
-public class ClientRatingBolt extends BaseRichBolt {
+public class ItemCountBolt extends BaseRichBolt {
     
-    private final Logger logger = LoggerFactory.getLogger(ClientRatingBolt.class);
-
+    private final Logger logger = LoggerFactory.getLogger(ItemCountBolt.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
+    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -39,7 +40,8 @@ public class ClientRatingBolt extends BaseRichBolt {
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
 
     private RepositoryFactory repositoryFactory;
-    private ClientRatingRepository clientRatingRepository;
+    private ItemCountRepository itemCountRepository;
+    
     private OutputCollector collector;
 
     private void launchCassandraKeyspace() {
@@ -50,75 +52,68 @@ public class ClientRatingBolt extends BaseRichBolt {
         this.repositoryFactory = new RepositoryFactory(session);
         KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
+
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
 
-    public void createTableIfNotExists() {
-        SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfNotExists();
-        ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.all());
-
-        SimpleStatement indexCreationStatement = this.clientRatingRepository.createIndexOnItemId();
-        result = this.repositoryFactory.executeStatement(indexCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "index creation status " + result.all());
+    private void createTableIfNotExists() {
+        SimpleStatement rowCreationStatement = this.itemCountRepository.createRowIfNotExists();
+        ResultSet rowCreationResult = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** ItemCountBolt ****: " + "row creation status " + rowCreationResult.all());
     }
-
+    
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
-        launchCassandraKeyspace();
 
-        this.clientRatingRepository = repositoryFactory.getClientRatingRepository();
+        launchCassandraKeyspace();
+        this.itemCountRepository = this.repositoryFactory.getItemCountRepository();
         createTableIfNotExists();
     }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        int oldRating = (int) input.getValueByField(OLD_RATING);
+        int deltaRating = incomeEvent.getWeight() - oldRating;
 
-        ClientRating clientRating = new ClientRating(incomeEvent.getClientId(), incomeEvent.getItemId(), incomeEvent.getWeight());
-        SimpleStatement findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
-            clientRating.getClientId(), clientRating.getItemId());
+        logger.info("********* ItemCountBolt **********" + incomeEvent + " with old value = " + oldRating);
+
+        SimpleStatement findOneStatement = this.itemCountRepository.findByItemId(incomeEvent.getItemId());
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
         int rowFound = findOneResult.getAvailableWithoutFetching();
-        logger.info(" ******* ClientRatingBolt ******** find on result: " + " size = " + rowFound);
+
+        logger.info("********* ItemCountBolt **********" + " rows found size = " + rowFound);
 
         if (rowFound == 0) {
-            SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(
-                clientRating);
-            
-            this.repositoryFactory.executeStatement(insertNewStatement, KEYSPACE_FIELD);
-            
-            logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
-
-            Values value = new Values(incomeEvent, 0);
-            collector.emit(value);
+            ItemCount itemCount = new ItemCount(incomeEvent.getItemId(), incomeEvent.getWeight());
+            SimpleStatement insertNewScoreStatement = this.itemCountRepository.insertNewScore(itemCount);
+            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId());
+            // emit to similarity
+            Values values = new Values(incomeEvent, incomeEvent.getWeight());
+            collector.emit(values);
         } else {
-            if (rowFound > 1) {
-                logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + rowFound);
-            }
-            int currRating = clientRatingRepository.convertRowToPojo(findOneResult.one()).getRating();
-            logger.info("******* ClientRatingBolt ******** current rating result: " + currRating);
+            int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
+            int newItemCountScore = currItemCount + deltaRating;
 
-            if (clientRating.getRating() > currRating) {
-
-                SimpleStatement updateIfGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(clientRating);
-                this.repositoryFactory.executeStatement(updateIfGreaterStatement, KEYSPACE_FIELD);
-
-                logger.info("******* ClientRatingBolt ******** Update current client rating: ");
-                logger.info("******* ClientRatingBolt ********:" + "emit only triggered update event");
-                Values value = new Values(incomeEvent, currRating);
-                collector.emit(value);
-            }
+            logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
+            SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
+                incomeEvent.getItemId(), newItemCountScore);
+            
+            this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
+            // emit to similarity
+            Values values = new Values(incomeEvent, newItemCountScore);
+            collector.emit(values);
         }
 
         collector.ack(input);
     }
 
-    
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, OLD_RATING));
+        declarer.declare(new Fields(EVENT_FIELD, NEW_ITEM_COUNT));
     }
 }

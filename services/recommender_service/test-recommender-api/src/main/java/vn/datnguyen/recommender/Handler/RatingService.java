@@ -4,6 +4,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
 
 @Service
 public class RatingService implements CommandHandler, EventHandler {
+
+    private final static int MAX_SCORE = 10; 
+    private final static int MIN_SCORE = 1;
 
     private RatingTransactionalPublisher ratingPublisher;
 
@@ -51,6 +56,8 @@ public class RatingService implements CommandHandler, EventHandler {
     @Value("${incomingEvent.avroAddToCartBehaviorEvent}")
     private String avroAddToCartBehaviorEvent;
 
+    private Logger logger = LoggerFactory.getLogger(RatingService.class);
+
     @Autowired
     public RatingService(RatingTransactionalPublisher ratingPublisher) {
         this.ratingPublisher = ratingPublisher;
@@ -67,6 +74,9 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private boolean isNotErrorCommand(Command command) {
+        if (command instanceof ErrorRatingCommand) {
+            logger.warn("*****ERROR COMMAND !!!! *****" + command);
+        }
         return (!(command instanceof ErrorRatingCommand));
     }
 
@@ -110,8 +120,8 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private Command validate(PublishRatingCommand command) {
-        boolean acceptable = (1<=command.getScore() && command.getScore() <= 5) ? true: false;
-
+        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore()<=MAX_SCORE) ? true: false;
+        logger.info("PublishRatingCommand acceptable=" + acceptable);
         if (acceptable) {
             return command;
         }
@@ -120,7 +130,7 @@ public class RatingService implements CommandHandler, EventHandler {
     }
 
     private Command validate(UpdateRatingCommand command) {
-        boolean acceptable = (1<=command.getScore() && command.getScore() <= 5) ? true: false;
+        boolean acceptable = (MIN_SCORE<=command.getScore() && command.getScore()<=MAX_SCORE) ? true: false;
         
         if (acceptable) {
             return command;

@@ -45,9 +45,8 @@ public class SpoutCreator {
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
-            .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.EARLIEST)
+            .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_EARLIEST)
             .setRetry(kafkaSpoutRetryService())
-            .setEmitNullTuples(false)
             .setRecordTranslator(byTopicTranslator)
             .build();
     }

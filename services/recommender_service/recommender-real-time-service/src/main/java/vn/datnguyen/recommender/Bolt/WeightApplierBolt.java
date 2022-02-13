@@ -51,6 +51,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String QUERY_RATING_EVENT_WEIGHT = customProperties.getProp("QUERY_RATING_EVENT_WEIGHT");
     private final static String BUY_EVENT_WEIGHT = customProperties.getProp("BUY_EVENT_WEIGHT");
     private final static String ADD_TO_CART_WEIGHT = customProperties.getProp("ADD_TO_CART_WEIGHT");
+    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
@@ -123,16 +124,20 @@ public class WeightApplierBolt extends BaseRichBolt {
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* APPLY WEIGHT BOLT **********" + event);
 
-        applyWeight(event);
+        if (event.getEventId() != null && event.getEventId() != "") {
+            applyWeight(event);
 
-        Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
-        Values values = new Values(ouputEvent);
+            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
+            Values values = new Values(this.clientId, ouputEvent);
 
-        collector.emit(values);
+            collector.emit(values);
+        }
+
+        collector.ack(tuple);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD));
+        declarer.declare(new Fields(CLIENT_ID_FIELD, EVENT_FIELD));
     }
 }

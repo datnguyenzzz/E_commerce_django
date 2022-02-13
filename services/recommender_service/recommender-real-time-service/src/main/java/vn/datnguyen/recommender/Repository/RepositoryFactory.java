@@ -1,8 +1,11 @@
 package vn.datnguyen.recommender.Repository;
 
 
+import java.util.concurrent.CompletionStage;
+
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
@@ -32,6 +35,14 @@ public class RepositoryFactory {
 
     /**
      * 
+     * @return Cassandra ItemCount DAO
+     */
+    public ItemCountRepository getItemCountRepository() {
+        return new ItemCountRepository(session);
+    }
+
+    /**
+     * 
      * @param statement
      * @param keyspaceName
      * @return execute cassandra statement within keyspace
@@ -42,5 +53,13 @@ public class RepositoryFactory {
         }
 
         return this.session.execute(statement);
+    }
+
+    public CompletionStage<AsyncResultSet> asyncExecuteStatement(SimpleStatement statement, String keyspaceName) {
+        if (keyspaceName != null) {
+            statement.setKeyspace(CqlIdentifier.fromCql(keyspaceName));
+        }
+
+        return this.session.executeAsync(statement);
     }
 }
