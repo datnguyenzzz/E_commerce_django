@@ -24,6 +24,11 @@ import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
+/**
+ * ItemCount[p] = sum(ClienRating[u,p])
+ * 
+ * R_new[u,p] > R[u,p] -> ItemCount[p] += delta_R
+ */
 public class ItemCountBolt extends BaseRichBolt {
     
     private final Logger logger = LoggerFactory.getLogger(ItemCountBolt.class);
