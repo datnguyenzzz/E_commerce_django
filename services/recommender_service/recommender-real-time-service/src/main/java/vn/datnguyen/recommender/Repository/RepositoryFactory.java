@@ -30,7 +30,7 @@ public class RepositoryFactory {
      * @return Cassandra ClienRating Row DAO
      */
     public ClientRatingRepository getClientRatingRepository() {
-        return new ClientRatingRepository(session);
+        return new ClientRatingRepository();
     }
 
     /**
@@ -38,8 +38,16 @@ public class RepositoryFactory {
      * @return Cassandra ItemCount DAO
      */
     public ItemCountRepository getItemCountRepository() {
-        return new ItemCountRepository(session);
+        return new ItemCountRepository();
     }
+
+    /**
+     * 
+     * @return Cassandra CoRating DAO
+     */
+    public CoRatingRepository getCoRatingRepository() {
+        return new CoRatingRepository();
+    } 
 
     /**
      * 

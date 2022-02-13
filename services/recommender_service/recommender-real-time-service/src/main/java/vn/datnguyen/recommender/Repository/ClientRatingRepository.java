@@ -1,7 +1,6 @@
 package vn.datnguyen.recommender.Repository;
 
 import com.datastax.oss.driver.api.core.ConsistencyLevel;
-import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
@@ -18,15 +17,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
     private static final String ITEM_ID = "item_id";
     private static final String RATING = "rating";
 
-    private CqlSession session; 
-
-    public ClientRatingRepository(CqlSession session) {
-        this.session = session;
-    }
-
-    public CqlSession getSession() {
-        return session;
-    }
+    public ClientRatingRepository() {}
 
     @Override
     public SimpleStatement createRowIfNotExists() {

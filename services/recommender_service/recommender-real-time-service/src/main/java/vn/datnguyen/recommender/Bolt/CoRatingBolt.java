@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Repository.CoRatingRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.CustomProperties;
@@ -49,6 +50,7 @@ public class CoRatingBolt extends BaseRichBolt {
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
 
     private RepositoryFactory repositoryFactory;
+    private CoRatingRepository coRatingRepository;
 
     private void launchCassandraKeyspace() {
         CassandraConnector connector = new CassandraConnector();
@@ -60,12 +62,18 @@ public class CoRatingBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** CoRatingBolt ****");
     }
+
+    public void createTableIfNotExists() {
+    }
+
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
 
         launchCassandraKeyspace();
+        this.coRatingRepository = repositoryFactory.getCoRatingRepository();
+        createTableIfNotExists();
     }
     
     @Override
