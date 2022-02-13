@@ -55,9 +55,9 @@ public class ItemCountRepository implements ItemCountInterface {
     }
 
     @Override
-    public SimpleStatement updateIncrScore(String itemId, int deltaScore) {
+    public SimpleStatement updateScore(String itemId, int newScore) {
         return QueryBuilder.update(ITEM_COUNT_ROW)
-            .increment(SCORE, QueryBuilder.literal(deltaScore))
+            .setColumn(SCORE, QueryBuilder.literal(newScore))
             .where(
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )

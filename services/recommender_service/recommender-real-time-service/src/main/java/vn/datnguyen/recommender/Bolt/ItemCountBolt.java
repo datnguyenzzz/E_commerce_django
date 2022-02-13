@@ -96,14 +96,16 @@ public class ItemCountBolt extends BaseRichBolt {
             collector.emit(values);
         } else {
             int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
+            int newItemCountScore = currItemCount + deltaRating;
+
             logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
-            SimpleStatement updateScoreStatement = this.itemCountRepository.updateIncrScore(
-                incomeEvent.getItemId(), deltaRating);
+            SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
+                incomeEvent.getItemId(), newItemCountScore);
             
             this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId());
+            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
             // emit to similarity
-            Values values = new Values(incomeEvent, currItemCount + deltaRating);
+            Values values = new Values(incomeEvent, newItemCountScore);
             collector.emit(values);
         }
 

@@ -9,6 +9,6 @@ public interface ItemCountInterface {
     SimpleStatement createRowIfNotExists();
     SimpleStatement findByItemId(String itemId);
     SimpleStatement insertNewScore(ItemCount itemcount);
-    SimpleStatement updateIncrScore(String itemId, int deltaScore);
+    SimpleStatement updateScore(String itemId, int newScore);
     ItemCount convertToPojo(Row row);
 }
