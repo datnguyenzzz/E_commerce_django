@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -64,6 +65,9 @@ public class CoRatingBolt extends BaseRichBolt {
     }
 
     public void createTableIfNotExists() {
+        SimpleStatement createTableStatement = this.coRatingRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: " + "row created ");
     }
 
     
