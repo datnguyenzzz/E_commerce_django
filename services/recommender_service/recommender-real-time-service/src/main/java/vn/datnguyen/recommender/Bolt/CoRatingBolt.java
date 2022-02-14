@@ -25,14 +25,14 @@ import vn.datnguyen.recommender.utils.CustomProperties;
 /**
  * coratingUPQ = min(Rup, Ruq)
 
-    exist P . then update all (P-Q) and (Q-P). 
+    exist P . then update all (P-Q)-U and (Q-P)-U. 
     R_new_up < Ruq -> += delta(R) 
 
     ---------------------------
     not exist P 
     co-rating(P,P) = R_new_up
 
-    get all Q . then insert all (P-Q) and (Q-P)
+    get all Q . then insert all (P-Q)-U and (Q-P)-U
     R_new_up < Ruq -> R_new_up
  */
 
@@ -70,9 +70,13 @@ public class CoRatingBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
         logger.info("*** CoRatingBolt ****: " + "row created ");
 
-        SimpleStatement createIndexStatement = this.coRatingRepository.createIndexes();
+        SimpleStatement createIndexStatement = this.coRatingRepository.createIndexOnItemId();
         this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
-        logger.info("*** CoRatingBolt ****: " + "index created ");
+        logger.info("*** CoRatingBolt ****: " + "index item id created ");
+
+        createIndexStatement = this.coRatingRepository.createIndexOnClientId();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: " + "index client id created ");
     }
 
     
@@ -90,26 +94,26 @@ public class CoRatingBolt extends BaseRichBolt {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         int oldRating = (int) input.getValueByField(OLD_RATING);
         int newRating = incomeEvent.getWeight();
-        int deltaRating = newRating - oldRating;
         String itemId = incomeEvent.getClientId();
+        String clientId = incomeEvent.getClientId();
 
-        SimpleStatement findByItemP = this.coRatingRepository.findByItem1Id(incomeEvent.getItemId());
+        SimpleStatement findByItemP = this.coRatingRepository.findByItem1Id(itemId);
         ResultSet findByItemPResult = this.repositoryFactory.executeStatement(findByItemP, KEYSPACE_FIELD);
         int rowFound =findByItemPResult.getAvailableWithoutFetching();
 
         if (rowFound == 0) {
-            executeWhenItemNotFound();
+            executeWhenItemNotFound(clientId, itemId, oldRating, newRating);
         } else {
-            executeWhenItemFound();
+            executeWhenItemFound(clientId, itemId, oldRating, newRating);
         }
 
         logger.info("********* CoRatingBolt **********" + incomeEvent + " with old rating = " + oldRating);
         collector.ack(input);
     }
 
-    private void executeWhenItemNotFound() {}
+    private void executeWhenItemNotFound(String clientId, String itemId, int oldRating, int newRating) {}
 
-    private void executeWhenItemFound() {}
+    private void executeWhenItemFound(String clientId, String itemId, int oldRating, int newRating) {}
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
