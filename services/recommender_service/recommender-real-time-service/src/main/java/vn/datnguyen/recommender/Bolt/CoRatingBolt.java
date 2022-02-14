@@ -68,6 +68,10 @@ public class CoRatingBolt extends BaseRichBolt {
         SimpleStatement createTableStatement = this.coRatingRepository.createRowIfNotExists();
         this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
         logger.info("*** CoRatingBolt ****: " + "row created ");
+
+        SimpleStatement createIndexStatement = this.coRatingRepository.createIndexes();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: " + "index created ");
     }
 
     

@@ -7,6 +7,7 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 public class CoRatingRepository implements CoRatingInterface {
 
     private static final String CO_RATING_ROW = "co_rating_row";
+    private static final String INDEX_ROW = "index_co_rating";
     private static final String CLIENT_ID = "client_id";
     private static final String ITEM_1_ID = "item_1_id";
     private static final String ITEM_2_ID = "item_2_id";
@@ -20,9 +21,18 @@ public class CoRatingRepository implements CoRatingInterface {
         return SchemaBuilder.createTable(CO_RATING_ROW)
             .ifNotExists()
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
-            .withPartitionKey(ITEM_2_ID, DataTypes.TEXT)
+            .withClusteringColumn(ITEM_2_ID, DataTypes.TEXT)
             .withColumn(CLIENT_ID, DataTypes.TEXT)
             .withColumn(SCORE, DataTypes.INT)
+            .build();
+    }
+
+    @Override
+    public SimpleStatement createIndexes() {
+        return SchemaBuilder.createIndex(INDEX_ROW)
+            .ifNotExists()
+            .onTable(CO_RATING_ROW)
+            .andColumn(ITEM_2_ID)
             .build();
     }
 }
