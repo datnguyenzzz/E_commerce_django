@@ -6,7 +6,7 @@ public interface CoRatingInterface {
     SimpleStatement createRowIfNotExists();
     SimpleStatement createIndexOnItemId();
     SimpleStatement createIndexOnClientId();
-    SimpleStatement findByItem1Id(String item1Id);
-    SimpleStatement insertByItem1Id(String item1Id, String clientId, int newRating);
-    SimpleStatement insertByItem2Id(String item2Id, String clientId, int newRating);
+    SimpleStatement findByItem1IdAndClientId(String item1Id, String clientId);
+    SimpleStatement updateItem1Score(String itemId, String clientId, int newRating, int deltaRating);
+    SimpleStatement updateItem2Score(String itemId, String clientId, int newRating, int deltaRating);
 }

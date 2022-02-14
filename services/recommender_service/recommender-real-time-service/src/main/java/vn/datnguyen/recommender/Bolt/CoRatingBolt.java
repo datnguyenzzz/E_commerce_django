@@ -97,7 +97,7 @@ public class CoRatingBolt extends BaseRichBolt {
         String itemId = incomeEvent.getClientId();
         String clientId = incomeEvent.getClientId();
 
-        SimpleStatement findByItemP = this.coRatingRepository.findByItem1Id(itemId);
+        SimpleStatement findByItemP = this.coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
         ResultSet findByItemPResult = this.repositoryFactory.executeStatement(findByItemP, KEYSPACE_FIELD);
         int rowFound =findByItemPResult.getAvailableWithoutFetching();
 
