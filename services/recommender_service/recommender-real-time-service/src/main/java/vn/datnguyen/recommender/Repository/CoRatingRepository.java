@@ -1,10 +1,10 @@
 package vn.datnguyen.recommender.Repository;
 
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.api.querybuilder.condition.Condition;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.update.Assignment;
 
@@ -19,9 +19,15 @@ public class CoRatingRepository implements CoRatingInterface {
     private static final String RATING_ITEM_1 = "rating_item_1";
     private static final String RATING_ITEM_2 = "rating_item_2";
     private static final String SCORE = "score";
+    private static final String DELTA_SCORE = "delta_score";
 
 
     public CoRatingRepository() {}
+
+    @Override
+    public Object getFromRow(Row row, String col) {
+        return row.getObject(col);
+    }
 
     @Override
     public SimpleStatement createRowIfNotExists() {
@@ -30,7 +36,8 @@ public class CoRatingRepository implements CoRatingInterface {
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
             .withClusteringColumn(ITEM_2_ID, DataTypes.TEXT)
             .withClusteringColumn(CLIENT_ID, DataTypes.TEXT)
-            .withColumn(SCORE, DataTypes.COUNTER)
+            .withColumn(SCORE, DataTypes.INT)
+            .withColumn(DELTA_SCORE, DataTypes.INT)
             .withColumn(RATING_ITEM_1, DataTypes.INT)
             .withColumn(RATING_ITEM_2, DataTypes.INT)
             .build();
@@ -56,42 +63,62 @@ public class CoRatingRepository implements CoRatingInterface {
 
     @Override
     public SimpleStatement findByItem1IdAndClientId(String item1Id, String clientId) {
-        return QueryBuilder.selectFrom(CO_RATING_ROW).all()
+        return QueryBuilder.selectFrom(CO_RATING_ROW).columns(ITEM_2_ID, RATING_ITEM_2)
             .where(
                 Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
             .build();
-    } 
+    }
 
     @Override
-    public SimpleStatement updateItem1Score(String itemId, String clientId, int newRating, int deltaRating) {
-        return QueryBuilder.update(CO_RATING_ROW)
-            .set(
-                Assignment.increment(SCORE, QueryBuilder.literal(deltaRating))
-            )
+    public SimpleStatement findByItem2IdAndClientId(String item2Id, String clientId) {
+        return QueryBuilder.selectFrom(CO_RATING_ROW).columns(ITEM_1_ID, RATING_ITEM_1)
             .where(
-                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(itemId)),
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .if_(
-                Condition.column(RATING_ITEM_2).isGreaterThan(QueryBuilder.literal(newRating))
+            .build();
+    }
+    
+    @Override
+    public SimpleStatement updateItemScore(String item1Id, String item2Id, String clientId, int newScore, int deltaScore) {
+        return QueryBuilder.update(CO_RATING_ROW)
+            .set(
+                Assignment.setColumn(SCORE, QueryBuilder.literal(newScore)),
+                Assignment.setColumn(DELTA_SCORE, QueryBuilder.literal(deltaScore))
+            )
+            .where(
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
+                Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
             .build();
     }
 
     @Override
-    public SimpleStatement updateItem2Score(String itemId, String clientId, int newRating, int deltaRating) {
+    public SimpleStatement updateItem1Rating(String item1Id, String item2Id, String clientId, int newRating) {
         return QueryBuilder.update(CO_RATING_ROW)
             .set(
-                Assignment.increment(SCORE, QueryBuilder.literal(deltaRating))
+                Assignment.setColumn(RATING_ITEM_1, QueryBuilder.literal(newRating))
             )
             .where(
-                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(itemId)),
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .if_(
-                Condition.column(RATING_ITEM_1).isGreaterThan(QueryBuilder.literal(newRating))
+            .build();
+    }
+    @Override
+    public SimpleStatement updateItem2Rating(String item1Id, String item2Id, String clientId, int newRating) {
+        return QueryBuilder.update(CO_RATING_ROW)
+            .set(
+                Assignment.setColumn(RATING_ITEM_2, QueryBuilder.literal(newRating))
+            )
+            .where(
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
+                Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
             .build();
     }

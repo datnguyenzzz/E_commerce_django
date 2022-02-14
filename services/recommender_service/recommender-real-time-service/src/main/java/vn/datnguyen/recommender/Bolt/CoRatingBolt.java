@@ -1,9 +1,13 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.DefaultBatchType;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -26,7 +30,8 @@ import vn.datnguyen.recommender.utils.CustomProperties;
  * coratingUPQ = min(Rup, Ruq)
 
     exist P . then update all (P-Q)-U and (Q-P)-U. 
-    R_new_up < Ruq -> += delta(R) 
+    R_new_up < Ruq -> = R_new_up
+    R_new_up > Ruq: => Ruq
 
     ---------------------------
     not exist P 
@@ -41,6 +46,11 @@ public class CoRatingBolt extends BaseRichBolt {
     private final Logger logger = LoggerFactory.getLogger(CoRatingBolt.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     private OutputCollector collector;
+    //TABLE COLUMN KEY
+    private static final String ITEM_1_ID = "item_1_id";
+    private static final String ITEM_2_ID = "item_2_id";
+    private static final String RATING_ITEM_1 = "rating_item_1";
+    private static final String RATING_ITEM_2 = "rating_item_2";
     //VALUE FIELDS
     private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
@@ -97,14 +107,19 @@ public class CoRatingBolt extends BaseRichBolt {
         String itemId = incomeEvent.getClientId();
         String clientId = incomeEvent.getClientId();
 
-        SimpleStatement findByItemP = this.coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
-        ResultSet findByItemPResult = this.repositoryFactory.executeStatement(findByItemP, KEYSPACE_FIELD);
-        int rowFound =findByItemPResult.getAvailableWithoutFetching();
+        SimpleStatement findByItem1Statement = this.coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
+        SimpleStatement findByItem2Statement = this.coRatingRepository.findByItem2IdAndClientId(itemId, clientId);
+        ResultSet findByItem1Result = this.repositoryFactory.executeStatement(findByItem1Statement, KEYSPACE_FIELD);
+        ResultSet findByItem2Result = this.repositoryFactory.executeStatement(findByItem2Statement, KEYSPACE_FIELD);
+
+        List<Row> findByItem1 = findByItem1Result.all();
+        List<Row> findByItem2 = findByItem2Result.all();
+        int rowFound =findByItem1.size();
 
         if (rowFound == 0) {
             executeWhenItemNotFound(clientId, itemId, oldRating, newRating);
         } else {
-            executeWhenItemFound(clientId, itemId, oldRating, newRating);
+            executeWhenItemFound(findByItem1, findByItem2, clientId, itemId, oldRating, newRating);
         }
 
         logger.info("********* CoRatingBolt **********" + incomeEvent + " with old rating = " + oldRating);
@@ -113,7 +128,51 @@ public class CoRatingBolt extends BaseRichBolt {
 
     private void executeWhenItemNotFound(String clientId, String itemId, int oldRating, int newRating) {}
 
-    private void executeWhenItemFound(String clientId, String itemId, int oldRating, int newRating) {}
+    private void executeWhenItemFound(List<Row> findByItem1, List<Row> findByItem2, String clientId, String itemId, int oldRating, int newRating) {
+
+        BatchStatement executeWhenItemFoundBatch = BatchStatement.newInstance(DefaultBatchType.UNLOGGED);
+
+        for (Row r: findByItem1) {
+            String item2Id = (String) this.coRatingRepository.getFromRow(r, ITEM_2_ID);
+            int item2Rating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_2);
+
+            SimpleStatement updateScoreItem;
+
+            if (newRating < item2Rating) {
+                int deltaScore = newRating - oldRating;
+                updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, newRating, deltaScore);
+            } else {
+                int deltaScore = item2Rating - Math.min(oldRating, item2Rating);
+                updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, item2Rating, deltaScore);
+            }
+
+            SimpleStatement updateRatingItem = this.coRatingRepository.updateItem1Rating(itemId, item2Id, clientId, newRating);
+
+            executeWhenItemFoundBatch.add(updateScoreItem).add(updateRatingItem);
+        }
+
+        for (Row r: findByItem2) {
+            String item1Id = (String) this.coRatingRepository.getFromRow(r, ITEM_1_ID);
+            int item1Rating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_1);
+
+            SimpleStatement updateScoreItem;
+
+            if (newRating < item1Rating) {
+                int deltaScore = newRating - oldRating;
+                updateScoreItem = this.coRatingRepository.updateItemScore(item1Id, itemId, clientId, newRating, deltaScore);
+            } else {
+                int deltaScore = item1Rating - Math.min(oldRating, item1Rating);
+                updateScoreItem = this.coRatingRepository.updateItemScore(item1Id, itemId, clientId, item1Rating, deltaScore);
+            }
+
+            SimpleStatement updateRatingItem = this.coRatingRepository.updateItem2Rating(item1Id, itemId, clientId, newRating);
+
+            executeWhenItemFoundBatch.add(updateScoreItem).add(updateRatingItem);
+        }
+
+        this.repositoryFactory.executeStatement(executeWhenItemFoundBatch, KEYSPACE_FIELD);
+
+    }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
