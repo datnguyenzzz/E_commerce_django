@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -92,9 +93,23 @@ public class CoRatingBolt extends BaseRichBolt {
         int deltaRating = newRating - oldRating;
         String itemId = incomeEvent.getClientId();
 
+        SimpleStatement findByItemP = this.coRatingRepository.findByItem1Id(incomeEvent.getItemId());
+        ResultSet findByItemPResult = this.repositoryFactory.executeStatement(findByItemP, KEYSPACE_FIELD);
+        int rowFound =findByItemPResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            executeWhenItemNotFound();
+        } else {
+            executeWhenItemFound();
+        }
+
         logger.info("********* CoRatingBolt **********" + incomeEvent + " with old rating = " + oldRating);
         collector.ack(input);
     }
+
+    private void executeWhenItemNotFound() {}
+
+    private void executeWhenItemFound() {}
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

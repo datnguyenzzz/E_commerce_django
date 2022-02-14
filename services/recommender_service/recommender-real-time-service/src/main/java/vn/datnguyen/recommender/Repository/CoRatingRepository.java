@@ -2,7 +2,9 @@ package vn.datnguyen.recommender.Repository;
 
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 
 public class CoRatingRepository implements CoRatingInterface {
 
@@ -39,4 +41,13 @@ public class CoRatingRepository implements CoRatingInterface {
             .andColumn(ITEM_2_ID)
             .build();
     }
+
+    @Override
+    public SimpleStatement findByItem1Id(String item1Id) {
+        return QueryBuilder.selectFrom(CO_RATING_ROW).all()
+            .where(
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id))
+            )
+            .build();
+    } 
 }
