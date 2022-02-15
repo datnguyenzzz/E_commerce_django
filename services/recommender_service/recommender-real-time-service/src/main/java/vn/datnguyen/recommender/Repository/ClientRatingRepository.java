@@ -1,7 +1,6 @@
 package vn.datnguyen.recommender.Repository;
 
 import com.datastax.oss.driver.api.core.ConsistencyLevel;
-import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
@@ -14,19 +13,12 @@ import vn.datnguyen.recommender.Models.ClientRating;
 public class ClientRatingRepository implements ClientRatingInterface {
     
     private static final String CLIENT_RATING_ROW = "client_rating_row";
+    private static final String INDEX_ROW = "index_client_rating";
     private static final String CLIENT_ID = "client_id";
     private static final String ITEM_ID = "item_id";
     private static final String RATING = "rating";
 
-    private CqlSession session; 
-
-    public ClientRatingRepository(CqlSession session) {
-        this.session = session;
-    }
-
-    public CqlSession getSession() {
-        return session;
-    }
+    public ClientRatingRepository() {}
 
     @Override
     public SimpleStatement createRowIfNotExists() {
@@ -40,7 +32,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
 
     @Override
     public SimpleStatement createIndexOnItemId() {
-        return SchemaBuilder.createIndex()
+        return SchemaBuilder.createIndex(INDEX_ROW)
             .ifNotExists()
             .onTable(CLIENT_RATING_ROW)
             .andColumn(ITEM_ID)
