@@ -1,6 +1,5 @@
 package vn.datnguyen.recommender.Repository;
 
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 public interface CoRatingInterface {
@@ -17,6 +16,4 @@ public interface CoRatingInterface {
     SimpleStatement updateItem2Rating(String itemId, String item2Id, String clientId, int newRating);
     //
     SimpleStatement insertNewItemScore(String item1Id, String item2Id, String clientId);
-    //
-    Object getFromRow(Row row, String col);
 }

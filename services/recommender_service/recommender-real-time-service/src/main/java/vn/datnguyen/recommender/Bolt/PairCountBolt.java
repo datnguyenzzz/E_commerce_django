@@ -1,8 +1,14 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
+import com.datastax.oss.driver.api.core.cql.BatchType;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -11,6 +17,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +44,9 @@ public class PairCountBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //Table id 
+    private final static String ITEM_2_ID = "item_2_id";
+    private static final String DELTA_SCORE = "delta_score";
 
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -71,8 +81,41 @@ public class PairCountBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        String clientId = incomeEvent.getClientId();
+        String itemId = incomeEvent.getItemId();
+
+        SimpleStatement findDeltaCoRatingStatement = this.pairCountRepository.findDeltaCoRating(clientId, itemId);
+        ResultSet findDeltaCoRatingResult = this.repositoryFactory.executeStatement(findDeltaCoRatingStatement, KEYSPACE_FIELD);
+        List<Row> findDeltaCoRating = findDeltaCoRatingResult.all();
+        int rowFound = findDeltaCoRating.size();
+
+        if (rowFound == 0) {
+            logger.warn("********* PairCountBolt **********: CAN NOT FIND ANY CO-RATING CORRECTSPOND TO itemId = " + itemId);
+        } else {
+
+            BatchStatementBuilder batchUpdateScore = BatchStatement.builder(BatchType.LOGGED);
+
+            for (Row r: findDeltaCoRating) {
+                String item2Id = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
+                int deltaScore = (int) this.repositoryFactory.getFromRow(r, DELTA_SCORE);
+
+                SimpleStatement updateScore; 
+
+                updateScore = this.pairCountRepository.updateScore(itemId, item2Id, deltaScore);
+                batchUpdateScore.addStatement(updateScore);
+
+                updateScore = this.pairCountRepository.updateScore(item2Id, itemId, deltaScore);
+                batchUpdateScore.addStatement(updateScore);
+            }
+            BatchStatement allBatch = batchUpdateScore.build();
+            logger.info("********* PairCountBolt **********: Attempt to execute " + allBatch.size() + " queries in batch");
+            this.repositoryFactory.executeStatement(allBatch, KEYSPACE_FIELD);
+        }
 
         logger.info("********* PairCountBolt **********" + incomeEvent);
+        
+        Values values = new Values(incomeEvent);
+        collector.emit(values);
         collector.ack(input);
     }
     

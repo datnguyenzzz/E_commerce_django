@@ -8,6 +8,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.BatchStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 public class RepositoryFactory {
@@ -86,5 +87,15 @@ public class RepositoryFactory {
         }
 
         return this.session.executeAsync(statement);
+    }
+
+    /**
+     * 
+     * @param row Cassandra row
+     * @param col key id
+     * @return col value
+     */
+    public Object getFromRow(Row row, String col) {
+        return row.getObject(col);
     }
 }

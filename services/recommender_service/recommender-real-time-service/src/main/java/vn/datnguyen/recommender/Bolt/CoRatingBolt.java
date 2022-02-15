@@ -150,8 +150,8 @@ public class CoRatingBolt extends BaseRichBolt {
             .addStatement(updateItem2IdRatingStatement);
 
         for (Row r : allItem1Id) {
-            String otherItemId = (String) this.coRatingRepository.getFromRow(r, ITEM_1_ID);
-            int otherItemRating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_1);
+            String otherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+            int otherItemRating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
 
             logger.info("********* CoRatingBolt **********: Found itemId = " + otherItemId + " with rating = " + otherItemRating);
 
@@ -188,8 +188,8 @@ public class CoRatingBolt extends BaseRichBolt {
         BatchStatementBuilder executeWhenItemFoundBatch = BatchStatement.builder(BatchType.LOGGED);
 
         for (Row r: findByItem1) {
-            String item2Id = (String) this.coRatingRepository.getFromRow(r, ITEM_2_ID);
-            int item2Rating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_2);
+            String item2Id = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
+            int item2Rating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_2);
 
             logger.info("********* CoRatingBolt **********: Found item 2 = " + item2Id + " with rating = " + item2Rating);
 
@@ -210,8 +210,8 @@ public class CoRatingBolt extends BaseRichBolt {
         }
 
         for (Row r: findByItem2) {
-            String item1Id = (String) this.coRatingRepository.getFromRow(r, ITEM_1_ID);
-            int item1Rating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_1);
+            String item1Id = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+            int item1Rating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
 
             logger.info("********* CoRatingBolt **********: Found item 1 = " + item1Id + " with rating = " + item1Rating);
 

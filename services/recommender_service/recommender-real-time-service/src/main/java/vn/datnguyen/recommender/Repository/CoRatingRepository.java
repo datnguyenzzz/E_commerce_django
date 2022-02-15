@@ -1,6 +1,5 @@
 package vn.datnguyen.recommender.Repository;
 
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
@@ -23,11 +22,6 @@ public class CoRatingRepository implements CoRatingInterface {
 
 
     public CoRatingRepository() {}
-
-    @Override
-    public Object getFromRow(Row row, String col) {
-        return row.getObject(col);
-    }
 
     @Override
     public SimpleStatement createRowIfNotExists() {
