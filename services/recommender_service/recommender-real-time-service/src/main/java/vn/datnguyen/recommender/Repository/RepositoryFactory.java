@@ -52,6 +52,14 @@ public class RepositoryFactory {
 
     /**
      * 
+     * @return Cassandra PairCount DAO
+     */
+    public PairCountRepository getPairCountRepository() {
+        return new PairCountRepository();
+    }
+
+    /**
+     * 
      * @param statement
      * @param keyspaceName
      * @return execute cassandra statement within keyspace
