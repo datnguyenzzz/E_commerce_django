@@ -45,4 +45,8 @@ public class BoltFactory {
     public PairCountBolt createPairCountBolt() {
         return new PairCountBolt();
     }
+
+    public SimilaritiesBolt createSimilaritiesBolt() {
+        return new SimilaritiesBolt();
+    }
 }
