@@ -16,6 +16,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,6 +129,8 @@ public class CoRatingBolt extends BaseRichBolt {
         }
 
         logger.info("********* CoRatingBolt **********" + incomeEvent + " with old rating = " + oldRating);
+        Values values = new Values(incomeEvent);
+        collector.emit(values);
         collector.ack(input);
     }
 
@@ -218,6 +221,6 @@ public class CoRatingBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sink-bolt"));
+        declarer.declare(new Fields("EVENT_FIELD"));
     }
 }
