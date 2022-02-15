@@ -131,8 +131,42 @@ public class CoRatingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private void executeWhenItemNotFound(List<Row> allClientId, String clientId, String itemId, int oldRating, int newRating) {
+
+    private void executeWhenItemNotFound(List<Row> allItem1Id, String clientId, String itemId, int oldRating, int newRating) {
         BatchStatement executeWhenItemNotFound = BatchStatement.newInstance(DefaultBatchType.UNLOGGED);
+
+        SimpleStatement updateItemIdScoreStatement = this.coRatingRepository.updateItemScore(itemId, itemId, clientId, newRating, newRating);
+        SimpleStatement updateItem1IdRatingStatement = this.coRatingRepository.updateItem1Rating(itemId, itemId, clientId, newRating);
+        SimpleStatement updateItem2IdRatingStatement = this.coRatingRepository.updateItem2Rating(itemId, itemId, clientId, newRating);
+
+        executeWhenItemNotFound.add(updateItemIdScoreStatement)
+            .add(updateItem1IdRatingStatement)
+            .add(updateItem2IdRatingStatement);
+
+        for (Row r : allItem1Id) {
+            String otherItemId = (String) this.coRatingRepository.getFromRow(r, ITEM_1_ID);
+            int otherItemRating = (int) this.coRatingRepository.getFromRow(r, RATING_ITEM_1);
+
+            int newScore = Math.min(newRating, otherItemRating);
+            updateItemIdScoreStatement = this.coRatingRepository.updateItemScore(itemId, otherItemId, clientId, newScore, newScore);
+            updateItem1IdRatingStatement = this.coRatingRepository.updateItem1Rating(itemId, otherItemId, clientId, newRating);
+            updateItem2IdRatingStatement = this.coRatingRepository.updateItem2Rating(itemId, otherItemId, clientId, otherItemRating);
+
+            executeWhenItemNotFound.add(updateItemIdScoreStatement)
+                .add(updateItem1IdRatingStatement)
+                .add(updateItem2IdRatingStatement);
+            // 
+            updateItemIdScoreStatement = this.coRatingRepository.updateItemScore(otherItemId, itemId, clientId, newScore, newScore);
+            updateItem1IdRatingStatement = this.coRatingRepository.updateItem1Rating(otherItemId, itemId, clientId, otherItemRating);
+            updateItem2IdRatingStatement = this.coRatingRepository.updateItem2Rating(otherItemId, itemId, clientId, newRating);
+
+            executeWhenItemNotFound.add(updateItemIdScoreStatement)
+                .add(updateItem1IdRatingStatement)
+                .add(updateItem2IdRatingStatement);
+        }
+
+        this.repositoryFactory.executeStatement(executeWhenItemNotFound, KEYSPACE_FIELD);
+        logger.info("********* CoRatingBolt **********: executed when item rating NOT found");
     }
 
     private void executeWhenItemFound(List<Row> findByItem1, List<Row> findByItem2, String clientId, String itemId, int oldRating, int newRating) {
@@ -178,6 +212,7 @@ public class CoRatingBolt extends BaseRichBolt {
         }
 
         this.repositoryFactory.executeStatement(executeWhenItemFoundBatch, KEYSPACE_FIELD);
+        logger.info("********* CoRatingBolt **********: executed when item rating found");
 
     }
     
