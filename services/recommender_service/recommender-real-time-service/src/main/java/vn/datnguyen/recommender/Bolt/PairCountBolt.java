@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -51,6 +52,12 @@ public class PairCountBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
+
+    private void createTableIfNotExists() {
+        SimpleStatement createTableStatement = this.pairCountRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+        logger.info("********* PairCountBolt **********: created table");
+    }
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -58,6 +65,7 @@ public class PairCountBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.pairCountRepository = this.repositoryFactory.getPairCountRepository();
+        createTableIfNotExists();
     }
     
     @Override
