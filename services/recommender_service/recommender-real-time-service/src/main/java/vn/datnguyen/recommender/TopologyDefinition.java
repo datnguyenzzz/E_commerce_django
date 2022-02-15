@@ -21,6 +21,7 @@ public class TopologyDefinition {
     private static final String WEIGHT_APPLIER_BOLT_THREADS = customProperties.getProp("WEIGHT_APPLIER_BOLT_THREADS");
     private static final String ITEM_COUNT_THREADS = customProperties.getProp("ITEM_COUNT_THREADS");
     private static final String CO_RATING_BOLT_THREADS = customProperties.getProp("CO_RATING_BOLT_THREADS");
+    private static final String PAIR_COUNT_BOLT_THREADS = customProperties.getProp("PAIR_COUNT_BOLT_THREADS");
     //private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
     //private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
     //STREAM
@@ -32,6 +33,7 @@ public class TopologyDefinition {
     private static final String ITEM_COUNT_BOLT = customProperties.getProp("ITEM_COUNT_BOLT");
     private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     private static final String CO_RATING_BOLT = customProperties.getProp("CO_RATING_BOLT");
+    private static final String PAIR_COUNT_BOLT = customProperties.getProp("PAIR_COUNT_BOLT");
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
     //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
@@ -64,6 +66,9 @@ public class TopologyDefinition {
 
         topologyBuilder.setBolt(CO_RATING_BOLT, boltFactory.createCoRatingBolt(), Integer.parseInt(CO_RATING_BOLT_THREADS))
             .shuffleGrouping(CLIENT_RATING_BOLT);
+
+        topologyBuilder.setBolt(PAIR_COUNT_BOLT, boltFactory.createPairCountBolt(), Integer.parseInt(PAIR_COUNT_BOLT_THREADS))
+            .shuffleGrouping(CO_RATING_BOLT);
 
         //topologyBuilder.setBolt(LOGGER_BOLT, boltFactory.creatLoggerBolt(), Integer.parseInt(LOGGER_BOLT_THREADS))
         //    .shuffleGrouping(CLIENT_RATING_BOLT);
