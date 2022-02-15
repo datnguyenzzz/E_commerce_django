@@ -78,6 +78,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
+            .allowFiltering()
             .build();
     }
 
@@ -130,6 +131,19 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
+            .build();
+    }
+
+    @Override
+    public SimpleStatement insertNewItemScore(String item1Id, String item2Id, String clientId) {
+        return QueryBuilder.insertInto(CO_RATING_ROW)
+            .value(ITEM_1_ID, QueryBuilder.literal(item1Id))
+            .value(ITEM_2_ID, QueryBuilder.literal(item2Id))
+            .value(CLIENT_ID, QueryBuilder.literal(clientId))
+            .value(SCORE, QueryBuilder.literal(0))
+            .value(RATING_ITEM_1, QueryBuilder.literal(0))
+            .value(RATING_ITEM_2, QueryBuilder.literal(0))
+            .value(DELTA_SCORE, QueryBuilder.literal(0))
             .build();
     }
 }

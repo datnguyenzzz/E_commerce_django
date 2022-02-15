@@ -16,5 +16,7 @@ public interface CoRatingInterface {
     SimpleStatement updateItem1Rating(String item1Id, String item2Id, String clientId, int newRating);
     SimpleStatement updateItem2Rating(String itemId, String item2Id, String clientId, int newRating);
     //
+    SimpleStatement insertNewItemScore(String item1Id, String item2Id, String clientId);
+    //
     Object getFromRow(Row row, String col);
 }
