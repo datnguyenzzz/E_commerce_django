@@ -108,17 +108,22 @@ public class CoRatingBolt extends BaseRichBolt {
         String clientId = incomeEvent.getClientId();
 
         SimpleStatement findByItem1Statement = this.coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
-        SimpleStatement findByItem2Statement = this.coRatingRepository.findByItem2IdAndClientId(itemId, clientId);
         ResultSet findByItem1Result = this.repositoryFactory.executeStatement(findByItem1Statement, KEYSPACE_FIELD);
-        ResultSet findByItem2Result = this.repositoryFactory.executeStatement(findByItem2Statement, KEYSPACE_FIELD);
 
         List<Row> findByItem1 = findByItem1Result.all();
-        List<Row> findByItem2 = findByItem2Result.all();
         int rowFound =findByItem1.size();
 
         if (rowFound == 0) {
-            executeWhenItemNotFound(clientId, itemId, oldRating, newRating);
+            SimpleStatement findSetClientIdStatement = this.coRatingRepository.findSetItemIdByClientId(clientId);
+            ResultSet findSetClientIdResult = this.repositoryFactory.executeStatement(findSetClientIdStatement, KEYSPACE_FIELD);
+            List<Row> findSetClientId = findSetClientIdResult.all();
+
+            executeWhenItemNotFound(findSetClientId, clientId, itemId, oldRating, newRating);
         } else {
+            SimpleStatement findByItem2Statement = this.coRatingRepository.findByItem2IdAndClientId(itemId, clientId);
+            ResultSet findByItem2Result = this.repositoryFactory.executeStatement(findByItem2Statement, KEYSPACE_FIELD);
+            List<Row> findByItem2 = findByItem2Result.all();
+
             executeWhenItemFound(findByItem1, findByItem2, clientId, itemId, oldRating, newRating);
         }
 
@@ -126,7 +131,9 @@ public class CoRatingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private void executeWhenItemNotFound(String clientId, String itemId, int oldRating, int newRating) {}
+    private void executeWhenItemNotFound(List<Row> allClientId, String clientId, String itemId, int oldRating, int newRating) {
+        BatchStatement executeWhenItemNotFound = BatchStatement.newInstance(DefaultBatchType.UNLOGGED);
+    }
 
     private void executeWhenItemFound(List<Row> findByItem1, List<Row> findByItem2, String clientId, String itemId, int oldRating, int newRating) {
 

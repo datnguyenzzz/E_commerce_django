@@ -80,6 +80,16 @@ public class CoRatingRepository implements CoRatingInterface {
             )
             .build();
     }
+
+    @Override
+    public SimpleStatement findSetItemIdByClientId(String clientId) {
+        return QueryBuilder.selectFrom(CO_RATING_ROW).columns(ITEM_1_ID, RATING_ITEM_1)
+            .where(
+                Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
+            )
+            .groupBy(ITEM_1_ID)
+            .build();
+    }
     
     @Override
     public SimpleStatement updateItemScore(String item1Id, String item2Id, String clientId, int newScore, int deltaScore) {
