@@ -56,6 +56,9 @@ public class CoRatingBolt extends BaseRichBolt {
     //VALUE FIELDS
     private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
+    private final static String ITEM_2_ID_FIELD = customProperties.getProp("ITEM_2_ID_FIELD");
+    private final static String DELTA_SCORE_FIELD = customProperties.getProp("DELTA_SCORE_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
@@ -128,11 +131,12 @@ public class CoRatingBolt extends BaseRichBolt {
 
             executeWhenItemFound(findByItem1, findByItem2, clientId, itemId, oldRating, newRating);
         }
-
-        logger.info("********* CoRatingBolt **********" + incomeEvent + " with old rating = " + oldRating);
-        Values values = new Values(incomeEvent);
-        collector.emit(values);
         collector.ack(input);
+    }
+
+    private void emitDeltaScore(String item1Id, String item2Id, int deltaScore) {
+        Values values = new Values(item1Id, item2Id, deltaScore);
+        collector.emit(values);
     }
 
 
@@ -149,6 +153,8 @@ public class CoRatingBolt extends BaseRichBolt {
             .addStatement(updateItem1IdRatingStatement)
             .addStatement(updateItem2IdRatingStatement);
 
+        emitDeltaScore(itemId, itemId, newRating);
+
         for (Row r : allItem1Id) {
             String otherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
             int otherItemRating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
@@ -164,7 +170,10 @@ public class CoRatingBolt extends BaseRichBolt {
             executeWhenItemNotFound.addStatement(insertNewItemId)
                 .addStatement(updateItemIdScoreStatement)
                 .addStatement(updateItem1IdRatingStatement)
-                .addStatement(updateItem2IdRatingStatement);
+                .addStatement(updateItem2IdRatingStatement);     
+
+            emitDeltaScore(itemId, otherItemId, newScore);
+            
             // 
             insertNewItemId = this.coRatingRepository.insertNewItemScore(otherItemId, itemId, clientId);
             updateItemIdScoreStatement = this.coRatingRepository.updateItemScore(otherItemId, itemId, clientId, newScore, newScore);
@@ -175,6 +184,8 @@ public class CoRatingBolt extends BaseRichBolt {
                 .addStatement(updateItemIdScoreStatement)
                 .addStatement(updateItem1IdRatingStatement)
                 .addStatement(updateItem2IdRatingStatement);
+            
+            emitDeltaScore(otherItemId, itemId, newScore);
         }
 
         BatchStatement allBatch = executeWhenItemNotFound.build();
@@ -198,9 +209,11 @@ public class CoRatingBolt extends BaseRichBolt {
             if (newRating < item2Rating) {
                 int deltaScore = newRating - oldRating;
                 updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, newRating, deltaScore);
+                emitDeltaScore(itemId, item2Id, deltaScore);
             } else {
                 int deltaScore = item2Rating - Math.min(oldRating, item2Rating);
                 updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, item2Rating, deltaScore);
+                emitDeltaScore(itemId, item2Id, deltaScore);
             }
 
             SimpleStatement updateRatingItem = this.coRatingRepository.updateItem1Rating(itemId, item2Id, clientId, newRating);
@@ -220,9 +233,11 @@ public class CoRatingBolt extends BaseRichBolt {
             if (newRating < item1Rating) {
                 int deltaScore = newRating - oldRating;
                 updateScoreItem = this.coRatingRepository.updateItemScore(item1Id, itemId, clientId, newRating, deltaScore);
+                emitDeltaScore(item1Id, itemId, deltaScore);
             } else {
                 int deltaScore = item1Rating - Math.min(oldRating, item1Rating);
                 updateScoreItem = this.coRatingRepository.updateItemScore(item1Id, itemId, clientId, item1Rating, deltaScore);
+                emitDeltaScore(item1Id, itemId, deltaScore);
             }
 
             SimpleStatement updateRatingItem = this.coRatingRepository.updateItem2Rating(item1Id, itemId, clientId, newRating);
@@ -240,6 +255,6 @@ public class CoRatingBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("EVENT_FIELD"));
+        declarer.declare(new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD, DELTA_SCORE_FIELD));
     }
 }

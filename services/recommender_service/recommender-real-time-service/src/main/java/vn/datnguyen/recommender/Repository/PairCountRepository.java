@@ -14,10 +14,6 @@ public class PairCountRepository implements PairCountInterface {
     private final static String ITEM_1_ID = "item_1_id";
     private final static String ITEM_2_ID = "item_2_id";
     private final static String SCORE = "score";
-    //co rating row
-    private static final String CO_RATING_ROW = "co_rating_row";
-    private static final String DELTA_SCORE = "delta_score";
-    private static final String CLIENT_ID = "client_id";
 
     public PairCountRepository () {}
 
@@ -32,18 +28,8 @@ public class PairCountRepository implements PairCountInterface {
     }
 
     @Override
-    public SimpleStatement findDeltaCoRating(String clientId, String itemId) {
-        return QueryBuilder.selectFrom(CO_RATING_ROW).columns(ITEM_2_ID, DELTA_SCORE)
-            .where(
-                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(itemId)),
-                Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
-            )
-            .build();
-    }
-
-    @Override
     public SimpleStatement updateScore(String item1Id, String item2Id, int deltaScore) {
-        return QueryBuilder.update(CO_RATING_ROW)
+        return QueryBuilder.update(PAIR_COUNT_ROW)
             .set(
                 Assignment.increment(SCORE, QueryBuilder.literal(deltaScore))
             )

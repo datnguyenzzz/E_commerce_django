@@ -35,8 +35,9 @@ public class ItemCountBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
-    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
+    private final static String DELTA_ITEM_COUNT = customProperties.getProp("DELTA_ITEM_COUNT");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
@@ -97,7 +98,7 @@ public class ItemCountBolt extends BaseRichBolt {
             this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
             logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId());
             // emit to similarity
-            Values values = new Values(incomeEvent, incomeEvent.getWeight());
+            Values values = new Values(itemCount.getItemId(), incomeEvent.getWeight());
             collector.emit(values);
         } else {
             int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
@@ -110,7 +111,7 @@ public class ItemCountBolt extends BaseRichBolt {
             this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
             logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
             // emit to similarity
-            Values values = new Values(incomeEvent, newItemCountScore);
+            Values values = new Values(incomeEvent.getItemId(), deltaRating);
             collector.emit(values);
         }
 
@@ -119,6 +120,6 @@ public class ItemCountBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, NEW_ITEM_COUNT));
+        declarer.declare(new Fields(ITEM_ID_FIELD, DELTA_ITEM_COUNT));
     }
 }
