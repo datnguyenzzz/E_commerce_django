@@ -83,11 +83,21 @@ public class PairCountBolt extends BaseRichBolt {
 
         SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
         ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);
-        int currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
-        int newPairCount = currentPairCount + deltaScore;
-        
-        SimpleStatement updateScore = this.pairCountRepository.updateScore(item1Id, item2Id, deltaScore);
-        this.repositoryFactory.executeStatement(updateScore, KEYSPACE_FIELD);
+        int rowFound = findCurrentScoreResult.getAvailableWithoutFetching();
+
+        int currentPairCount, newPairCount;
+        if (rowFound == 0) {
+            currentPairCount = 0; 
+            newPairCount = deltaScore;
+            SimpleStatement initCols = this.pairCountRepository.initNewScore(item1Id, item2Id);
+            this.repositoryFactory.executeStatement(initCols, KEYSPACE_FIELD);
+        } else {
+            currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
+            newPairCount = currentPairCount + deltaScore;
+        }
+            
+        SimpleStatement updateScoreStatement = this.pairCountRepository.updateScore(item1Id, item2Id, newPairCount);
+        this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
         
         Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
         collector.emit(values);

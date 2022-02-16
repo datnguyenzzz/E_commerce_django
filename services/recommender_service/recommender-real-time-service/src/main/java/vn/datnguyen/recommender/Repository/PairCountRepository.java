@@ -23,15 +23,15 @@ public class PairCountRepository implements PairCountInterface {
             .ifNotExists()
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
             .withPartitionKey(ITEM_2_ID, DataTypes.TEXT)
-            .withColumn(SCORE, DataTypes.COUNTER)
+            .withColumn(SCORE, DataTypes.INT)
             .build();
     }
 
     @Override
-    public SimpleStatement updateScore(String item1Id, String item2Id, int deltaScore) {
+    public SimpleStatement updateScore(String item1Id, String item2Id, int newScore) {
         return QueryBuilder.update(PAIR_COUNT_ROW)
             .set(
-                Assignment.increment(SCORE, QueryBuilder.literal(deltaScore))
+                Assignment.setColumn(SCORE, QueryBuilder.literal(newScore))
             )
             .where(
                 Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
@@ -47,6 +47,15 @@ public class PairCountRepository implements PairCountInterface {
                 Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
             )
+            .build();
+    }
+
+    @Override
+    public SimpleStatement initNewScore(String item1Id, String item2Id) {
+        return QueryBuilder.insertInto(PAIR_COUNT_ROW)
+            .value(ITEM_1_ID, QueryBuilder.literal(item1Id))
+            .value(ITEM_2_ID, QueryBuilder.literal(item2Id))
+            .value(SCORE, QueryBuilder.literal(0))
             .build();
     }
 }
