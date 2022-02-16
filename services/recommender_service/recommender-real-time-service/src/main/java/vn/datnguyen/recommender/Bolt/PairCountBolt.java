@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -33,7 +34,8 @@ public class PairCountBolt extends BaseRichBolt {
     private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
     private final static String ITEM_2_ID_FIELD = customProperties.getProp("ITEM_2_ID_FIELD");
     private final static String DELTA_SCORE_FIELD = customProperties.getProp("DELTA_SCORE_FIELD");
-    private final static String DELTA_PAIR_COUNT = customProperties.getProp("DELTA_PAIR_COUNT");
+    private final static String OLD_PAIR_COUNT = customProperties.getProp("OLD_PAIR_COUNT");
+    private final static String NEW_PAIR_COUNT = customProperties.getProp("NEW_PAIR_COUNT");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
@@ -41,6 +43,8 @@ public class PairCountBolt extends BaseRichBolt {
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //Table id 
+    private final static String SCORE = "score";
+
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
     private PairCountRepository pairCountRepository;
@@ -76,11 +80,16 @@ public class PairCountBolt extends BaseRichBolt {
         String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD); 
         String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
         int deltaScore = (int) input.getValueByField(DELTA_SCORE_FIELD);
+
+        SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
+        ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);
+        int currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
+        int newPairCount = currentPairCount + deltaScore;
         
         SimpleStatement updateScore = this.pairCountRepository.updateScore(item1Id, item2Id, deltaScore);
         this.repositoryFactory.executeStatement(updateScore, KEYSPACE_FIELD);
         
-        Values values = new Values(item1Id, item2Id, deltaScore);
+        Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
         collector.emit(values);
 
         collector.ack(input);
@@ -88,6 +97,6 @@ public class PairCountBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD, DELTA_PAIR_COUNT));
+        declarer.declare(new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD, OLD_PAIR_COUNT, NEW_PAIR_COUNT));
     }
 }

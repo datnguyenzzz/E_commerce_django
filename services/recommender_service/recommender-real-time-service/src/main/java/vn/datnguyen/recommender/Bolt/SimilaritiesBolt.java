@@ -21,11 +21,13 @@ public class SimilaritiesBolt extends BaseRichBolt {
     private static final String PAIR_COUNT_BOLT = customProperties.getProp("PAIR_COUNT_BOLT");
     //Item count
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
-    private final static String DELTA_ITEM_COUNT = customProperties.getProp("DELTA_ITEM_COUNT");
+    private final static String OLD_ITEM_COUNT = customProperties.getProp("OLD_ITEM_COUNT");
+    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     //pair count 
     private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
     private final static String ITEM_2_ID_FIELD = customProperties.getProp("ITEM_2_ID_FIELD");
-    private final static String DELTA_PAIR_COUNT = customProperties.getProp("DELTA_PAIR_COUNT");
+    private final static String OLD_PAIR_COUNT = customProperties.getProp("OLD_PAIR_COUNT");
+    private final static String NEW_PAIR_COUNT = customProperties.getProp("NEW_PAIR_COUNT");
     //VALUE FIELDS
     private OutputCollector collector;
     
@@ -41,13 +43,15 @@ public class SimilaritiesBolt extends BaseRichBolt {
 
         if (inputSource.equals(ITEM_COUNT_BOLT)) {
             String itemId = (String) input.getValueByField(ITEM_ID_FIELD);
-            int deltaItemCount = (int) input.getValueByField(DELTA_ITEM_COUNT);
-            logger.info("************ SimilaritiesBolt *************: Values - " + itemId + " . " + deltaItemCount);
+            int oldItemCount = (int) input.getValueByField(OLD_ITEM_COUNT);
+            int newItemCount = (int) input.getValueByField(NEW_ITEM_COUNT);
+            logger.info("************ SimilaritiesBolt *************: Values - " + itemId + " . " + oldItemCount + " . " + newItemCount);
         } else if (inputSource.equals(PAIR_COUNT_BOLT)) {
             String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD);
             String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
-            int deltaPairCount = (int) input.getValueByField(DELTA_PAIR_COUNT);
-            logger.info("************ SimilaritiesBolt *************: Values - " + item1Id + " . " + item2Id + " . " + deltaPairCount);
+            int oldPairCount = (int) input.getValueByField(OLD_PAIR_COUNT);
+            int newPairCount = (int) input.getValueByField(NEW_PAIR_COUNT);
+            logger.info("************ SimilaritiesBolt *************: Values - " + item1Id + " . " + item2Id + " . " + oldPairCount + " . " + newPairCount);
         }
         collector.ack(input);
     }

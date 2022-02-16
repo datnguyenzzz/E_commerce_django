@@ -39,5 +39,15 @@ public class PairCountRepository implements PairCountInterface {
             )
             .build();
     }
+
+    @Override
+    public SimpleStatement getCurrentScore(String item1Id, String item2Id) {
+        return QueryBuilder.selectFrom(PAIR_COUNT_ROW).column(SCORE)
+            .where(
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
+            )
+            .build();
+    }
 }
 
