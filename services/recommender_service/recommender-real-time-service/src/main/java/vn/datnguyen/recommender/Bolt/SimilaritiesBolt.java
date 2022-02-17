@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
+import vn.datnguyen.recommender.Repository.SimilaritiesRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class SimilaritiesBolt extends BaseRichBolt {
@@ -43,12 +44,14 @@ public class SimilaritiesBolt extends BaseRichBolt {
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
+    private SimilaritiesRepository similaritiesRepository;
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
 
         launchCassandraKeyspace();
+        this.similaritiesRepository = this.repositoryFactory.getSimilaritiesRepository();
 
         createTableIfNotExists();
     }

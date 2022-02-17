@@ -61,6 +61,14 @@ public class RepositoryFactory {
 
     /**
      * 
+     * @return Cassandra Similarities DAO
+     */
+    public SimilaritiesRepository getSimilaritiesRepository() {
+        return new SimilaritiesRepository();
+    }
+
+    /**
+     * 
      * @param statement
      * @param keyspaceName
      * @return execute cassandra statement within keyspace
