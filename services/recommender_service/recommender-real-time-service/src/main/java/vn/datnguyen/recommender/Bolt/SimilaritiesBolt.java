@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -64,10 +65,14 @@ public class SimilaritiesBolt extends BaseRichBolt {
         this.repositoryFactory = new RepositoryFactory(session);
         KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
-        logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
+        logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** SimilaritiesBolt ****");
     }
 
-    private void createTableIfNotExists() {}
+    private void createTableIfNotExists() {
+        SimpleStatement createTable = this.similaritiesRepository.createTableIfNotExists();
+        this.repositoryFactory.executeStatement(createTable, KEYSPACE_FIELD);
+        logger.info("************ SimilaritiesBolt *************: create table successfully ");
+    }
     
     @Override
     public void execute(Tuple input) {
