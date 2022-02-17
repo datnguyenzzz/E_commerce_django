@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Repository;
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
@@ -62,7 +63,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
             .allowFiltering()
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
             .groupBy(ITEM_1_ID)
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
     
     @Override
@@ -98,7 +99,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
     @Override
     public SimpleStatement updateItem2Rating(String item1Id, String item2Id, String clientId, int newRating) {
@@ -125,7 +126,7 @@ public class CoRatingRepository implements CoRatingInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id)),
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
             )
-            .build();
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class ItemCountRepository implements ItemCountInterface {
             .where(
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ItemCountRepository implements ItemCountInterface {
             .where(
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override

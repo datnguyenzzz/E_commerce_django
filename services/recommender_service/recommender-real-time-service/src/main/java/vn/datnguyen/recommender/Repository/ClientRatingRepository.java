@@ -46,7 +46,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId)),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
-            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ClientRatingRepository implements ClientRatingInterface {
                 Relation.column(CLIENT_ID).isEqualTo(QueryBuilder.literal(clientRating.getClientId())),
                 Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(clientRating.getItemId()))
             )
-            .build().setConsistencyLevel(ConsistencyLevel.ONE);
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
     @Override
