@@ -24,7 +24,7 @@ public class SimilaritiesRepository implements SimilaritiesInterface {
             .ifNotExists()
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
             .withPartitionKey(ITEM_2_ID, DataTypes.TEXT)
-            .withClusteringColumn(SCORE, DataTypes.FLOAT)
+            .withClusteringColumn(SCORE, DataTypes.DOUBLE)
             .withClusteringOrder(SCORE, ClusteringOrder.DESC)
             .build();
     }
@@ -40,40 +40,16 @@ public class SimilaritiesRepository implements SimilaritiesInterface {
     }
 
     @Override
-    public SimpleStatement initScore(String item1Id, String item2Id) {
+    public SimpleStatement initScore(String item1Id, String item2Id, double score) {
         return QueryBuilder.insertInto(SIMILARITIES_ROW)
             .value(ITEM_1_ID, QueryBuilder.literal(item1Id))
             .value(ITEM_2_ID, QueryBuilder.literal(item2Id))
-            .value(SCORE, QueryBuilder.literal(1.0f))
+            .value(SCORE, QueryBuilder.literal(score))
             .build();
     }
 
     @Override
-    public SimpleStatement updateItem1Count(String item1Id, float newScore) {
-        return QueryBuilder.update(SIMILARITIES_ROW)
-            .set(
-                Assignment.setColumn(SCORE, QueryBuilder.literal(newScore))
-            )
-            .where(
-                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id))
-            )
-            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
-    }
-
-    @Override
-    public SimpleStatement updateItem2Count(String item2Id, float newScore) {
-        return QueryBuilder.update(SIMILARITIES_ROW)
-            .set(
-                Assignment.setColumn(SCORE, QueryBuilder.literal(newScore))
-            )
-            .where(
-                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
-            )
-            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
-    }
-
-    @Override
-    public SimpleStatement updatePairCount(String item1Id, String item2Id, float newScore) {
+    public SimpleStatement updateScore(String item1Id, String item2Id, double newScore) {
         return QueryBuilder.update(SIMILARITIES_ROW)
             .set(
                 Assignment.setColumn(SCORE, QueryBuilder.literal(newScore))
@@ -83,5 +59,30 @@ public class SimilaritiesRepository implements SimilaritiesInterface {
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
             )
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM); 
+    }
+
+    @Override
+    public SimpleStatement findAllItemId() {
+        return QueryBuilder.selectFrom(SIMILARITIES_ROW).column(ITEM_1_ID)
+            .groupBy(ITEM_1_ID)
+            .build();
+    }
+
+    @Override
+    public SimpleStatement findByItem1Id(String item1Id) {
+        return QueryBuilder.selectFrom(SIMILARITIES_ROW).columns(ITEM_2_ID, SCORE)
+            .where(
+                Relation.column(ITEM_1_ID).isEqualTo(QueryBuilder.literal(item1Id))
+            )
+            .build();
+    }
+
+    @Override
+    public SimpleStatement findByItem2Id(String item2Id) {
+        return QueryBuilder.selectFrom(SIMILARITIES_ROW).columns(ITEM_1_ID, SCORE)
+            .where(
+                Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
+            )
+            .build();
     }
 }

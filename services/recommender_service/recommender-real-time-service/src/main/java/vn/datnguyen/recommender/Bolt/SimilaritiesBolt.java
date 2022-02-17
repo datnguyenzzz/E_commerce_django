@@ -1,8 +1,14 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
+import com.datastax.oss.driver.api.core.cql.BatchType;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -42,6 +48,9 @@ public class SimilaritiesBolt extends BaseRichBolt {
     //VALUE FIELDS
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
+    //
+    private final static String ITEM_1_ID = "item_1_id";
+    private final static String SCORE = "score";
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -83,15 +92,81 @@ public class SimilaritiesBolt extends BaseRichBolt {
             String itemId = (String) input.getValueByField(ITEM_ID_FIELD);
             int oldItemCount = (int) input.getValueByField(OLD_ITEM_COUNT);
             int newItemCount = (int) input.getValueByField(NEW_ITEM_COUNT);
-            logger.info("************ SimilaritiesBolt *************: Values - " + itemId + " . " + oldItemCount + " . " + newItemCount);
+            
+            executeWhenItemCountUpdated(itemId, oldItemCount, newItemCount);
         } else if (inputSource.equals(PAIR_COUNT_BOLT)) {
             String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD);
             String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
             int oldPairCount = (int) input.getValueByField(OLD_PAIR_COUNT);
             int newPairCount = (int) input.getValueByField(NEW_PAIR_COUNT);
-            logger.info("************ SimilaritiesBolt *************: Values - " + item1Id + " . " + item2Id + " . " + oldPairCount + " . " + newPairCount);
+            executeWhenPairCountUpdated(item1Id, item2Id, oldPairCount, newPairCount);
         }
         collector.ack(input);
+    }
+
+    private void executeWhenItemCountUpdated(String itemId, int oldItemCount, int newItemCount) {
+        logger.info("************ SimilaritiesBolt *************: Values - " + itemId + " . " + oldItemCount + " . " + newItemCount);
+
+        SimpleStatement findByItem1IdStatement = this.similaritiesRepository.findByItem1Id(itemId);
+        ResultSet findByItem1IdResult = this.repositoryFactory.executeStatement(findByItem1IdStatement, KEYSPACE_FIELD);
+        List<Row> findByItem1Id = findByItem1IdResult.all();
+
+        BatchStatementBuilder allBatch = BatchStatement.builder(BatchType.LOGGED);
+
+        if (findByItem1Id.size() == 0) {
+            SimpleStatement findAllStatement = this.similaritiesRepository.findAllItemId();
+            ResultSet findAllResult = this.repositoryFactory.executeStatement(findAllStatement, KEYSPACE_FIELD);
+            List<Row> findAll = findAllResult.all(); 
+
+            double score = 1.0 / Math.sqrt(newItemCount) / Math.sqrt(newItemCount); 
+            SimpleStatement insertScore = this.similaritiesRepository.initScore(itemId, itemId, score);
+            allBatch.addStatement(insertScore);
+
+            for (Row r: findAll) {
+                String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+                score = 1.0 / Math.sqrt(newItemCount);
+
+                insertScore = this.similaritiesRepository.initScore(itemId, anotherItemId, score);
+                allBatch.addStatement(insertScore);
+
+                insertScore = this.similaritiesRepository.initScore(anotherItemId, itemId, score);
+                allBatch.addStatement(insertScore);
+            }
+        } else {
+            for (Row r: findByItem1Id) {
+                String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+                double score = (double) this.repositoryFactory.getFromRow(r, SCORE); 
+                
+                score *= Math.sqrt(oldItemCount) / Math.sqrt(newItemCount);
+
+                SimpleStatement updateScore = this.similaritiesRepository.updateScore(itemId, anotherItemId, score);
+                allBatch.addStatement(updateScore);
+
+                updateScore = this.similaritiesRepository.updateScore(anotherItemId, itemId, score);
+                allBatch.addStatement(updateScore);
+            }
+        }
+
+        this.repositoryFactory.executeStatement(allBatch.build(), KEYSPACE_FIELD);
+    }
+
+    private void executeWhenPairCountUpdated(String item1Id, String item2Id, int oldPairCount, int newPairCount) {
+        logger.info("************ SimilaritiesBolt *************: Values - " + item1Id + " . " + item2Id + " . " + oldPairCount + " . " + newPairCount);
+
+        SimpleStatement findByStatement = this.similaritiesRepository.findBy(item1Id, item2Id);
+        ResultSet findByResult = this.repositoryFactory.executeStatement(findByStatement, KEYSPACE_FIELD);
+        List<Row> rowFound = findByResult.all(); 
+
+        if (rowFound.size() == 0) {
+            double score = (double) newPairCount;
+            SimpleStatement initScoreStatement = this.similaritiesRepository.initScore(item1Id, item2Id, score);
+            this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
+        } else {
+            double currentScore = (double) this.repositoryFactory.getFromRow(rowFound.get(0), SCORE);
+            currentScore *= 1.0f * newPairCount / oldPairCount;
+            SimpleStatement initScoreStatement = this.similaritiesRepository.updateScore(item1Id, item2Id, currentScore);
+            this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
+        }
     }
     
     @Override

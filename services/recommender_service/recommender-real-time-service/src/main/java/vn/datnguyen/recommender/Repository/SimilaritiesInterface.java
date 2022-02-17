@@ -4,9 +4,10 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 public interface SimilaritiesInterface {
     SimpleStatement createTableIfNotExists();
-    SimpleStatement initScore(String item1Id, String item2Id);
+    SimpleStatement initScore(String item1Id, String item2Id, double score);
     SimpleStatement findBy(String item1Id, String item2Id);
-    SimpleStatement updateItem1Count(String item1Id, float newScore);
-    SimpleStatement updateItem2Count(String item2Id, float newScore);
-    SimpleStatement updatePairCount(String item1Id, String item2Id, float newScore);
+    SimpleStatement findByItem1Id(String item1Id);
+    SimpleStatement findByItem2Id(String item2Id);
+    SimpleStatement findAllItemId();
+    SimpleStatement updateScore(String item1Id, String item2Id, double newScore);
 }
