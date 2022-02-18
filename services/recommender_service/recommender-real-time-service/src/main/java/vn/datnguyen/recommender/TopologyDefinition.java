@@ -32,10 +32,13 @@ public class TopologyDefinition {
     private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
     private final static String CLIENT_RATING_BOLT = customProperties.getProp("CLIENT_RATING_BOLT");
     private static final String ITEM_COUNT_BOLT = customProperties.getProp("ITEM_COUNT_BOLT");
-    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     private static final String CO_RATING_BOLT = customProperties.getProp("CO_RATING_BOLT");
     private static final String PAIR_COUNT_BOLT = customProperties.getProp("PAIR_COUNT_BOLT");
     private static final String SIMILARITIES_BOLT = customProperties.getProp("SIMILARITIES_BOLT");
+    //
+    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
+    private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
     //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
@@ -73,8 +76,8 @@ public class TopologyDefinition {
             .shuffleGrouping(CO_RATING_BOLT);
 
         topologyBuilder.setBolt(SIMILARITIES_BOLT, boltFactory.createSimilaritiesBolt(), Integer.parseInt(SIMILARITIES_BOLT_THREADS))
-            .shuffleGrouping(PAIR_COUNT_BOLT)
-            .shuffleGrouping(ITEM_COUNT_BOLT);
+            .fieldsGrouping(PAIR_COUNT_BOLT, new Fields(ITEM_1_ID_FIELD))
+            .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
 
         Config tpConfig = getConfig();
         StormSubmitter.submitTopology(TOPO_ID, tpConfig, topologyBuilder.createTopology());
