@@ -30,6 +30,10 @@ public class BoltFactory {
         return new DuplicateFilterBolt(poolConfig);
     }
 
+    public NewRecordBolt createNewRecordBolt() {
+        return new NewRecordBolt();
+    }
+
     public ClientRatingBolt createClientRatingBolt() {
         return new ClientRatingBolt();
     }

@@ -120,15 +120,18 @@ public class SimilaritiesBolt extends BaseRichBolt {
 
             double score = 1.0 / Math.sqrt(newItemCount) / Math.sqrt(newItemCount); 
             SimpleStatement insertScore = this.similaritiesRepository.initScore(itemId, itemId, score);
+            logger.info("************ SimilaritiesBolt *************: INIT ITEMCOUNT - " + itemId + " - " + itemId + " - " + score);
             allBatch.addStatement(insertScore);
 
             for (Row r: findAll) {
                 String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
                 score = 1.0 / Math.sqrt(newItemCount);
 
+                logger.info("************ SimilaritiesBolt *************: INIT ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + score);
                 insertScore = this.similaritiesRepository.initScore(itemId, anotherItemId, score);
                 allBatch.addStatement(insertScore);
 
+                logger.info("************ SimilaritiesBolt *************: INIT ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + score);
                 insertScore = this.similaritiesRepository.initScore(anotherItemId, itemId, score);
                 allBatch.addStatement(insertScore);
             }
@@ -139,9 +142,11 @@ public class SimilaritiesBolt extends BaseRichBolt {
                 
                 score *= Math.sqrt(oldItemCount) / Math.sqrt(newItemCount);
 
+                logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + score);
                 SimpleStatement updateScore = this.similaritiesRepository.updateScore(itemId, anotherItemId, score);
                 allBatch.addStatement(updateScore);
 
+                logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + score);
                 updateScore = this.similaritiesRepository.updateScore(anotherItemId, itemId, score);
                 allBatch.addStatement(updateScore);
             }
@@ -159,11 +164,13 @@ public class SimilaritiesBolt extends BaseRichBolt {
 
         if (rowFound.size() == 0) {
             double score = (double) newPairCount;
+            logger.info("************ SimilaritiesBolt *************: INIT PARICOUNT - " + item1Id + " - " + item2Id + " - " + score);
             SimpleStatement initScoreStatement = this.similaritiesRepository.initScore(item1Id, item2Id, score);
             this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
         } else {
             double currentScore = (double) this.repositoryFactory.getFromRow(rowFound.get(0), SCORE);
             currentScore *= 1.0f * newPairCount / oldPairCount;
+            logger.info("************ SimilaritiesBolt *************: UPDATE PARICOUNT - " + item1Id + " - " + item2Id + " - " + currentScore);
             SimpleStatement initScoreStatement = this.similaritiesRepository.updateScore(item1Id, item2Id, currentScore);
             this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
         }

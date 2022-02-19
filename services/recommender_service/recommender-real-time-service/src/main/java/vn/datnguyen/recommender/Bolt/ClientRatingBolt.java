@@ -37,6 +37,7 @@ public class ClientRatingBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
 
     private RepositoryFactory repositoryFactory;
     private ClientRatingRepository clientRatingRepository;
@@ -81,6 +82,8 @@ public class ClientRatingBolt extends BaseRichBolt {
             clientRating.getClientId(), clientRating.getItemId());
         ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
 
+        String itemId = incomeEvent.getItemId();
+
         int rowFound = findOneResult.getAvailableWithoutFetching();
         logger.info(" ******* ClientRatingBolt ******** find on result: " + " size = " + rowFound);
 
@@ -92,7 +95,7 @@ public class ClientRatingBolt extends BaseRichBolt {
             
             logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
 
-            Values value = new Values(incomeEvent, 0);
+            Values value = new Values(incomeEvent, 0, itemId);
             collector.emit(value);
         } else {
             if (rowFound > 1) {
@@ -108,7 +111,7 @@ public class ClientRatingBolt extends BaseRichBolt {
 
                 logger.info("******* ClientRatingBolt ******** Update current client rating: ");
                 logger.info("******* ClientRatingBolt ********:" + "emit only triggered update event");
-                Values value = new Values(incomeEvent, currRating);
+                Values value = new Values(incomeEvent, currRating, itemId);
                 collector.emit(value);
             }
         }
@@ -119,6 +122,6 @@ public class ClientRatingBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, OLD_RATING));
+        declarer.declare(new Fields(EVENT_FIELD, OLD_RATING, ITEM_ID_FIELD));
     }
 }

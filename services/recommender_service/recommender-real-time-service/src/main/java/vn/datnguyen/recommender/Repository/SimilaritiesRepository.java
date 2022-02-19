@@ -2,7 +2,6 @@ package vn.datnguyen.recommender.Repository;
 
 import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
@@ -23,9 +22,8 @@ public class SimilaritiesRepository implements SimilaritiesInterface {
         return SchemaBuilder.createTable(SIMILARITIES_ROW)
             .ifNotExists()
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
-            .withPartitionKey(ITEM_2_ID, DataTypes.TEXT)
-            .withClusteringColumn(SCORE, DataTypes.DOUBLE)
-            .withClusteringOrder(SCORE, ClusteringOrder.DESC)
+            .withClusteringColumn(ITEM_2_ID, DataTypes.TEXT)
+            .withColumn(SCORE, DataTypes.DOUBLE)
             .build();
     }
 
@@ -83,6 +81,7 @@ public class SimilaritiesRepository implements SimilaritiesInterface {
             .where(
                 Relation.column(ITEM_2_ID).isEqualTo(QueryBuilder.literal(item2Id))
             )
+            .allowFiltering()
             .build();
     }
 }
