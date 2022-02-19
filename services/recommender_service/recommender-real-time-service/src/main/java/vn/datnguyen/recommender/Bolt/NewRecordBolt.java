@@ -2,8 +2,11 @@ package vn.datnguyen.recommender.Bolt;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.BatchStatement;
 import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
 import com.datastax.oss.driver.api.core.cql.BatchType;
@@ -71,7 +74,7 @@ public class NewRecordBolt extends BaseRichBolt {
         launchCassandraKeyspace();
     }
 
-    private void initClientRatingTable(String clientId, String itemId) {
+    private CompletionStage<AsyncResultSet> initClientRatingTable(String clientId, String itemId) {
         ClientRatingRepository clientRatingRepository = this.repositoryFactory.getClientRatingRepository();
         //Table Creation
         SimpleStatement rowCreationStatement = clientRatingRepository.createRowIfNotExists();
@@ -90,14 +93,14 @@ public class NewRecordBolt extends BaseRichBolt {
         if (rowFound == 0) {
             ClientRating clientRating = new ClientRating(clientId, itemId, 0);
             SimpleStatement insertNewStatement = clientRatingRepository.insertClientRating(clientRating);
-            
-            this.repositoryFactory.executeStatement(insertNewStatement, KEYSPACE_FIELD);
-            
-            logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
+
+            return this.repositoryFactory.asyncExecuteStatement(insertNewStatement, KEYSPACE_FIELD);
         }
+
+        return null;
     }
     
-    private void initItemCountTable(String itemId) {
+    private CompletionStage<AsyncResultSet> initItemCountTable(String itemId) {
         ItemCountRepository itemCountRepository = this.repositoryFactory.getItemCountRepository();
         //
         SimpleStatement rowCreationStatement = itemCountRepository.createRowIfNotExists();
@@ -112,12 +115,14 @@ public class NewRecordBolt extends BaseRichBolt {
         if (rowFound == 0) {
             ItemCount itemCount = new ItemCount(itemId, 0);
             SimpleStatement insertNewScoreStatement = itemCountRepository.insertNewScore(itemCount);
-            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
             logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + itemId);
+            return this.repositoryFactory.asyncExecuteStatement(insertNewScoreStatement, KEYSPACE_FIELD);
         }
+
+        return null;
     }
 
-    private void initCoRatingTable(String clientId, String itemId) {
+    private CompletionStage<AsyncResultSet> initCoRatingTable(String clientId, String itemId) {
         CoRatingRepository coRatingRepository = repositoryFactory.getCoRatingRepository();
 
         SimpleStatement createTableStatement = coRatingRepository.createRowIfNotExists();
@@ -181,19 +186,21 @@ public class NewRecordBolt extends BaseRichBolt {
 
             BatchStatement allBatch = executeWhenItemNotFound.build();
             logger.info("********* NewRecordBolt **********: CoRatingBolt Attempt to execute " + allBatch.size() + " queries in batch");
-            this.repositoryFactory.executeStatement(allBatch, KEYSPACE_FIELD);
+            return this.repositoryFactory.asyncExecuteStatement(allBatch, KEYSPACE_FIELD);
         }
+
+        return null;
     }
 
-    private void initPairCountTable() {
+    private CompletionStage<AsyncResultSet> initPairCountTable() {
         PairCountRepository pairCountRepository = repositoryFactory.getPairCountRepository();
         //
         SimpleStatement createTableStatement = pairCountRepository.createRowIfNotExists();
-        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
         logger.info("********* PairCountBolt **********: created table");
+        return this.repositoryFactory.asyncExecuteStatement(createTableStatement, KEYSPACE_FIELD);
     }
 
-    private void initSimilaritiesTable(String itemId, int weight) {
+    private CompletionStage<AsyncResultSet> initSimilaritiesTable(String itemId, int weight) {
         SimilaritiesRepository similaritiesRepository = repositoryFactory.getSimilaritiesRepository();
         //
         SimpleStatement createTable = similaritiesRepository.createTableIfNotExists();
@@ -224,8 +231,10 @@ public class NewRecordBolt extends BaseRichBolt {
                 allBatch.addStatement(insertScore);
             }
 
-            this.repositoryFactory.executeStatement(allBatch.build(), KEYSPACE_FIELD);
+            return this.repositoryFactory.asyncExecuteStatement(allBatch.build(), KEYSPACE_FIELD);
         }
+
+        return null;
     }
 
     @Override
@@ -238,11 +247,28 @@ public class NewRecordBolt extends BaseRichBolt {
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
         //need async
-        initClientRatingTable(clientId, itemId);
-        initItemCountTable(itemId);
-        initCoRatingTable(clientId, itemId);
-        initPairCountTable();
-        initSimilaritiesTable(itemId, weight);
+        CompletableFuture<Void> clientRating = (CompletableFuture<Void>)initClientRatingTable(clientId, itemId)
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH clientRating: ");
+            });
+        CompletableFuture<Void> itemCount = (CompletableFuture<Void>)initItemCountTable(itemId)
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH itemCount: ");
+            });
+        CompletableFuture<Void> coRating = (CompletableFuture<Void>)initCoRatingTable(clientId, itemId)
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH coRating: ");
+            });
+        CompletableFuture<Void> pairCount = (CompletableFuture<Void>)initPairCountTable()
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH pairCount: ");
+            });
+        CompletableFuture<Void> similarities = (CompletableFuture<Void>)initSimilaritiesTable(itemId, weight)
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH similarities: ");
+            });
+
+        CompletableFuture.allOf(clientRating, itemCount, coRating, pairCount, similarities).join();
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);

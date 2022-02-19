@@ -1,8 +1,11 @@
 package vn.datnguyen.recommender.Bolt;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
@@ -69,7 +72,7 @@ public class PairCountBolt extends BaseRichBolt {
         this.pairCountRepository = this.repositoryFactory.getPairCountRepository();
     }
 
-    private void initSimilaritiesTable(String item1Id, String item2Id) {
+    private CompletionStage<AsyncResultSet> initSimilaritiesTable(String item1Id, String item2Id) {
         SimilaritiesRepository similaritiesRepository = repositoryFactory.getSimilaritiesRepository();
         //
         SimpleStatement findByStatement = similaritiesRepository.findBy(item1Id, item2Id);
@@ -78,8 +81,10 @@ public class PairCountBolt extends BaseRichBolt {
 
         if (rowFound == 0) {
             SimpleStatement initScoreStatement = similaritiesRepository.initScore(item1Id, item2Id, 1.0);
-            this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
+            return this.repositoryFactory.asyncExecuteStatement(initScoreStatement, KEYSPACE_FIELD);
         }
+
+        return null;
     }
     
     @Override
@@ -87,8 +92,13 @@ public class PairCountBolt extends BaseRichBolt {
         String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD); 
         String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
         int deltaScore = (int) input.getValueByField(DELTA_SCORE_FIELD);
+        
+        CompletableFuture<Void> similarities = (CompletableFuture<Void>)initSimilaritiesTable(item1Id, item2Id)
+            .thenAccept((t) -> {
+                logger.info("******* NewRecordBolt ******** FINISH itemCount: ");
+            });
 
-        initSimilaritiesTable(item1Id, item2Id);
+        similarities.join();
 
         SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
         ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);

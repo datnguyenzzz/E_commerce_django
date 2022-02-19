@@ -97,6 +97,14 @@ public class RepositoryFactory {
         return this.session.executeAsync(statement);
     }
 
+    public CompletionStage<AsyncResultSet> asyncExecuteStatement(BatchStatement statement, String keyspaceName) {
+        if (keyspaceName != null) {
+            statement.setKeyspace(CqlIdentifier.fromCql(keyspaceName));
+        }
+
+        return this.session.executeAsync(statement);
+    }
+
     /**
      * 
      * @param row Cassandra row
