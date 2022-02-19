@@ -29,6 +29,7 @@ import vn.datnguyen.recommender.Repository.ClientRatingRepository;
 import vn.datnguyen.recommender.Repository.CoRatingRepository;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
+import vn.datnguyen.recommender.Repository.PairCountRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -115,7 +116,7 @@ public class NewRecordBolt extends BaseRichBolt {
         }
     }
 
-    private void initCoRatingTable(String clientId, String itemId, int weight) {
+    private void initCoRatingTable(String clientId, String itemId) {
         CoRatingRepository coRatingRepository = repositoryFactory.getCoRatingRepository();
 
         SimpleStatement createTableStatement = coRatingRepository.createRowIfNotExists();
@@ -183,19 +184,27 @@ public class NewRecordBolt extends BaseRichBolt {
         }
     }
 
+    private void initPairCountTable() {
+        PairCountRepository pairCountRepository = repositoryFactory.getPairCountRepository();
+        //
+        SimpleStatement createTableStatement = pairCountRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+        logger.info("********* PairCountBolt **********: created table");
+    }
+
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         String clientId = incomeEvent.getClientId();
         String itemId = incomeEvent.getItemId();
-        int weight = incomeEvent.getWeight();
 
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
         //need async
         initClientRatingTable(clientId, itemId);
         initItemCountTable(itemId);
-        initCoRatingTable(clientId, itemId, weight);
+        initCoRatingTable(clientId, itemId);
+        initPairCountTable();
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);

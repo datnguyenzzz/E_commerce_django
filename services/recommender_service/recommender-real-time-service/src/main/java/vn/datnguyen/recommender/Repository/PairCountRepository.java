@@ -23,7 +23,7 @@ public class PairCountRepository implements PairCountInterface {
         return SchemaBuilder.createTable(PAIR_COUNT_ROW)
             .ifNotExists()
             .withPartitionKey(ITEM_1_ID, DataTypes.TEXT)
-            .withPartitionKey(ITEM_2_ID, DataTypes.TEXT)
+            .withClusteringColumn(ITEM_2_ID, DataTypes.TEXT)
             .withColumn(SCORE, DataTypes.INT)
             .build();
     }
@@ -57,6 +57,13 @@ public class PairCountRepository implements PairCountInterface {
             .value(ITEM_1_ID, QueryBuilder.literal(item1Id))
             .value(ITEM_2_ID, QueryBuilder.literal(item2Id))
             .value(SCORE, QueryBuilder.literal(0))
+            .build();
+    }
+
+    @Override
+    public SimpleStatement selectSetItemId(String itemId) {
+        return QueryBuilder.selectFrom(PAIR_COUNT_ROW).column(ITEM_1_ID)
+            .groupBy(ITEM_1_ID)
             .build();
     }
 }

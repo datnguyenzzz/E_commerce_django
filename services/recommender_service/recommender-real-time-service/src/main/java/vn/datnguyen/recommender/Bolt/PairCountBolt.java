@@ -60,19 +60,12 @@ public class PairCountBolt extends BaseRichBolt {
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
 
-    private void createTableIfNotExists() {
-        SimpleStatement createTableStatement = this.pairCountRepository.createRowIfNotExists();
-        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
-        logger.info("********* PairCountBolt **********: created table");
-    }
-    
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
 
         launchCassandraKeyspace();
         this.pairCountRepository = this.repositoryFactory.getPairCountRepository();
-        createTableIfNotExists();
     }
     
     @Override
