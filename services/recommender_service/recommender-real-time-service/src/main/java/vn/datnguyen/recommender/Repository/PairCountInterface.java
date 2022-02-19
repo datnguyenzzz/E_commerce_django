@@ -7,5 +7,4 @@ public interface PairCountInterface {
     SimpleStatement updateScore(String item1Id, String item2Id, int deltaScore);
     SimpleStatement getCurrentScore(String item1Id, String item2Id);
     SimpleStatement initNewScore(String item1Id, String item2Id);
-    SimpleStatement selectSetItemId(String itemId);
 }

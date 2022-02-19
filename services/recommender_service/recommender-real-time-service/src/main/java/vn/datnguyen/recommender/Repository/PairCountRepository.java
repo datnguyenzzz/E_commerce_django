@@ -60,11 +60,5 @@ public class PairCountRepository implements PairCountInterface {
             .build();
     }
 
-    @Override
-    public SimpleStatement selectSetItemId(String itemId) {
-        return QueryBuilder.selectFrom(PAIR_COUNT_ROW).column(ITEM_1_ID)
-            .groupBy(ITEM_1_ID)
-            .build();
-    }
 }
 

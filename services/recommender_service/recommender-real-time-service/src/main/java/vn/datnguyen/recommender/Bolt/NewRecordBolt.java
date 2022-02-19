@@ -31,6 +31,7 @@ import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.PairCountRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
+import vn.datnguyen.recommender.Repository.SimilaritiesRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class NewRecordBolt extends BaseRichBolt {
@@ -192,11 +193,47 @@ public class NewRecordBolt extends BaseRichBolt {
         logger.info("********* PairCountBolt **********: created table");
     }
 
+    private void initSimilaritiesTable(String itemId, int weight) {
+        SimilaritiesRepository similaritiesRepository = repositoryFactory.getSimilaritiesRepository();
+        //
+        SimpleStatement createTable = similaritiesRepository.createTableIfNotExists();
+        this.repositoryFactory.executeStatement(createTable, KEYSPACE_FIELD);
+        logger.info("************ SimilaritiesBolt *************: create table successfully ");
+        // 
+        SimpleStatement findByItem1IdStatement = similaritiesRepository.findByItem1Id(itemId);
+        ResultSet findByItem1IdResult = this.repositoryFactory.executeStatement(findByItem1IdStatement, KEYSPACE_FIELD);
+        List<Row> findByItem1Id = findByItem1IdResult.all();
+
+        BatchStatementBuilder allBatch = BatchStatement.builder(BatchType.LOGGED);
+
+        if (findByItem1Id.size() == 0) {
+            SimpleStatement findAllStatement = similaritiesRepository.findAllItemId();
+            ResultSet findAllResult = this.repositoryFactory.executeStatement(findAllStatement, KEYSPACE_FIELD);
+            List<Row> findAll = findAllResult.all();
+
+            SimpleStatement insertScore = similaritiesRepository.initScore(itemId, itemId, 1.0 / Math.sqrt(weight));
+            allBatch.addStatement(insertScore);
+
+            for (Row r: findAll) {
+                String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+
+                insertScore = similaritiesRepository.initScore(itemId, anotherItemId, 1.0);
+                allBatch.addStatement(insertScore);
+
+                insertScore = similaritiesRepository.initScore(anotherItemId, itemId, 1.0);
+                allBatch.addStatement(insertScore);
+            }
+
+            this.repositoryFactory.executeStatement(allBatch.build(), KEYSPACE_FIELD);
+        }
+    }
+
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         String clientId = incomeEvent.getClientId();
         String itemId = incomeEvent.getItemId();
+        int weight = incomeEvent.getWeight();
 
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
@@ -205,6 +242,7 @@ public class NewRecordBolt extends BaseRichBolt {
         initItemCountTable(itemId);
         initCoRatingTable(clientId, itemId);
         initPairCountTable();
+        initSimilaritiesTable(itemId, weight);
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);

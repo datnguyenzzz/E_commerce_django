@@ -20,6 +20,7 @@ import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.PairCountRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
+import vn.datnguyen.recommender.Repository.SimilaritiesRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 /**
@@ -67,12 +68,27 @@ public class PairCountBolt extends BaseRichBolt {
         launchCassandraKeyspace();
         this.pairCountRepository = this.repositoryFactory.getPairCountRepository();
     }
+
+    private void initSimilaritiesTable(String item1Id, String item2Id) {
+        SimilaritiesRepository similaritiesRepository = repositoryFactory.getSimilaritiesRepository();
+        //
+        SimpleStatement findByStatement = similaritiesRepository.findBy(item1Id, item2Id);
+        ResultSet findByResult = this.repositoryFactory.executeStatement(findByStatement, KEYSPACE_FIELD);
+        int rowFound = findByResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            SimpleStatement initScoreStatement = similaritiesRepository.initScore(item1Id, item2Id, 1.0);
+            this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
+        }
+    }
     
     @Override
     public void execute(Tuple input) {
         String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD); 
         String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
         int deltaScore = (int) input.getValueByField(DELTA_SCORE_FIELD);
+
+        initSimilaritiesTable(item1Id, item2Id);
 
         SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
         ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);
@@ -87,14 +103,13 @@ public class PairCountBolt extends BaseRichBolt {
         } else {
             currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
             newPairCount = currentPairCount + deltaScore;
+            Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
+            collector.emit(values);
         }
             
         SimpleStatement updateScoreStatement = this.pairCountRepository.updateScore(item1Id, item2Id, newPairCount);
         this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
-        
-        Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
-        collector.emit(values);
-
+    
         collector.ack(input);
     }
     
