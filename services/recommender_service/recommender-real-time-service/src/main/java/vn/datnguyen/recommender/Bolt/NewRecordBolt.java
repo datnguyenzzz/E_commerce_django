@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
+import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.ClientRatingRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
@@ -57,8 +58,9 @@ public class NewRecordBolt extends BaseRichBolt {
         launchCassandraKeyspace();
     }
 
-    private void createClientRatingTable() {
+    private void initClientRatingTable(String clientId, String itemId) {
         ClientRatingRepository clientRatingRepository = this.repositoryFactory.getClientRatingRepository();
+        //Table Creation
         SimpleStatement rowCreationStatement = clientRatingRepository.createRowIfNotExists();
         ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
         logger.info("*** NewRecordBolt ****: ClientRating " + "row creation status " + result.all());
@@ -66,16 +68,31 @@ public class NewRecordBolt extends BaseRichBolt {
         SimpleStatement indexCreationStatement = clientRatingRepository.createIndexOnItemId();
         result = this.repositoryFactory.executeStatement(indexCreationStatement, KEYSPACE_FIELD);
         logger.info("*** NewRecordBolt ****: ClientRating " + "index creation status " + result.all());
+        // Rows init
+        SimpleStatement findOneStatement = clientRatingRepository.findByClientIdAndItemId(
+            clientId, itemId);
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            ClientRating clientRating = new ClientRating(clientId, itemId, 0);
+            SimpleStatement insertNewStatement = clientRatingRepository.insertClientRating(clientRating);
+            
+            this.repositoryFactory.executeStatement(insertNewStatement, KEYSPACE_FIELD);
+            
+            logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
+        }
     }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         String clientId = incomeEvent.getClientId();
+        String itemId = incomeEvent.getItemId();
 
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
-        createClientRatingTable();
+        initClientRatingTable(clientId, itemId);
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);

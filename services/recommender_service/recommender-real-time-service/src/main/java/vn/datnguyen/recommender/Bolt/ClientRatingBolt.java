@@ -76,33 +76,22 @@ public class ClientRatingBolt extends BaseRichBolt {
         int rowFound = findOneResult.getAvailableWithoutFetching();
         logger.info(" ******* ClientRatingBolt ******** find on result: " + " size = " + rowFound);
 
-        if (rowFound == 0) {
-            SimpleStatement insertNewStatement = this.clientRatingRepository.insertClientRating(
-                clientRating);
-            
-            this.repositoryFactory.executeStatement(insertNewStatement, KEYSPACE_FIELD);
-            
-            logger.info("******* ClientRatingBolt ******** Insert new client rating: ");
+        if (rowFound > 1) {
+            logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + rowFound);
+        }
+        
+        int currRating = clientRatingRepository.convertRowToPojo(findOneResult.one()).getRating();
+        logger.info("******* ClientRatingBolt ******** current rating result: " + currRating);
 
-            Values value = new Values(incomeEvent, 0, itemId);
+        if (clientRating.getRating() > currRating) {
+
+            SimpleStatement updateIfGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(clientRating);
+            this.repositoryFactory.executeStatement(updateIfGreaterStatement, KEYSPACE_FIELD);
+
+            logger.info("******* ClientRatingBolt ******** Update current client rating: ");
+            logger.info("******* ClientRatingBolt ********:" + "emit only triggered update event");
+            Values value = new Values(incomeEvent, currRating, itemId);
             collector.emit(value);
-        } else {
-            if (rowFound > 1) {
-                logger.warn(" ******* ClientRatingBolt ******** " + " found more than 1 result ..... " + rowFound);
-            }
-            int currRating = clientRatingRepository.convertRowToPojo(findOneResult.one()).getRating();
-            logger.info("******* ClientRatingBolt ******** current rating result: " + currRating);
-
-            if (clientRating.getRating() > currRating) {
-
-                SimpleStatement updateIfGreaterStatement = this.clientRatingRepository.updateIfGreaterClientRating(clientRating);
-                this.repositoryFactory.executeStatement(updateIfGreaterStatement, KEYSPACE_FIELD);
-
-                logger.info("******* ClientRatingBolt ******** Update current client rating: ");
-                logger.info("******* ClientRatingBolt ********:" + "emit only triggered update event");
-                Values value = new Values(incomeEvent, currRating, itemId);
-                collector.emit(value);
-            }
         }
 
         collector.ack(input);
