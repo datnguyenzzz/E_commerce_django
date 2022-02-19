@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Models.ItemCount;
 import vn.datnguyen.recommender.Repository.ClientRatingRepository;
+import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.CustomProperties;
@@ -84,6 +86,26 @@ public class NewRecordBolt extends BaseRichBolt {
         }
     }
     
+    private void initItemCountTable(String itemId) {
+        ItemCountRepository itemCountRepository = this.repositoryFactory.getItemCountRepository();
+        //
+        SimpleStatement rowCreationStatement = itemCountRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****:  ItemCountTAble " + "row creation status ");
+        //
+        SimpleStatement findOneStatement = itemCountRepository.findByItemId(itemId);
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            ItemCount itemCount = new ItemCount(itemId, 0);
+            SimpleStatement insertNewScoreStatement = itemCountRepository.insertNewScore(itemCount);
+            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + itemId);
+        }
+    }
+
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
@@ -92,7 +114,9 @@ public class NewRecordBolt extends BaseRichBolt {
 
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
+        //need async
         initClientRatingTable(clientId, itemId);
+        initItemCountTable(itemId);
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);

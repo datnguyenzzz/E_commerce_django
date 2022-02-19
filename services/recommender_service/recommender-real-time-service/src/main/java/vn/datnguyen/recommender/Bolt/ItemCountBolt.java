@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.Event;
-import vn.datnguyen.recommender.Models.ItemCount;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -62,12 +61,6 @@ public class ItemCountBolt extends BaseRichBolt {
 
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
-
-    private void createTableIfNotExists() {
-        SimpleStatement rowCreationStatement = this.itemCountRepository.createRowIfNotExists();
-        ResultSet rowCreationResult = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ItemCountBolt ****: " + "row creation status " + rowCreationResult.all());
-    }
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -75,7 +68,6 @@ public class ItemCountBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.itemCountRepository = this.repositoryFactory.getItemCountRepository();
-        createTableIfNotExists();
     }
     
     @Override
@@ -92,30 +84,20 @@ public class ItemCountBolt extends BaseRichBolt {
         int rowFound = findOneResult.getAvailableWithoutFetching();
 
         logger.info("********* ItemCountBolt **********" + " rows found size = " + rowFound);
+        
+        int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
+        int newItemCountScore = currItemCount + deltaRating;
 
-        if (rowFound == 0) {
-            ItemCount itemCount = new ItemCount(incomeEvent.getItemId(), incomeEvent.getWeight());
-            SimpleStatement insertNewScoreStatement = this.itemCountRepository.insertNewScore(itemCount);
-            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId());
-            // emit to similarity
-            Values values = new Values(itemCount.getItemId(), 0, incomeEvent.getWeight());
-            collector.emit(values);
-        } else {
-            int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
-            int newItemCountScore = currItemCount + deltaRating;
-
-            logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
-            SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
-                incomeEvent.getItemId(), newItemCountScore);
+        logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
+        SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
+            incomeEvent.getItemId(), newItemCountScore);
             
-            this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
-            // emit to similarity
-            Values values = new Values(incomeEvent.getItemId(), currItemCount, newItemCountScore);
-            collector.emit(values);
-        }
-
+        this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
+        logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
+        // emit to similarity
+        Values values = new Values(incomeEvent.getItemId(), currItemCount, newItemCountScore);
+        collector.emit(values);
+        
         collector.ack(input);
     }
 
