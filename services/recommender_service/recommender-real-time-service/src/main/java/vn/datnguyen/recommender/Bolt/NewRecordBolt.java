@@ -1,9 +1,14 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
+import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -21,6 +26,7 @@ import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Models.ItemCount;
 import vn.datnguyen.recommender.Repository.ClientRatingRepository;
+import vn.datnguyen.recommender.Repository.CoRatingRepository;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -39,6 +45,9 @@ public class NewRecordBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //
+    private static final String ITEM_1_ID = "item_1_id";
+    private static final String RATING_ITEM_1 = "rating_item_1";
     
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -106,17 +115,87 @@ public class NewRecordBolt extends BaseRichBolt {
         }
     }
 
+    private void initCoRatingTable(String clientId, String itemId, int weight) {
+        CoRatingRepository coRatingRepository = repositoryFactory.getCoRatingRepository();
+
+        SimpleStatement createTableStatement = coRatingRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****: CoRatingBolt " + "row created ");
+
+        SimpleStatement createIndexStatement = coRatingRepository.createIndexOnItemId();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****: CoRatingBolt " + "index item id created ");
+
+        createIndexStatement = coRatingRepository.createIndexOnClientId();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****: CoRatingBolt " + "index client id created ");
+        //
+        SimpleStatement findByItem1Statement = coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
+        ResultSet findByItem1Result = this.repositoryFactory.executeStatement(findByItem1Statement, KEYSPACE_FIELD);
+
+        int rowFound = findByItem1Result.getAvailableWithoutFetching();
+        if (rowFound == 0) {
+            SimpleStatement findSeItemIdStatement = coRatingRepository.findSetItemIdByClientId(clientId);
+            ResultSet findSetItemIdResult = this.repositoryFactory.executeStatement(findSeItemIdStatement, KEYSPACE_FIELD);
+            List<Row> findSetItemId = findSetItemIdResult.all();
+
+            BatchStatementBuilder executeWhenItemNotFound = BatchStatement.builder(BatchType.LOGGED);
+
+            SimpleStatement insertNewItemId = coRatingRepository.insertNewItemScore(itemId, itemId, clientId);
+            SimpleStatement updateItemIdScoreStatement = coRatingRepository.updateItemScore(itemId, itemId, clientId, 0, 0);
+            SimpleStatement updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(itemId, itemId, clientId, 0);
+            SimpleStatement updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(itemId, itemId, clientId, 0);
+
+            executeWhenItemNotFound.addStatement(insertNewItemId)
+                .addStatement(updateItemIdScoreStatement)
+                .addStatement(updateItem1IdRatingStatement)
+                .addStatement(updateItem2IdRatingStatement);
+
+            for (Row r: findSetItemId) {
+                String otherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+                int otherItemRating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
+
+                insertNewItemId = coRatingRepository.insertNewItemScore(itemId, otherItemId, clientId);
+                updateItemIdScoreStatement = coRatingRepository.updateItemScore(itemId, otherItemId, clientId, 0, 0);
+                updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(itemId, otherItemId, clientId, 0);
+                updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(itemId, otherItemId, clientId, otherItemRating);
+
+                executeWhenItemNotFound.addStatement(insertNewItemId)
+                    .addStatement(updateItemIdScoreStatement)
+                    .addStatement(updateItem1IdRatingStatement)
+                    .addStatement(updateItem2IdRatingStatement);     
+
+                // 
+                insertNewItemId = coRatingRepository.insertNewItemScore(otherItemId, itemId, clientId);
+                updateItemIdScoreStatement = coRatingRepository.updateItemScore(otherItemId, itemId, clientId, 0, 0);
+                updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(otherItemId, itemId, clientId, otherItemRating);
+                updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(otherItemId, itemId, clientId, 0);
+
+                executeWhenItemNotFound.addStatement(insertNewItemId)
+                    .addStatement(updateItemIdScoreStatement)
+                    .addStatement(updateItem1IdRatingStatement)
+                    .addStatement(updateItem2IdRatingStatement);
+            }
+
+            BatchStatement allBatch = executeWhenItemNotFound.build();
+            logger.info("********* NewRecordBolt **********: CoRatingBolt Attempt to execute " + allBatch.size() + " queries in batch");
+            this.repositoryFactory.executeStatement(allBatch, KEYSPACE_FIELD);
+        }
+    }
+
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         String clientId = incomeEvent.getClientId();
         String itemId = incomeEvent.getItemId();
+        int weight = incomeEvent.getWeight();
 
         logger.info("********* NewRecordBolt **********" + incomeEvent);
 
         //need async
         initClientRatingTable(clientId, itemId);
         initItemCountTable(itemId);
+        initCoRatingTable(clientId, itemId, weight);
 
         Values values = new Values(incomeEvent, clientId);
         collector.emit(values);
