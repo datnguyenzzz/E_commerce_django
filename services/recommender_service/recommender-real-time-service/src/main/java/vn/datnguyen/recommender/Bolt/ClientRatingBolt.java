@@ -54,23 +54,12 @@ public class ClientRatingBolt extends BaseRichBolt {
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
 
-    public void createTableIfNotExists() {
-        SimpleStatement rowCreationStatement = this.clientRatingRepository.createRowIfNotExists();
-        ResultSet result = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "row creation status " + result.all());
-
-        SimpleStatement indexCreationStatement = this.clientRatingRepository.createIndexOnItemId();
-        result = this.repositoryFactory.executeStatement(indexCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ClientRatingBolt ****: " + "index creation status " + result.all());
-    }
-
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
         launchCassandraKeyspace();
 
         this.clientRatingRepository = repositoryFactory.getClientRatingRepository();
-        createTableIfNotExists();
     }
     
     @Override
