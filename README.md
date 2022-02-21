@@ -2,11 +2,11 @@
 
 Recommendation architecture:
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/recommender/assets/recommender-service.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/real-time-compute/assets/recommender-service.png)
 
 Payment processor system architecture 
 
-![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/auto_complete/assets/payment_service_provider_architecture.png)
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/recommender/assets/payment_service_provider_architecture.png)
 
 Autocomplete system architecture 
 
