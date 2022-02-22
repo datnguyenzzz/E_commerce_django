@@ -49,7 +49,7 @@ public class SimilaritiesBolt extends BaseRichBolt {
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //
-    private final static String ITEM_1_ID = "item_1_id";
+    private final static String ITEM_2_ID = "item_2_id";
     private final static String SCORE = "score";
     //
     private OutputCollector collector;
@@ -106,7 +106,7 @@ public class SimilaritiesBolt extends BaseRichBolt {
         BatchStatementBuilder allBatch = BatchStatement.builder(BatchType.LOGGED);
 
         for (Row r: findByItem1Id) {
-            String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+            String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
             double score = (double) this.repositoryFactory.getFromRow(r, SCORE); 
                 
             score *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);
