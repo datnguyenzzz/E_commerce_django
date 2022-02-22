@@ -86,6 +86,74 @@ public class CoRatingBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.coRatingRepository = repositoryFactory.getCoRatingRepository();
+
+        SimpleStatement createTableStatement = coRatingRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: CoRatingBolt " + "row created ");
+
+        SimpleStatement createIndexStatement = coRatingRepository.createIndexOnItemId();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: CoRatingBolt " + "index item id created ");
+
+        createIndexStatement = coRatingRepository.createIndexOnClientId();
+        this.repositoryFactory.executeStatement(createIndexStatement, KEYSPACE_FIELD);
+        logger.info("*** CoRatingBolt ****: CoRatingBolt " + "index client id created ");
+    }
+
+    private void initCoRatingTable(String clientId, String itemId, int weight) {
+        SimpleStatement findByItem1Statement = coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
+        ResultSet findByItem1Result = this.repositoryFactory.executeStatement(findByItem1Statement, KEYSPACE_FIELD);
+
+        int rowFound = findByItem1Result.getAvailableWithoutFetching();
+        if (rowFound == 0) {
+            logger.info("*** CoRatingBolt ****: CoRatingBolt " + "init new row with itemId = " + itemId);
+            SimpleStatement findSeItemIdStatement = coRatingRepository.findSetItemIdByClientId(clientId);
+            ResultSet findSetItemIdResult = this.repositoryFactory.executeStatement(findSeItemIdStatement, KEYSPACE_FIELD);
+            List<Row> findSetItemId = findSetItemIdResult.all();
+
+            BatchStatementBuilder executeWhenItemNotFound = BatchStatement.builder(BatchType.LOGGED);
+
+            SimpleStatement insertNewItemId = coRatingRepository.insertNewItemScore(itemId, itemId, clientId);
+            SimpleStatement updateItemIdScoreStatement = coRatingRepository.updateItemScore(itemId, itemId, clientId, 0, 0);
+            SimpleStatement updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(itemId, itemId, clientId, weight);
+            SimpleStatement updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(itemId, itemId, clientId, weight);
+
+            executeWhenItemNotFound.addStatement(insertNewItemId)
+                .addStatement(updateItemIdScoreStatement)
+                .addStatement(updateItem1IdRatingStatement)
+                .addStatement(updateItem2IdRatingStatement);
+
+            for (Row r: findSetItemId) {
+                String otherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+                int otherItemRating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
+
+                insertNewItemId = coRatingRepository.insertNewItemScore(itemId, otherItemId, clientId);
+                updateItemIdScoreStatement = coRatingRepository.updateItemScore(itemId, otherItemId, clientId, 0, 0);
+                updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(itemId, otherItemId, clientId, weight);
+                updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(itemId, otherItemId, clientId, otherItemRating);
+
+                executeWhenItemNotFound.addStatement(insertNewItemId)
+                    .addStatement(updateItemIdScoreStatement)
+                    .addStatement(updateItem1IdRatingStatement)
+                    .addStatement(updateItem2IdRatingStatement);     
+
+                // 
+                insertNewItemId = coRatingRepository.insertNewItemScore(otherItemId, itemId, clientId);
+                updateItemIdScoreStatement = coRatingRepository.updateItemScore(otherItemId, itemId, clientId, 0, 0);
+                updateItem1IdRatingStatement = coRatingRepository.updateItem1Rating(otherItemId, itemId, clientId, otherItemRating);
+                updateItem2IdRatingStatement = coRatingRepository.updateItem2Rating(otherItemId, itemId, clientId, weight);
+
+                executeWhenItemNotFound.addStatement(insertNewItemId)
+                    .addStatement(updateItemIdScoreStatement)
+                    .addStatement(updateItem1IdRatingStatement)
+                    .addStatement(updateItem2IdRatingStatement);
+            }
+
+            BatchStatement allBatch = executeWhenItemNotFound.build();
+            logger.info("********* NewRecordBolt **********: CoRatingBolt Attempt to execute " + allBatch.size() + " queries in batch");
+            this.repositoryFactory.executeStatement(allBatch, KEYSPACE_FIELD);
+        }
+
     }
     
     @Override
@@ -95,6 +163,8 @@ public class CoRatingBolt extends BaseRichBolt {
         int newRating = incomeEvent.getWeight();
         String itemId = incomeEvent.getItemId();
         String clientId = incomeEvent.getClientId();
+
+        initCoRatingTable(clientId, itemId, newRating);
 
         SimpleStatement findByItem1Statement = this.coRatingRepository.findByItem1IdAndClientId(itemId, clientId);
         ResultSet findByItem1Result = this.repositoryFactory.executeStatement(findByItem1Statement, KEYSPACE_FIELD);
@@ -123,7 +193,7 @@ public class CoRatingBolt extends BaseRichBolt {
             String item2Id = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
             int item2Rating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_2);
 
-            logger.info("********* CoRatingBolt **********: Found item 2 = " + item2Id + " with rating = " + item2Rating);
+            logger.info("********* CoRatingBolt **********: Found item2Id = " + item2Id + " with rating = " + item2Rating);
 
             SimpleStatement updateScoreItem;
 
@@ -146,6 +216,10 @@ public class CoRatingBolt extends BaseRichBolt {
         for (Row r: findByItem2) {
             String item1Id = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
             int item1Rating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
+
+            if (item1Id.equals(itemId)) {
+                continue;
+            }
 
             logger.info("********* CoRatingBolt **********: Found item 1 = " + item1Id + " with rating = " + item1Rating);
 

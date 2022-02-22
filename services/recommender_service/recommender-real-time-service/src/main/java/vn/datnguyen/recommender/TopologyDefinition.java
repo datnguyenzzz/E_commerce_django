@@ -18,7 +18,6 @@ public class TopologyDefinition {
     private static final String KAFKA_SPOUT_THREAD = customProperties.getProp("KAFKA_SPOUT_THREAD");
     private static final String TOPOLOGY_WORKERS = customProperties.getProp("TOPOLOGY_WORKERS");
     private static final String CLIENT_RATING_BOLT_THREADS = customProperties.getProp("CLIENT_RATING_BOLT_THREADS");
-    private final static String NEW_RECORD_BOLT_THREADS = customProperties.getProp("NEW_RECORD_BOLT_THREADS");
     private static final String WEIGHT_APPLIER_BOLT_THREADS = customProperties.getProp("WEIGHT_APPLIER_BOLT_THREADS");
     private static final String ITEM_COUNT_THREADS = customProperties.getProp("ITEM_COUNT_THREADS");
     private static final String CO_RATING_BOLT_THREADS = customProperties.getProp("CO_RATING_BOLT_THREADS");
@@ -31,7 +30,6 @@ public class TopologyDefinition {
     //IDs
     private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
     private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
-    private final static String NEW_RECORD_BOLT = customProperties.getProp("NEW_RECORD_BOLT");
     private final static String CLIENT_RATING_BOLT = customProperties.getProp("CLIENT_RATING_BOLT");
     private static final String ITEM_COUNT_BOLT = customProperties.getProp("ITEM_COUNT_BOLT");
     private static final String CO_RATING_BOLT = customProperties.getProp("CO_RATING_BOLT");
@@ -45,7 +43,6 @@ public class TopologyDefinition {
     //Tasks size 
     private final static String SPOUT_TASKS = customProperties.getProp("SPOUT_TASKS");
     private final static String WEIGHT_APPLIER_BOLT_TASKS = customProperties.getProp("WEIGHT_APPLIER_BOLT_TASKS");
-    private final static String NEW_RECORD_BOLT_TASKS = customProperties.getProp("NEW_RECORD_BOLT_TASKS");
     private final static String CLIENT_RATING_BOLT_TASKS = customProperties.getProp("CLIENT_RATING_BOLT_TASKS");
     private final static String ITEM_COUNT_BOLT_TASKS = customProperties.getProp("ITEM_COUNT_BOLT_TASKS");
     private final static String CO_RATING_BOLT_TASKS = customProperties.getProp("CO_RATING_BOLT_TASKS");
@@ -61,6 +58,7 @@ public class TopologyDefinition {
     private static Config getConfig() {
         Config config = new Config();
         config.setDebug(true);
+        config.setMessageTimeoutSecs(1200);
         config.setNumWorkers(Integer.parseInt(TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);
@@ -77,13 +75,9 @@ public class TopologyDefinition {
             .setNumTasks(Integer.parseInt(WEIGHT_APPLIER_BOLT_TASKS))
             .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
         
-        topologyBuilder.setBolt(NEW_RECORD_BOLT, boltFactory.createNewRecordBolt(), Integer.parseInt(NEW_RECORD_BOLT_THREADS))
-            .setNumTasks(Integer.parseInt(NEW_RECORD_BOLT_TASKS))
-            .fieldsGrouping(WEIGHT_APPLIER_BOLT, new Fields(ITEM_ID_FIELD));
-
         topologyBuilder.setBolt(CLIENT_RATING_BOLT, boltFactory.createClientRatingBolt(), Integer.parseInt(CLIENT_RATING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(CLIENT_RATING_BOLT_TASKS))
-            .fieldsGrouping(NEW_RECORD_BOLT, new Fields(CLIENT_ID_FIELD));
+            .fieldsGrouping(WEIGHT_APPLIER_BOLT, new Fields(CLIENT_ID_FIELD));
 
         topologyBuilder.setBolt(ITEM_COUNT_BOLT, boltFactory.createItemCountBolt(), Integer.parseInt(ITEM_COUNT_THREADS))
             .setNumTasks(Integer.parseInt(ITEM_COUNT_BOLT_TASKS))

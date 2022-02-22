@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Models.ItemCount;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -44,6 +45,8 @@ public class ItemCountBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //
+
 
     private RepositoryFactory repositoryFactory;
     private ItemCountRepository itemCountRepository;
@@ -68,11 +71,33 @@ public class ItemCountBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.itemCountRepository = this.repositoryFactory.getItemCountRepository();
+
+        SimpleStatement rowCreationStatement = itemCountRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****:  ItemCountTAble " + "row creation status ");
+    }
+
+    private void initItemCountTable(String itemId) {
+        SimpleStatement findOneStatement = itemCountRepository.findByItemId(itemId);
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            ItemCount itemCount = new ItemCount(itemId, 0);
+            SimpleStatement insertNewScoreStatement = itemCountRepository.insertNewScore(itemCount);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + itemId);
+            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+        }
+
     }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+
+        initItemCountTable(incomeEvent.getItemId());
+
         int oldRating = (int) input.getValueByField(OLD_RATING);
         int deltaRating = incomeEvent.getWeight() - oldRating;
 

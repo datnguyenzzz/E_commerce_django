@@ -1,11 +1,8 @@
 package vn.datnguyen.recommender.Bolt;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.AsyncResultSet;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
@@ -23,7 +20,6 @@ import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.PairCountRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
-import vn.datnguyen.recommender.Repository.SimilaritiesRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 /**
@@ -70,52 +66,43 @@ public class PairCountBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.pairCountRepository = this.repositoryFactory.getPairCountRepository();
+
+        SimpleStatement createTableStatement = pairCountRepository.createRowIfNotExists();
+        logger.info("********* PairCountBolt **********: created table");
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
     }
 
-    private CompletionStage<AsyncResultSet> initSimilaritiesTable(String item1Id, String item2Id) {
-        SimilaritiesRepository similaritiesRepository = repositoryFactory.getSimilaritiesRepository();
-        //
-        SimpleStatement findByStatement = similaritiesRepository.findBy(item1Id, item2Id);
-        ResultSet findByResult = this.repositoryFactory.executeStatement(findByStatement, KEYSPACE_FIELD);
-        int rowFound = findByResult.getAvailableWithoutFetching();
+    private void initPairCountTable(String item1Id, String item2Id) {
+        SimpleStatement createTableStatement = pairCountRepository.createRowIfNotExists();
+        logger.info("********* PairCountBolt **********: created table");
+        this.repositoryFactory.executeStatement(createTableStatement, KEYSPACE_FIELD);
+
+        SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
+        ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);
+        int rowFound = findCurrentScoreResult.getAvailableWithoutFetching();
 
         if (rowFound == 0) {
-            SimpleStatement initScoreStatement = similaritiesRepository.initScore(item1Id, item2Id, 1.0);
-            return this.repositoryFactory.asyncExecuteStatement(initScoreStatement, KEYSPACE_FIELD);
+            SimpleStatement initCols = this.pairCountRepository.initNewScore(item1Id, item2Id);
+            this.repositoryFactory.executeStatement(initCols, KEYSPACE_FIELD);
         }
-
-        return null;
     }
-    
+  
     @Override
     public void execute(Tuple input) {
         String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD); 
         String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
         int deltaScore = (int) input.getValueByField(DELTA_SCORE_FIELD);
         
-        CompletableFuture<Void> similarities = (CompletableFuture<Void>)initSimilaritiesTable(item1Id, item2Id)
-            .thenAccept((t) -> {
-                logger.info("******* NewRecordBolt ******** FINISH itemCount: ");
-            });
-
-        similarities.join();
+        initPairCountTable(item1Id, item2Id);
 
         SimpleStatement findCurrentScore = this.pairCountRepository.getCurrentScore(item1Id, item2Id);
         ResultSet findCurrentScoreResult = this.repositoryFactory.executeStatement(findCurrentScore, KEYSPACE_FIELD);
-        int rowFound = findCurrentScoreResult.getAvailableWithoutFetching();
-
         int currentPairCount, newPairCount;
-        if (rowFound == 0) {
-            currentPairCount = 0; 
-            newPairCount = deltaScore;
-            SimpleStatement initCols = this.pairCountRepository.initNewScore(item1Id, item2Id);
-            this.repositoryFactory.executeStatement(initCols, KEYSPACE_FIELD);
-        } else {
-            currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
-            newPairCount = currentPairCount + deltaScore;
-            Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
-            collector.emit(values);
-        }
+       
+        currentPairCount = (int) this.repositoryFactory.getFromRow(findCurrentScoreResult.one(), SCORE);
+        newPairCount = currentPairCount + deltaScore;
+        Values values = new Values(item1Id, item2Id, currentPairCount, newPairCount);
+        collector.emit(values);
             
         SimpleStatement updateScoreStatement = this.pairCountRepository.updateScore(item1Id, item2Id, newPairCount);
         this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);

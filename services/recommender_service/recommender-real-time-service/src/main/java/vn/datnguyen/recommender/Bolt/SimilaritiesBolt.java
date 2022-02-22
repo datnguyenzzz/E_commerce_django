@@ -62,6 +62,10 @@ public class SimilaritiesBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.similaritiesRepository = this.repositoryFactory.getSimilaritiesRepository();
+
+        SimpleStatement createTable = similaritiesRepository.createTableIfNotExists();
+        this.repositoryFactory.executeStatement(createTable, KEYSPACE_FIELD);
+        logger.info("************ SimilaritiesBolt *************: create table successfully ");
     }
 
     private void launchCassandraKeyspace() {
@@ -74,6 +78,7 @@ public class SimilaritiesBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** SimilaritiesBolt ****");
     }
+
     
     @Override
     public void execute(Tuple input) {
@@ -84,13 +89,14 @@ public class SimilaritiesBolt extends BaseRichBolt {
             String itemId = (String) input.getValueByField(ITEM_ID_FIELD);
             int oldItemCount = (int) input.getValueByField(OLD_ITEM_COUNT);
             int newItemCount = (int) input.getValueByField(NEW_ITEM_COUNT);
-            
+
             executeWhenItemCountUpdated(itemId, oldItemCount, newItemCount);
         } else if (inputSource.equals(PAIR_COUNT_BOLT)) {
             String item1Id = (String) input.getValueByField(ITEM_1_ID_FIELD);
             String item2Id = (String) input.getValueByField(ITEM_2_ID_FIELD);
             int oldPairCount = (int) input.getValueByField(OLD_PAIR_COUNT);
             int newPairCount = (int) input.getValueByField(NEW_PAIR_COUNT);
+
             executeWhenPairCountUpdated(item1Id, item2Id, oldPairCount, newPairCount);
         }
         collector.ack(input);
@@ -114,6 +120,10 @@ public class SimilaritiesBolt extends BaseRichBolt {
             logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + score);
             SimpleStatement updateScore = this.similaritiesRepository.updateScore(itemId, anotherItemId, score);
             allBatch.addStatement(updateScore);
+
+            if (itemId.equals(anotherItemId)) {
+                score *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);    
+            }
 
             logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + score);
             updateScore = this.similaritiesRepository.updateScore(anotherItemId, itemId, score);
