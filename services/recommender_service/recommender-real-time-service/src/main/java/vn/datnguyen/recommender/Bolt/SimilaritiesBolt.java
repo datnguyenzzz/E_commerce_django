@@ -50,7 +50,8 @@ public class SimilaritiesBolt extends BaseRichBolt {
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //
     private final static String ITEM_2_ID = "item_2_id";
-    private final static String SCORE = "score";
+    private final static String SCORE_ITEM_COUNT = "score_item_count";
+    private final static String SCORE_PAIR_COUNT = "score_pair_count";
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -113,20 +114,20 @@ public class SimilaritiesBolt extends BaseRichBolt {
 
         for (Row r: findByItem1Id) {
             String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
-            double score = (double) this.repositoryFactory.getFromRow(r, SCORE); 
+            double scoreItemCount = (double) this.repositoryFactory.getFromRow(r, SCORE_ITEM_COUNT); 
                 
-            score *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);
+            scoreItemCount *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);
 
-            logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + score);
-            SimpleStatement updateScore = this.similaritiesRepository.updateScore(itemId, anotherItemId, score);
+            logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + scoreItemCount);
+            SimpleStatement updateScore = this.similaritiesRepository.updateScoreItemCount(itemId, anotherItemId, scoreItemCount);
             allBatch.addStatement(updateScore);
 
             if (itemId.equals(anotherItemId)) {
-                score *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);    
+                scoreItemCount *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);    
             }
 
-            logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + score);
-            updateScore = this.similaritiesRepository.updateScore(anotherItemId, itemId, score);
+            logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + scoreItemCount);
+            updateScore = this.similaritiesRepository.updateScoreItemCount(anotherItemId, itemId, scoreItemCount);
             allBatch.addStatement(updateScore);
         }
         
@@ -140,10 +141,10 @@ public class SimilaritiesBolt extends BaseRichBolt {
         ResultSet findByResult = this.repositoryFactory.executeStatement(findByStatement, KEYSPACE_FIELD);
         List<Row> rowFound = findByResult.all(); 
 
-        double currentScore = (double) this.repositoryFactory.getFromRow(rowFound.get(0), SCORE);
-        currentScore *= 1.0f * newPairCount / Math.max(oldPairCount,1);
-        logger.info("************ SimilaritiesBolt *************: UPDATE PARICOUNT - " + item1Id + " - " + item2Id + " - " + currentScore);
-        SimpleStatement initScoreStatement = this.similaritiesRepository.updateScore(item1Id, item2Id, currentScore);
+        double currentScorePC = (double) this.repositoryFactory.getFromRow(rowFound.get(0), SCORE_PAIR_COUNT);
+        currentScorePC *= 1.0f * newPairCount / Math.max(oldPairCount,1);
+        logger.info("************ SimilaritiesBolt *************: UPDATE PARICOUNT - " + item1Id + " - " + item2Id + " - " + currentScorePC);
+        SimpleStatement initScoreStatement = this.similaritiesRepository.updateScorePairCount(item1Id, item2Id, currentScorePC);
         this.repositoryFactory.executeStatement(initScoreStatement, KEYSPACE_FIELD);
     }
     

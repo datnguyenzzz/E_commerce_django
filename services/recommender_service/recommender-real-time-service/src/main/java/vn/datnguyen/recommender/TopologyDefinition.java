@@ -58,7 +58,7 @@ public class TopologyDefinition {
     private static Config getConfig() {
         Config config = new Config();
         config.setDebug(true);
-        config.setMessageTimeoutSecs(1200);
+        config.setMessageTimeoutSecs(30);
         config.setNumWorkers(Integer.parseInt(TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);

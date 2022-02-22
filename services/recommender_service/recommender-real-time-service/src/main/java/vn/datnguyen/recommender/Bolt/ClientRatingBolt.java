@@ -114,16 +114,16 @@ public class ClientRatingBolt extends BaseRichBolt {
             ResultSet findAllResult = this.repositoryFactory.executeStatement(findAllStatement, KEYSPACE_FIELD);
             List<Row> findAll = findAllResult.all();
 
-            SimpleStatement insertScore = similaritiesRepository.initScore(itemId, itemId, 1.0);
+            SimpleStatement insertScore = similaritiesRepository.initScore(itemId, itemId, 1.0, 1.0);
             allBatch.addStatement(insertScore);
 
             for (Row r: findAll) {
                 String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
 
-                insertScore = similaritiesRepository.initScore(itemId, anotherItemId, 1.0);
+                insertScore = similaritiesRepository.initScore(itemId, anotherItemId, 1.0, 1.0);
                 allBatch.addStatement(insertScore);
 
-                insertScore = similaritiesRepository.initScore(anotherItemId, itemId, 1.0);
+                insertScore = similaritiesRepository.initScore(anotherItemId, itemId, 1.0, 1.0);
                 allBatch.addStatement(insertScore);
             }
 
