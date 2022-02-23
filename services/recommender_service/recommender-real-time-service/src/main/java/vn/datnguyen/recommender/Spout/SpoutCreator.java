@@ -25,7 +25,7 @@ public class SpoutCreator {
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
     private final static String TOPIC_FIELD = customProperties.getProp("TOPIC_FIELD");
-    private final static String VALUE_FIELD = customProperties.getProp("VALUE_FIELD");
+    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
 
     public SpoutCreator() {}
 
@@ -36,7 +36,7 @@ public class SpoutCreator {
     private KafkaSpoutConfig<String, String> kafkaAvroEventSpoutConfig() {
         ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
             (r) -> new Values(r.topic(), r.value()), 
-            new Fields(TOPIC_FIELD, VALUE_FIELD),
+            new Fields(TOPIC_FIELD, EVENT_FIELD),
             EVENTSOURCE_STREAM);
         
         //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});

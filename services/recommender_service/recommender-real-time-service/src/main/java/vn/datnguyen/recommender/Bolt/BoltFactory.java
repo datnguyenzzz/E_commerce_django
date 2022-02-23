@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt;
 
+
 import org.apache.storm.redis.common.config.JedisPoolConfig;
 
 import vn.datnguyen.recommender.utils.CustomProperties;
@@ -11,7 +12,8 @@ public class BoltFactory {
     //Redis configs
     private final static String REDIS_HOST = customProperties.getProp("REDIS_HOST");
     private final static String REDIS_PORT = customProperties.getProp("REDIS_PORT");
-    
+    //pair count
+
     public BoltFactory() {}
 
     public LoggerBolt creatLoggerBolt() {
@@ -44,5 +46,13 @@ public class BoltFactory {
 
     public PairCountBolt createPairCountBolt() {
         return new PairCountBolt();
+    }
+
+    public SimilaritiesBolt createSimilaritiesBolt() {
+        return new SimilaritiesBolt();
+    }
+
+    public NewRecordBolt createNewRecordBolt() {
+        return new NewRecordBolt();
     }
 }

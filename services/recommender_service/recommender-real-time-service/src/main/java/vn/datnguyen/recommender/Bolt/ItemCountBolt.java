@@ -35,14 +35,18 @@ public class ItemCountBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String OLD_RATING = customProperties.getProp("OLD_RATING");
-    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
+    private final static String OLD_ITEM_COUNT = customProperties.getProp("OLD_ITEM_COUNT");
+    private final static String NEW_ITEM_COUNT = customProperties.getProp("NEW_ITEM_COUNT");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //
+
 
     private RepositoryFactory repositoryFactory;
     private ItemCountRepository itemCountRepository;
@@ -60,12 +64,6 @@ public class ItemCountBolt extends BaseRichBolt {
 
         logger.info("CREATE AND USE KEYSPACE SUCCESSFULLY keyspace in **** ItemCountBolt ****");
     }
-
-    private void createTableIfNotExists() {
-        SimpleStatement rowCreationStatement = this.itemCountRepository.createRowIfNotExists();
-        ResultSet rowCreationResult = this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
-        logger.info("*** ItemCountBolt ****: " + "row creation status " + rowCreationResult.all());
-    }
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -73,12 +71,33 @@ public class ItemCountBolt extends BaseRichBolt {
 
         launchCassandraKeyspace();
         this.itemCountRepository = this.repositoryFactory.getItemCountRepository();
-        createTableIfNotExists();
+
+        SimpleStatement rowCreationStatement = itemCountRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(rowCreationStatement, KEYSPACE_FIELD);
+        logger.info("*** NewRecordBolt ****:  ItemCountTAble " + "row creation status ");
+    }
+
+    private void initItemCountTable(String itemId) {
+        SimpleStatement findOneStatement = itemCountRepository.findByItemId(itemId);
+        ResultSet findOneResult = this.repositoryFactory.executeStatement(findOneStatement, KEYSPACE_FIELD);
+
+        int rowFound = findOneResult.getAvailableWithoutFetching();
+
+        if (rowFound == 0) {
+            ItemCount itemCount = new ItemCount(itemId, 0);
+            SimpleStatement insertNewScoreStatement = itemCountRepository.insertNewScore(itemCount);
+            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + itemId);
+            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
+        }
+
     }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+
+        initItemCountTable(incomeEvent.getItemId());
+
         int oldRating = (int) input.getValueByField(OLD_RATING);
         int deltaRating = incomeEvent.getWeight() - oldRating;
 
@@ -90,35 +109,25 @@ public class ItemCountBolt extends BaseRichBolt {
         int rowFound = findOneResult.getAvailableWithoutFetching();
 
         logger.info("********* ItemCountBolt **********" + " rows found size = " + rowFound);
+        
+        int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
+        int newItemCountScore = currItemCount + deltaRating;
 
-        if (rowFound == 0) {
-            ItemCount itemCount = new ItemCount(incomeEvent.getItemId(), incomeEvent.getWeight());
-            SimpleStatement insertNewScoreStatement = this.itemCountRepository.insertNewScore(itemCount);
-            this.repositoryFactory.executeStatement(insertNewScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: inserted new score for itemId = " + incomeEvent.getItemId());
-            // emit to similarity
-            Values values = new Values(incomeEvent, incomeEvent.getWeight());
-            collector.emit(values);
-        } else {
-            int currItemCount = this.itemCountRepository.convertToPojo(findOneResult.one()).getScore();
-            int newItemCountScore = currItemCount + deltaRating;
-
-            logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
-            SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
-                incomeEvent.getItemId(), newItemCountScore);
+        logger.info("********* ItemCountBolt **********" + " current item count score = " + currItemCount);
+        SimpleStatement updateScoreStatement = this.itemCountRepository.updateScore(
+            incomeEvent.getItemId(), newItemCountScore);
             
-            this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
-            logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
-            // emit to similarity
-            Values values = new Values(incomeEvent, newItemCountScore);
-            collector.emit(values);
-        }
-
+        this.repositoryFactory.executeStatement(updateScoreStatement, KEYSPACE_FIELD);
+        logger.info("***** ItemCountBolt *******: updated score for itemId = " + incomeEvent.getItemId() + " with new score = " + newItemCountScore);
+        // emit to similarity
+        Values values = new Values(incomeEvent.getItemId(), currItemCount, newItemCountScore);
+        collector.emit(values);
+        
         collector.ack(input);
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, NEW_ITEM_COUNT));
+        declarer.declare(new Fields(ITEM_ID_FIELD, OLD_ITEM_COUNT, NEW_ITEM_COUNT));
     }
 }
