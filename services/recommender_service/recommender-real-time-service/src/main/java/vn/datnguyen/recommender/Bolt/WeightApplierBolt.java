@@ -18,8 +18,10 @@ import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
 import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
@@ -117,13 +119,15 @@ public class WeightApplierBolt extends BaseRichBolt {
             this.weight = Integer.parseInt(ADD_TO_CART_WEIGHT);
         }
         else if (eventType.equals(avroAddItemEvent)) {
-            this.clientId = null;
-            this.itemId = null;
+            AvroAddItem payload = (AvroAddItem) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
             this.weight = 0;
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
-            this.clientId = null;
-            this.itemId = null;
+            AvroDeleteItem payload = (AvroDeleteItem) event.getData();
+            this.clientId = payload.getClientId();
+            this.itemId = payload.getItemId();
             this.weight = 0;
         } 
         else {

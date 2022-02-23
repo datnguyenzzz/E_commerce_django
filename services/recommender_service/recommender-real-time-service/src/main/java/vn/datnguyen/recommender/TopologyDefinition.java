@@ -39,6 +39,7 @@ public class TopologyDefinition {
     private static final String PAIR_COUNT_BOLT = customProperties.getProp("PAIR_COUNT_BOLT");
     private static final String SIMILARITIES_BOLT = customProperties.getProp("SIMILARITIES_BOLT");
     private static final String NEW_RECORD_BOLT = customProperties.getProp("NEW_RECORD_BOLT");
+    //--
     //
     private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
@@ -105,6 +106,8 @@ public class TopologyDefinition {
             .setNumTasks(Integer.parseInt(SIMILARITIES_BOLT_TASKS))
             .fieldsGrouping(PAIR_COUNT_BOLT, new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD))
             .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
+
+        // content based
 
 
         Config tpConfig = getConfig();

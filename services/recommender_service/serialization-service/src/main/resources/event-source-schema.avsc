@@ -98,6 +98,30 @@
                             "name": "itemId", "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "AvroAddItem",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroDeleteItem",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "itemId", "type": "string"
+                        }
+                    ]
                 }
             ]
         }
