@@ -38,7 +38,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
-    private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
+    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
     //INCOME EVENT
     private final static String avroPublishRatingEvent = customProperties.getProp("avroPublishRatingEvent");
     private final static String avroUpdateRatingEvent = customProperties.getProp("avroUpdateRatingEvent");
@@ -127,7 +127,7 @@ public class WeightApplierBolt extends BaseRichBolt {
             applyWeight(event);
 
             Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
-            Values values = new Values(ouputEvent, this.clientId);
+            Values values = new Values(ouputEvent, this.itemId);
 
             collector.emit(values);
         }
@@ -137,6 +137,6 @@ public class WeightApplierBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, CLIENT_ID_FIELD));
+        declarer.declare(new Fields(EVENT_FIELD, ITEM_ID_FIELD));
     }
 }

@@ -49,6 +49,7 @@ public class SimilaritiesBolt extends BaseRichBolt {
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //
+    private final static String ITEM_1_ID = "item_1_id";
     private final static String ITEM_2_ID = "item_2_id";
     private final static String SCORE_ITEM_COUNT = "score_item_count";
     private final static String SCORE_PAIR_COUNT = "score_pair_count";
@@ -116,21 +117,37 @@ public class SimilaritiesBolt extends BaseRichBolt {
             String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_2_ID);
             double scoreItemCount = (double) this.repositoryFactory.getFromRow(r, SCORE_ITEM_COUNT); 
                 
-            scoreItemCount *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);
+            scoreItemCount *= Math.sqrt(newItemCount) / Math.max(Math.sqrt(oldItemCount),1.0);
+
+            if (itemId.equals(anotherItemId)) {
+                scoreItemCount *= Math.sqrt(newItemCount) / Math.max(Math.sqrt(oldItemCount),1.0);
+            }
 
             logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + itemId + " - " + anotherItemId + " - " + scoreItemCount);
             SimpleStatement updateScore = this.similaritiesRepository.updateScoreItemCount(itemId, anotherItemId, scoreItemCount);
             allBatch.addStatement(updateScore);
+        }
+
+        SimpleStatement findByItem2IdStatement = this.similaritiesRepository.findByItem2Id(itemId);
+        ResultSet findByItem2IdResult = this.repositoryFactory.executeStatement(findByItem2IdStatement, KEYSPACE_FIELD);
+        List<Row> findByItem2Id = findByItem2IdResult.all();
+
+        for (Row r: findByItem2Id) {
+            String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
+            double scoreItemCount = (double) this.repositoryFactory.getFromRow(r, SCORE_ITEM_COUNT); 
+                
+            scoreItemCount *= Math.sqrt(newItemCount) / Math.max(Math.sqrt(oldItemCount),1.0);
 
             if (itemId.equals(anotherItemId)) {
-                scoreItemCount *= Math.max(Math.sqrt(oldItemCount),1.0) / Math.sqrt(newItemCount);    
+                continue;
             }
 
             logger.info("************ SimilaritiesBolt *************: UPDATE ITEMCOUNT - " + anotherItemId + " - " + itemId + " - " + scoreItemCount);
-            updateScore = this.similaritiesRepository.updateScoreItemCount(anotherItemId, itemId, scoreItemCount);
+            SimpleStatement updateScore = this.similaritiesRepository.updateScoreItemCount(anotherItemId, itemId, scoreItemCount);
             allBatch.addStatement(updateScore);
+
         }
-        
+
         this.repositoryFactory.executeStatement(allBatch.build(), KEYSPACE_FIELD);
     }
 

@@ -51,4 +51,8 @@ public class BoltFactory {
     public SimilaritiesBolt createSimilaritiesBolt() {
         return new SimilaritiesBolt();
     }
+
+    public NewRecordBolt createNewRecordBolt() {
+        return new NewRecordBolt();
+    }
 }

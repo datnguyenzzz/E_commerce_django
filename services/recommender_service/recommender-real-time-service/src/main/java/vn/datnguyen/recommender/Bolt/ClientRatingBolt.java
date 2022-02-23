@@ -1,13 +1,8 @@
 package vn.datnguyen.recommender.Bolt;
 
-import java.util.List;
 import java.util.Map;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.BatchStatement;
-import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
-import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -25,7 +20,6 @@ import vn.datnguyen.recommender.Models.ClientRating;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
-import vn.datnguyen.recommender.Repository.SimilaritiesRepository;
 import vn.datnguyen.recommender.Repository.ClientRatingRepository;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -44,9 +38,6 @@ public class ClientRatingBolt extends BaseRichBolt {
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
-    //
-    private final static String ITEM_1_ID = "item_1_id";
-
 
     private RepositoryFactory repositoryFactory;
     private ClientRatingRepository clientRatingRepository;
@@ -95,48 +86,12 @@ public class ClientRatingBolt extends BaseRichBolt {
 
     }
 
-    private void initSimilaritiesTableWhenItemCountUpdate(String itemId) {
-        SimilaritiesRepository similaritiesRepository = this.repositoryFactory.getSimilaritiesRepository();
-
-        SimpleStatement createTable = similaritiesRepository.createTableIfNotExists();
-        this.repositoryFactory.executeStatement(createTable, KEYSPACE_FIELD);
-        logger.info("************ SimilaritiesBolt *************: create table successfully ");
-        //
-        SimpleStatement findByItem1IdStatement = similaritiesRepository.findByItem1Id(itemId);
-        ResultSet findByItem1IdResult = this.repositoryFactory.executeStatement(findByItem1IdStatement, KEYSPACE_FIELD);
-        List<Row> findByItem1Id = findByItem1IdResult.all();
-
-        BatchStatementBuilder allBatch = BatchStatement.builder(BatchType.LOGGED);
-
-        if (findByItem1Id.size() == 0) {
-            logger.info("************ SimilaritiesBolt *************: initSimilaritiesTableWhenItemCountUpdate itemId = " + itemId);
-            SimpleStatement findAllStatement = similaritiesRepository.findAllItemId();
-            ResultSet findAllResult = this.repositoryFactory.executeStatement(findAllStatement, KEYSPACE_FIELD);
-            List<Row> findAll = findAllResult.all();
-
-            SimpleStatement insertScore = similaritiesRepository.initScore(itemId, itemId, 1.0, 1.0);
-            allBatch.addStatement(insertScore);
-
-            for (Row r: findAll) {
-                String anotherItemId = (String) this.repositoryFactory.getFromRow(r, ITEM_1_ID);
-
-                insertScore = similaritiesRepository.initScore(itemId, anotherItemId, 1.0, 1.0);
-                allBatch.addStatement(insertScore);
-
-                insertScore = similaritiesRepository.initScore(anotherItemId, itemId, 1.0, 1.0);
-                allBatch.addStatement(insertScore);
-            }
-
-            this.repositoryFactory.executeStatement(allBatch.build(), KEYSPACE_FIELD);
-        }
-    }
     
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
         initClientRatingTable(incomeEvent.getClientId(), incomeEvent.getItemId());
-        initSimilaritiesTableWhenItemCountUpdate(incomeEvent.getItemId());
 
         ClientRating clientRating = new ClientRating(incomeEvent.getClientId(), incomeEvent.getItemId(), incomeEvent.getWeight());
         SimpleStatement findOneStatement = this.clientRatingRepository.findByClientIdAndItemId(
