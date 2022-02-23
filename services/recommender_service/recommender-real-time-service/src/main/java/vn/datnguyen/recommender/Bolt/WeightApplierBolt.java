@@ -36,6 +36,9 @@ public class WeightApplierBolt extends BaseRichBolt {
     public static CharsetDecoder decoder = charset.newDecoder();
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
+    //STREAM 
+    private final static String ITEM_BASED_STREAM = customProperties.getProp("ITEM_BASED_STREAM");
+    private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
@@ -46,6 +49,8 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String avroQueryRatingEvent = customProperties.getProp("avroQueryRatingEvent");
     private final static String avroBuyBehaviorEvent = customProperties.getProp("avroBuyBehaviorEvent");
     private final static String avroAddToCartBehaviorEvent = customProperties.getProp("avroAddToCartBehaviorEvent");
+    private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
+    private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     //WEIGHT VALUEs
     private final static String DELETE_RATING_EVENT_WEIGHT = customProperties.getProp("DELETE_RATING_EVENT_WEIGHT");
     private final static String QUERY_RATING_EVENT_WEIGHT = customProperties.getProp("QUERY_RATING_EVENT_WEIGHT");
@@ -111,6 +116,16 @@ public class WeightApplierBolt extends BaseRichBolt {
             this.itemId = payload.getItemId();
             this.weight = Integer.parseInt(ADD_TO_CART_WEIGHT);
         }
+        else if (eventType.equals(avroAddItemEvent)) {
+            this.clientId = null;
+            this.itemId = null;
+            this.weight = 0;
+        } 
+        else if (eventType.equals(avroDeleteItemEvent)) {
+            this.clientId = null;
+            this.itemId = null;
+            this.weight = 0;
+        } 
         else {
             logger.error("NOT EXIST EVENT");
             throw new FailedException("NOT EXIST EVENT");
@@ -129,7 +144,11 @@ public class WeightApplierBolt extends BaseRichBolt {
             Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
             Values values = new Values(ouputEvent, this.itemId);
 
-            collector.emit(values);
+            if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
+                collector.emit(CONTENT_BASED_STREAM, values);
+            } else {
+                collector.emit(ITEM_BASED_STREAM, values);
+            }
         }
 
         collector.ack(tuple);

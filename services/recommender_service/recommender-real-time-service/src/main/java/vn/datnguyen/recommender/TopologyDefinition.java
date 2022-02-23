@@ -27,6 +27,8 @@ public class TopologyDefinition {
     //private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
     //private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
     //STREAM
+    private final static String ITEM_BASED_STREAM = customProperties.getProp("ITEM_BASED_STREAM");
+    private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
     //IDs
     private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
@@ -71,6 +73,7 @@ public class TopologyDefinition {
     private static void createTopology() throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
+        // item based recommender
         topologyBuilder.setSpout(KAFKA_SPOUT, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD))
             .setNumTasks(Integer.parseInt(SPOUT_TASKS));
 
@@ -80,7 +83,7 @@ public class TopologyDefinition {
 
         topologyBuilder.setBolt(NEW_RECORD_BOLT, boltFactory.createNewRecordBolt(), Integer.parseInt(NEW_RECORD_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(NEW_RECORD_BOLT_TASKS))
-            .fieldsGrouping(WEIGHT_APPLIER_BOLT, new Fields(ITEM_ID_FIELD));
+            .fieldsGrouping(WEIGHT_APPLIER_BOLT, ITEM_BASED_STREAM, new Fields(ITEM_ID_FIELD));
         
         topologyBuilder.setBolt(CLIENT_RATING_BOLT, boltFactory.createClientRatingBolt(), Integer.parseInt(CLIENT_RATING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(CLIENT_RATING_BOLT_TASKS))
@@ -102,6 +105,7 @@ public class TopologyDefinition {
             .setNumTasks(Integer.parseInt(SIMILARITIES_BOLT_TASKS))
             .fieldsGrouping(PAIR_COUNT_BOLT, new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD))
             .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
+
 
         Config tpConfig = getConfig();
         StormSubmitter.submitTopology(TOPO_ID, tpConfig, topologyBuilder.createTopology());
