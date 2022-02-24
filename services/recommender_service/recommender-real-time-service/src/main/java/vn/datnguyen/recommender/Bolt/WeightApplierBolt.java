@@ -5,7 +5,12 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -18,6 +23,7 @@ import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
 import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
@@ -28,6 +34,9 @@ import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Repository.IndexesCoordRepository;
+import vn.datnguyen.recommender.Repository.KeyspaceRepository;
+import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.AvroEventScheme;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -44,6 +53,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
+    private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     //INCOME EVENT
     private final static String avroPublishRatingEvent = customProperties.getProp("avroPublishRatingEvent");
     private final static String avroUpdateRatingEvent = customProperties.getProp("avroUpdateRatingEvent");
@@ -58,12 +68,22 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String QUERY_RATING_EVENT_WEIGHT = customProperties.getProp("QUERY_RATING_EVENT_WEIGHT");
     private final static String BUY_EVENT_WEIGHT = customProperties.getProp("BUY_EVENT_WEIGHT");
     private final static String ADD_TO_CART_WEIGHT = customProperties.getProp("ADD_TO_CART_WEIGHT");
+    private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
+    private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
+    //CASSANDRA PROPS
+    private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
+    private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
+    private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
     private AvroEventScheme avroEventScheme = new AvroEventScheme();
     private String eventId, timestamp, eventType, clientId, itemId;
     private int weight;
+    private List<Integer> coord;
+
+    private RepositoryFactory repositoryFactory;
+    private IndexesCoordRepository indexesCoordRepository;
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -122,18 +142,63 @@ public class WeightApplierBolt extends BaseRichBolt {
             AvroAddItem payload = (AvroAddItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
-            this.weight = 0;
+
+            this.coord = new ArrayList<Integer>();
+            this.coord.add(payload.getProperties1());
+            this.coord.add(payload.getProperties2());
+            this.coord.add(payload.getProperties3());
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
             AvroDeleteItem payload = (AvroDeleteItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
-            this.weight = 0;
+            
+            this.coord = new ArrayList<Integer>();
+            this.coord.add(payload.getProperties1());
+            this.coord.add(payload.getProperties2());
+            this.coord.add(payload.getProperties3());
         } 
         else {
             logger.error("NOT EXIST EVENT");
             throw new FailedException("NOT EXIST EVENT");
         }
+    }
+
+    private void launchCassandraKeyspace() {
+        CassandraConnector connector = new CassandraConnector();
+        connector.connect(CASS_NODE, Integer.parseInt(CASS_PORT), CASS_DATA_CENTER);
+        CqlSession session = connector.getSession();
+
+        this.repositoryFactory = new RepositoryFactory(session);
+        KeyspaceRepository keyspaceRepository = this.repositoryFactory.getKeyspaceRepository();
+        keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
+    }
+
+    private void createIndexCoordTable() {
+        SimpleStatement createIndexesCoordStatement = indexesCoordRepository.createRowIfNotExists();
+        this.repositoryFactory.executeStatement(createIndexesCoordStatement, KEYSPACE_FIELD);
+    }
+   
+    private void testedCentreCoord() {
+        /**
+         * Tested Centre coord
+         */
+        List<Integer> coord = new ArrayList<Integer>();
+        coord.add(0); coord.add(0); coord.add(0);
+        SimpleStatement initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
+
+        coord.set(0, 10); 
+        initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
+
+        coord.set(0, -10); 
+        initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
+    }
+
+    private int findCentreId(List<Integer> itemProp) {
+        return 0;
     }
     
     @Override
@@ -146,11 +211,20 @@ public class WeightApplierBolt extends BaseRichBolt {
             applyWeight(event);
 
             Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
-            Values values = new Values(ouputEvent, this.itemId);
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
+                launchCassandraKeyspace();
+                this.indexesCoordRepository = repositoryFactory.getIndexesCoordRepository();
+                createIndexCoordTable();
+
+                //tested centre cooord 
+                testedCentreCoord();
+
+                int centreId = findCentreId(this.coord);
+                Values values = new Values(ouputEvent, null, centreId);
                 collector.emit(CONTENT_BASED_STREAM, values);
             } else {
+                Values values = new Values(ouputEvent, this.itemId, null);
                 collector.emit(ITEM_BASED_STREAM, values);
             }
         }
@@ -160,6 +234,6 @@ public class WeightApplierBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, ITEM_ID_FIELD));
+        declarer.declare(new Fields(EVENT_FIELD, ITEM_ID_FIELD, CENTRE_ID_FIELD));
     }
 }

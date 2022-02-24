@@ -10,11 +10,14 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8563239507155168803L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroDeleteItem\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}");
+  private static final long serialVersionUID = -6284180235331361657L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AvroDeleteItem\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"properties_1\",\"type\":\"int\"},{\"name\":\"properties_2\",\"type\":\"int\"},{\"name\":\"properties_3\",\"type\":\"int\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String clientId;
   @Deprecated public java.lang.String itemId;
+  @Deprecated public int properties_1;
+  @Deprecated public int properties_2;
+  @Deprecated public int properties_3;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -27,10 +30,16 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
    * All-args constructor.
    * @param clientId The new value for clientId
    * @param itemId The new value for itemId
+   * @param properties_1 The new value for properties_1
+   * @param properties_2 The new value for properties_2
+   * @param properties_3 The new value for properties_3
    */
-  public AvroDeleteItem(java.lang.String clientId, java.lang.String itemId) {
+  public AvroDeleteItem(java.lang.String clientId, java.lang.String itemId, java.lang.Integer properties_1, java.lang.Integer properties_2, java.lang.Integer properties_3) {
     this.clientId = clientId;
     this.itemId = itemId;
+    this.properties_1 = properties_1;
+    this.properties_2 = properties_2;
+    this.properties_3 = properties_3;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
@@ -39,6 +48,9 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
     switch (field$) {
     case 0: return clientId;
     case 1: return itemId;
+    case 2: return properties_1;
+    case 3: return properties_2;
+    case 4: return properties_3;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -49,6 +61,9 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
     switch (field$) {
     case 0: clientId = (java.lang.String)value$; break;
     case 1: itemId = (java.lang.String)value$; break;
+    case 2: properties_1 = (java.lang.Integer)value$; break;
+    case 3: properties_2 = (java.lang.Integer)value$; break;
+    case 4: properties_3 = (java.lang.Integer)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -86,6 +101,54 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
   }
 
   /**
+   * Gets the value of the 'properties_1' field.
+   * @return The value of the 'properties_1' field.
+   */
+  public java.lang.Integer getProperties1() {
+    return properties_1;
+  }
+
+  /**
+   * Sets the value of the 'properties_1' field.
+   * @param value the value to set.
+   */
+  public void setProperties1(java.lang.Integer value) {
+    this.properties_1 = value;
+  }
+
+  /**
+   * Gets the value of the 'properties_2' field.
+   * @return The value of the 'properties_2' field.
+   */
+  public java.lang.Integer getProperties2() {
+    return properties_2;
+  }
+
+  /**
+   * Sets the value of the 'properties_2' field.
+   * @param value the value to set.
+   */
+  public void setProperties2(java.lang.Integer value) {
+    this.properties_2 = value;
+  }
+
+  /**
+   * Gets the value of the 'properties_3' field.
+   * @return The value of the 'properties_3' field.
+   */
+  public java.lang.Integer getProperties3() {
+    return properties_3;
+  }
+
+  /**
+   * Sets the value of the 'properties_3' field.
+   * @param value the value to set.
+   */
+  public void setProperties3(java.lang.Integer value) {
+    this.properties_3 = value;
+  }
+
+  /**
    * Creates a new AvroDeleteItem RecordBuilder.
    * @return A new AvroDeleteItem RecordBuilder
    */
@@ -119,6 +182,9 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
 
     private java.lang.String clientId;
     private java.lang.String itemId;
+    private int properties_1;
+    private int properties_2;
+    private int properties_3;
 
     /** Creates a new Builder */
     private Builder() {
@@ -139,6 +205,18 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
         this.itemId = data().deepCopy(fields()[1].schema(), other.itemId);
         fieldSetFlags()[1] = true;
       }
+      if (isValidValue(fields()[2], other.properties_1)) {
+        this.properties_1 = data().deepCopy(fields()[2].schema(), other.properties_1);
+        fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.properties_2)) {
+        this.properties_2 = data().deepCopy(fields()[3].schema(), other.properties_2);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.properties_3)) {
+        this.properties_3 = data().deepCopy(fields()[4].schema(), other.properties_3);
+        fieldSetFlags()[4] = true;
+      }
     }
 
     /**
@@ -154,6 +232,18 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
       if (isValidValue(fields()[1], other.itemId)) {
         this.itemId = data().deepCopy(fields()[1].schema(), other.itemId);
         fieldSetFlags()[1] = true;
+      }
+      if (isValidValue(fields()[2], other.properties_1)) {
+        this.properties_1 = data().deepCopy(fields()[2].schema(), other.properties_1);
+        fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.properties_2)) {
+        this.properties_2 = data().deepCopy(fields()[3].schema(), other.properties_2);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.properties_3)) {
+        this.properties_3 = data().deepCopy(fields()[4].schema(), other.properties_3);
+        fieldSetFlags()[4] = true;
       }
     }
 
@@ -235,12 +325,129 @@ public class AvroDeleteItem extends org.apache.avro.specific.SpecificRecordBase 
       return this;
     }
 
+    /**
+      * Gets the value of the 'properties_1' field.
+      * @return The value.
+      */
+    public java.lang.Integer getProperties1() {
+      return properties_1;
+    }
+
+    /**
+      * Sets the value of the 'properties_1' field.
+      * @param value The value of 'properties_1'.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder setProperties1(int value) {
+      validate(fields()[2], value);
+      this.properties_1 = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'properties_1' field has been set.
+      * @return True if the 'properties_1' field has been set, false otherwise.
+      */
+    public boolean hasProperties1() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'properties_1' field.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder clearProperties1() {
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'properties_2' field.
+      * @return The value.
+      */
+    public java.lang.Integer getProperties2() {
+      return properties_2;
+    }
+
+    /**
+      * Sets the value of the 'properties_2' field.
+      * @param value The value of 'properties_2'.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder setProperties2(int value) {
+      validate(fields()[3], value);
+      this.properties_2 = value;
+      fieldSetFlags()[3] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'properties_2' field has been set.
+      * @return True if the 'properties_2' field has been set, false otherwise.
+      */
+    public boolean hasProperties2() {
+      return fieldSetFlags()[3];
+    }
+
+
+    /**
+      * Clears the value of the 'properties_2' field.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder clearProperties2() {
+      fieldSetFlags()[3] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'properties_3' field.
+      * @return The value.
+      */
+    public java.lang.Integer getProperties3() {
+      return properties_3;
+    }
+
+    /**
+      * Sets the value of the 'properties_3' field.
+      * @param value The value of 'properties_3'.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder setProperties3(int value) {
+      validate(fields()[4], value);
+      this.properties_3 = value;
+      fieldSetFlags()[4] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'properties_3' field has been set.
+      * @return True if the 'properties_3' field has been set, false otherwise.
+      */
+    public boolean hasProperties3() {
+      return fieldSetFlags()[4];
+    }
+
+
+    /**
+      * Clears the value of the 'properties_3' field.
+      * @return This builder.
+      */
+    public vn.datnguyen.recommender.AvroClasses.AvroDeleteItem.Builder clearProperties3() {
+      fieldSetFlags()[4] = false;
+      return this;
+    }
+
     @Override
     public AvroDeleteItem build() {
       try {
         AvroDeleteItem record = new AvroDeleteItem();
         record.clientId = fieldSetFlags()[0] ? this.clientId : (java.lang.String) defaultValue(fields()[0]);
         record.itemId = fieldSetFlags()[1] ? this.itemId : (java.lang.String) defaultValue(fields()[1]);
+        record.properties_1 = fieldSetFlags()[2] ? this.properties_1 : (java.lang.Integer) defaultValue(fields()[2]);
+        record.properties_2 = fieldSetFlags()[3] ? this.properties_2 : (java.lang.Integer) defaultValue(fields()[3]);
+        record.properties_3 = fieldSetFlags()[4] ? this.properties_3 : (java.lang.Integer) defaultValue(fields()[4]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

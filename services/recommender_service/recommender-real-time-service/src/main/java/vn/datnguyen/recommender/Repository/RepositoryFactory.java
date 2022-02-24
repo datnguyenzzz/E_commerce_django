@@ -67,6 +67,10 @@ public class RepositoryFactory {
         return new SimilaritiesRepository();
     }
 
+    public IndexesCoordRepository getIndexesCoordRepository() {
+        return new IndexesCoordRepository();
+    }
+
     /**
      * 
      * @param statement

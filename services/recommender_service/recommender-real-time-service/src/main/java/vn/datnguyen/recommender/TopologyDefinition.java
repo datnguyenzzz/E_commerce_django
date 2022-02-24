@@ -48,6 +48,7 @@ public class TopologyDefinition {
     private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
     private final static String ITEM_2_ID_FIELD = customProperties.getProp("ITEM_2_ID_FIELD");
     private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
+    private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     //Tasks size 
     private final static String SPOUT_TASKS = customProperties.getProp("SPOUT_TASKS");
     private final static String WEIGHT_APPLIER_BOLT_TASKS = customProperties.getProp("WEIGHT_APPLIER_BOLT_TASKS");
@@ -115,7 +116,7 @@ public class TopologyDefinition {
         // content based
         topologyBuilder.setBolt(DISPATCHER_BOLT, null, Integer.parseInt(DISPATCHER_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(DISPATCHER_BOLT_TASKS))
-            .fieldsGrouping(WEIGHT_APPLIER_BOLT, CONTENT_BASED_STREAM, new Fields(ITEM_ID_FIELD));
+            .fieldsGrouping(WEIGHT_APPLIER_BOLT, CONTENT_BASED_STREAM, new Fields(CENTRE_ID_FIELD));
 
         Config tpConfig = getConfig();
         StormSubmitter.submitTopology(TOPO_ID, tpConfig, topologyBuilder.createTopology());

@@ -108,6 +108,15 @@
                         },
                         {
                             "name": "itemId", "type": "string"
+                        },
+                        {
+                            "name": "properties_1", "type": "int"
+                        },
+                        {
+                            "name": "properties_2", "type": "int"
+                        },
+                        {
+                            "name": "properties_3", "type": "int"
                         }
                     ]
                 },
@@ -120,6 +129,15 @@
                         },
                         {
                             "name": "itemId", "type": "string"
+                        },
+                        {
+                            "name": "properties_1", "type": "int"
+                        },
+                        {
+                            "name": "properties_2", "type": "int"
+                        },
+                        {
+                            "name": "properties_3", "type": "int"
                         }
                     ]
                 }
