@@ -24,6 +24,8 @@ public class TopologyDefinition {
     private static final String PAIR_COUNT_BOLT_THREADS = customProperties.getProp("PAIR_COUNT_BOLT_THREADS");
     private static final String SIMILARITIES_BOLT_THREADS = customProperties.getProp("SIMILARITIES_BOLT_THREADS");
     private static final String NEW_RECORD_BOLT_THREADS = customProperties.getProp("NEW_RECORD_BOLT_THREADS");
+    //---
+    private static final String DISPATCHER_BOLT_THREADS = customProperties.getProp("DISPATCHER_BOLT_THREADS");
     //private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
     //private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
     //STREAM
@@ -40,6 +42,7 @@ public class TopologyDefinition {
     private static final String SIMILARITIES_BOLT = customProperties.getProp("SIMILARITIES_BOLT");
     private static final String NEW_RECORD_BOLT = customProperties.getProp("NEW_RECORD_BOLT");
     //--
+    private static final String DISPATCHER_BOLT = customProperties.getProp("DISPATCHER_BOLT");
     //
     private final static String CLIENT_ID_FIELD = customProperties.getProp("CLIENT_ID_FIELD");
     private final static String ITEM_1_ID_FIELD = customProperties.getProp("ITEM_1_ID_FIELD");
@@ -54,6 +57,8 @@ public class TopologyDefinition {
     private final static String PAIR_COUNT_BOLT_TASKS = customProperties.getProp("PAIR_COUNT_BOLT_TASKS");
     private final static String SIMILARITIES_BOLT_TASKS = customProperties.getProp("SIMILARITIES_BOLT_TASKS");
     private static final String NEW_RECORD_BOLT_TASKS = customProperties.getProp("NEW_RECORD_BOLT_TASKS");
+    //--
+    private static final String DISPATCHER_BOLT_TASKS = customProperties.getProp("DISPATCHER_BOLT_TASKS");
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
     //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private final static String TOPO_ID = customProperties.getProp("TOPO_ID");
@@ -108,7 +113,9 @@ public class TopologyDefinition {
             .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
 
         // content based
-
+        topologyBuilder.setBolt(DISPATCHER_BOLT, null, Integer.parseInt(DISPATCHER_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(DISPATCHER_BOLT_TASKS))
+            .fieldsGrouping(WEIGHT_APPLIER_BOLT, CONTENT_BASED_STREAM, new Fields(ITEM_ID_FIELD));
 
         Config tpConfig = getConfig();
         StormSubmitter.submitTopology(TOPO_ID, tpConfig, topologyBuilder.createTopology());
