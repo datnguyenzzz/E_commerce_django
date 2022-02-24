@@ -1,6 +1,7 @@
 package vn.datnguyen.recommender.Repository;
 
 
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
@@ -118,4 +119,9 @@ public class RepositoryFactory {
     public Object getFromRow(Row row, String col) {
         return row.getObject(col);
     }
+
+    public List<Integer> getListFromRow(Row row, String col) {
+        return row.getList(col, Integer.class);
+    }
+
 }

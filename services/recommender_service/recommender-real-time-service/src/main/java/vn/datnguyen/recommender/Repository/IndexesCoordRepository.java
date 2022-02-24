@@ -26,4 +26,9 @@ public class IndexesCoordRepository implements IndexesCoordInterface {
             .value(CENTRE_COORD, QueryBuilder.literal(coord))
             .build();
     }
+
+    public SimpleStatement selectAllCentre() {
+        return QueryBuilder.selectFrom(INDEXES_COORD_ROW).all()
+            .build();
+    }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -74,6 +75,9 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //
+    private final static String CENTRE_ID = "centre_id";
+    private final static String CENTRE_COORD = "centre_coord";
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
@@ -197,8 +201,33 @@ public class WeightApplierBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
     }
 
+    private double distance(List<Integer> a, List<Integer> b) {
+        double s = 0; 
+        for (int i = 0; i<a.size(); i++) {
+            s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
+        }
+
+        return Math.sqrt(s);
+    }
+
     private int findCentreId(List<Integer> itemProp) {
-        return 0;
+        SimpleStatement findAllCentreStatement = this.indexesCoordRepository.selectAllCentre();
+        List<Row> findAllCentre = this.repositoryFactory.executeStatement(findAllCentreStatement, KEYSPACE_FIELD).all();
+
+        double minDist = Double.MAX_VALUE;
+        int centreId=0;
+
+        for (Row r: findAllCentre) {
+            int id = (int) this.repositoryFactory.getFromRow(r, CENTRE_ID);
+            List<Integer> centreCoord = this.repositoryFactory.getListFromRow(r, CENTRE_COORD);
+
+            if (minDist > distance(centreCoord, itemProp)) {
+                minDist = distance(centreCoord, itemProp); 
+                centreId = id;
+            }
+
+        }
+        return centreId;
     }
     
     @Override
