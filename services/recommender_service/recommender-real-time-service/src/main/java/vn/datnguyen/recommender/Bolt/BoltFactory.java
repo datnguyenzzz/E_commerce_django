@@ -55,4 +55,8 @@ public class BoltFactory {
     public NewRecordBolt createNewRecordBolt() {
         return new NewRecordBolt();
     }
+
+    public DispatcherBolt createDispatcherBolt() {
+        return new DispatcherBolt();
+    }
 }

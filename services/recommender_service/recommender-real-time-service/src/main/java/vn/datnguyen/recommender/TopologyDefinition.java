@@ -114,7 +114,7 @@ public class TopologyDefinition {
             .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
 
         // content based
-        topologyBuilder.setBolt(DISPATCHER_BOLT, null, Integer.parseInt(DISPATCHER_BOLT_THREADS))
+        topologyBuilder.setBolt(DISPATCHER_BOLT, boltFactory.createDispatcherBolt(), Integer.parseInt(DISPATCHER_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(DISPATCHER_BOLT_TASKS))
             .fieldsGrouping(WEIGHT_APPLIER_BOLT, CONTENT_BASED_STREAM, new Fields(CENTRE_ID_FIELD));
 

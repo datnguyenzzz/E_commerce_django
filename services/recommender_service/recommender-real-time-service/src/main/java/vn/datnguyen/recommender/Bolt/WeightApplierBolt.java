@@ -187,17 +187,17 @@ public class WeightApplierBolt extends BaseRichBolt {
         /**
          * Tested Centre coord
          */
-        List<Integer> coord = new ArrayList<Integer>();
-        coord.add(0); coord.add(0); coord.add(0);
-        SimpleStatement initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        List<Integer> centreCoord = new ArrayList<Integer>();
+        centreCoord.add(0); centreCoord.add(0); centreCoord.add(0);
+        SimpleStatement initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
 
-        coord.set(0, 10); 
-        initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        centreCoord.set(0, 5); 
+        initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
 
-        coord.set(0, -10); 
-        initCoord = this.indexesCoordRepository.insertNewIndex(0, coord);
+        centreCoord.set(0, -5); 
+        initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
     }
 
