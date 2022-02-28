@@ -84,7 +84,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     private AvroEventScheme avroEventScheme = new AvroEventScheme();
     private String eventId, timestamp, eventType, clientId, itemId;
     private int weight;
-    private List<Integer> coord;
+    private List<Integer> coord = null;
 
     private RepositoryFactory repositoryFactory;
     private IndexesCoordRepository indexesCoordRepository;
@@ -92,6 +92,15 @@ public class WeightApplierBolt extends BaseRichBolt {
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
+
+        launchCassandraKeyspace();
+        this.indexesCoordRepository = repositoryFactory.getIndexesCoordRepository();
+        createIndexCoordTable();
+
+        //initial Centre coord 
+        //they're suppose to be K-cluster of training dataset
+        testedCentreCoord();
+        //
     }
 
     private static ByteBuffer str_to_bb(String msg){
@@ -186,15 +195,16 @@ public class WeightApplierBolt extends BaseRichBolt {
          */
         List<Integer> centreCoord = new ArrayList<Integer>();
         centreCoord.add(0); centreCoord.add(0); centreCoord.add(0);
-        SimpleStatement initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
+        int rowId = 0;
+        SimpleStatement initCoord = this.indexesCoordRepository.insertNewIndex(rowId++, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
 
         centreCoord.set(0, 5); 
-        initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
+        initCoord = this.indexesCoordRepository.insertNewIndex(rowId++, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
 
         centreCoord.set(0, -5); 
-        initCoord = this.indexesCoordRepository.insertNewIndex(0, centreCoord);
+        initCoord = this.indexesCoordRepository.insertNewIndex(rowId++, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
     }
 
@@ -239,19 +249,11 @@ public class WeightApplierBolt extends BaseRichBolt {
             Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight, this.coord);
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
-                launchCassandraKeyspace();
-                this.indexesCoordRepository = repositoryFactory.getIndexesCoordRepository();
-                createIndexCoordTable();
-
-                //tested centre cooord 
-                testedCentreCoord();
-                //
-
                 int centreId = findCentreId(this.coord);
-                Values values = new Values(ouputEvent, null, centreId);
+                Values values = new Values(ouputEvent,centreId);
                 collector.emit(CONTENT_BASED_STREAM, values);
             } else {
-                Values values = new Values(ouputEvent, this.itemId, null);
+                Values values = new Values(ouputEvent, this.itemId);
                 collector.emit(ITEM_BASED_STREAM, values);
             }
         }
@@ -261,6 +263,7 @@ public class WeightApplierBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_FIELD, ITEM_ID_FIELD, CENTRE_ID_FIELD));
+        declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
+        declarer.declareStream(ITEM_BASED_STREAM, new Fields(EVENT_FIELD, ITEM_ID_FIELD));
     }
 }
