@@ -33,7 +33,8 @@ public class DispatcherBolt extends BaseRichBolt {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
 
-        logger.info("********* DispatcherBolt **********" + incomeEvent + " with centre ID = " + centreId);
+        logger.info("********* DispatcherBolt **********" + incomeEvent + " with centre ID = " + centreId 
+                    + " with event coord = " + incomeEvent.getCoord() );
         collector.ack(input);
     }
     

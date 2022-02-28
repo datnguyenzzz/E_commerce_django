@@ -146,6 +146,7 @@ public class WeightApplierBolt extends BaseRichBolt {
             AvroAddItem payload = (AvroAddItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
+            this.weight = 0;
 
             this.coord = new ArrayList<Integer>();
             this.coord.add(payload.getProperties1());
@@ -156,6 +157,7 @@ public class WeightApplierBolt extends BaseRichBolt {
             AvroDeleteItem payload = (AvroDeleteItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
+            this.weight = 0;
         } 
         else {
             logger.error("NOT EXIST EVENT");
@@ -234,7 +236,7 @@ public class WeightApplierBolt extends BaseRichBolt {
         if (event.getEventId() != null && event.getEventId() != "") {
             applyWeight(event);
 
-            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight);
+            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight, this.coord);
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
                 launchCassandraKeyspace();
@@ -243,6 +245,7 @@ public class WeightApplierBolt extends BaseRichBolt {
 
                 //tested centre cooord 
                 testedCentreCoord();
+                //
 
                 int centreId = findCentreId(this.coord);
                 Values values = new Values(ouputEvent, null, centreId);
