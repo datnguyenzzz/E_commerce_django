@@ -1,10 +1,10 @@
 package vn.datnguyen.recommender.Domain;
 
-public class AddItem extends Command {
+public class AddItemCommand extends Command {
     private String itemId, clientId;
     private int property1, property2, property3;
     
-    public AddItem(String clientId, String itemId, int property1, int property2, int property3) {
+    public AddItemCommand(String clientId, String itemId, int property1, int property2, int property3) {
         this.itemId = itemId;
         this.clientId = clientId;
         this.property1 = property1;

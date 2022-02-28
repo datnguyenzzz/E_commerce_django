@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import vn.datnguyen.recommender.Domain.AddItem;
-import vn.datnguyen.recommender.Domain.DeleteItem;
+import vn.datnguyen.recommender.Domain.AddItemCommand;
+import vn.datnguyen.recommender.Domain.DeleteItemCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
 import vn.datnguyen.recommender.Handler.RatingService;
 
@@ -48,7 +48,7 @@ public class ApiController {
     }
 
     @PostMapping("/testing/item")
-    public CompletableFuture<ResponseEntity<String>> AddNewItem(@Validated @RequestBody AddItem command) {
+    public CompletableFuture<ResponseEntity<String>> AddNewItem(@Validated @RequestBody AddItemCommand command) {
         logger.info("TESTING-RATING-SERVICE: " + "Add item command = " + command.toString());
 
         return ratingService.process(command)
@@ -64,7 +64,7 @@ public class ApiController {
     }
 
     @DeleteMapping("/testing/item")
-    public CompletableFuture<ResponseEntity<String>> DeleteItem(@Validated @RequestBody DeleteItem command) {
+    public CompletableFuture<ResponseEntity<String>> DeleteItem(@Validated @RequestBody DeleteItemCommand command) {
         logger.info("TESTING-RATING-SERVICE: " + "Delete item command = " + command.toString());
 
         return ratingService.process(command)
