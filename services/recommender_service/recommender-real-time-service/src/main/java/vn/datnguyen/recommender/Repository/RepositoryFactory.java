@@ -72,6 +72,10 @@ public class RepositoryFactory {
         return new IndexesCoordRepository();
     }
 
+    public BoundedRingRepository getBoundedRingRepository() {
+        return new BoundedRingRepository();
+    }
+
     /**
      * 
      * @param statement
