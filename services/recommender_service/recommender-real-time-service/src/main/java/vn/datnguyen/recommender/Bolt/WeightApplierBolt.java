@@ -156,11 +156,6 @@ public class WeightApplierBolt extends BaseRichBolt {
             AvroDeleteItem payload = (AvroDeleteItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
-            
-            this.coord = new ArrayList<Integer>();
-            this.coord.add(payload.getProperties1());
-            this.coord.add(payload.getProperties2());
-            this.coord.add(payload.getProperties3());
         } 
         else {
             logger.error("NOT EXIST EVENT");

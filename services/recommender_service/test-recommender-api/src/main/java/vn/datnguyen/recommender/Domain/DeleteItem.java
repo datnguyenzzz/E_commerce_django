@@ -1,9 +1,9 @@
 package vn.datnguyen.recommender.Domain;
 
-public class RemoveItem extends Command {
+public class DeleteItem extends Command {
     private String itemId, clientId;
     
-    public RemoveItem(String clientId, String itemId) {
+    public DeleteItem(String clientId, String itemId) {
         this.itemId = itemId;
         this.clientId = clientId;
     }
