@@ -21,6 +21,9 @@ public class DispatcherBolt extends BaseRichBolt {
     //VALUE FIELDS
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    //incoming event 
+    private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
+    private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     private OutputCollector collector;
     
     @Override
@@ -31,10 +34,18 @@ public class DispatcherBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        String eventType = incomeEvent.getEventType();
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
 
         logger.info("********* DispatcherBolt **********" + incomeEvent + " with centre ID = " + centreId 
                     + " with event coord = " + incomeEvent.getCoord() );
+
+        if (eventType.equals(avroAddItemEvent)) {
+
+        } 
+        else if (eventType.equals(avroDeleteItemEvent)) {
+
+        }
         collector.ack(input);
     }
     

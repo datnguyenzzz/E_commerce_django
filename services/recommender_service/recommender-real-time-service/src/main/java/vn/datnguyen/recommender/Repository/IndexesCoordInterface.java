@@ -8,4 +8,5 @@ public interface IndexesCoordInterface {
     SimpleStatement createRowIfNotExists();
     SimpleStatement insertNewIndex(int id, List<Integer> coord);
     SimpleStatement selectAllCentre();
+    SimpleStatement selectCentreById(int id);
 }
