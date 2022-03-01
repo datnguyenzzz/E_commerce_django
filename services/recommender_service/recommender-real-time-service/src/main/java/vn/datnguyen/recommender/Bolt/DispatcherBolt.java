@@ -6,6 +6,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
+import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
@@ -93,10 +96,10 @@ public class DispatcherBolt extends BaseRichBolt {
                     + " with centre coordinate = " + centreCoord);
 
         if (eventType.equals(avroAddItemEvent)) {
-            addDatatoToCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
+            addDataToCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
-            deleteDatatoFromCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
+            deleteDataFromCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
         }
         collector.ack(input);
     }
@@ -110,7 +113,7 @@ public class DispatcherBolt extends BaseRichBolt {
         return Math.sqrt(s);
     }
 
-    private void addDatatoToCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+    private void addDataToCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
         //
         SortedSet<Double> sortedRangeList = new TreeSet<>();
         for (double ubRange: centreUBRangeList) {
@@ -118,19 +121,28 @@ public class DispatcherBolt extends BaseRichBolt {
         }
 
         double dist = distance(eventCoord, centreCoord);
-
         SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
 
+        BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
         if (distGreaterList.size() == 0) {
             // add new bounded ring
-            int maxRingId = centreUBRangeList.size() - 1; 
+            int ringId = centreUBRangeList.size();
+            double lbRange = sortedRangeList.size() == 0 
+                            ? 0.0
+                            : sortedRangeList.last();
+            double ubRange = dist;
+            
+            SimpleStatement addNewBoundedRingStatement = 
+                this.boundedRingRepository.addNewBoundedRing(ringId, centreId, lbRange, ubRange);
+            
+            addDataToCentre.addStatement(addNewBoundedRingStatement);
 
         } else {
-
+            
         }
     }
 
-    private void deleteDatatoFromCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+    private void deleteDataFromCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
         //
     }
 
