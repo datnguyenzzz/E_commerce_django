@@ -1,9 +1,11 @@
 package vn.datnguyen.recommender.Repository;
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 
 public class BoundedRingRepository implements BoundedRingInterface {
     private final static String BOUNDED_RING_ROW = "bounded_ring_row";
@@ -33,4 +35,15 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .value(CAPACITY, QueryBuilder.literal(0))
             .build();
     }
+
+    public SimpleStatement findBoundedRingById(int ringId, int centreId) {
+        return QueryBuilder.selectFrom(BOUNDED_RING_ROW).all()
+            .where(
+                Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId))
+            )
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
+    }
+
+    
 }

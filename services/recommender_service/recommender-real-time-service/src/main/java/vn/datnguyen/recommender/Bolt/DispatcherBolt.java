@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -18,6 +19,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ public class DispatcherBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
+    private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -48,6 +51,9 @@ public class DispatcherBolt extends BaseRichBolt {
     //
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
+    // stream 
+    private final static String ADD_DATA_TO_CENTRE_STREAM = customProperties.getProp("ADD_DATA_TO_CENTRE_STREAM");
+    private final static String DELETE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("DELETE_DATA_FROM_CENTRE_STREAM");
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -95,11 +101,14 @@ public class DispatcherBolt extends BaseRichBolt {
                     + " list of upperbound range = " + centreUBRangeList
                     + " with centre coordinate = " + centreCoord);
 
+        int selectedRing = findBoundedRing(centreId, centreCoord, centreUBRangeList, eventCoord);
+        Values values = new Values(incomeEvent, centreId, selectedRing);
+
         if (eventType.equals(avroAddItemEvent)) {
-            addDataToCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
+            collector.emit(ADD_DATA_TO_CENTRE_STREAM, values);
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
-            deleteDataFromCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
+            collector.emit(DELETE_DATA_FROM_CENTRE_STREAM, values);
         }
         collector.ack(input);
     }
@@ -113,21 +122,26 @@ public class DispatcherBolt extends BaseRichBolt {
         return Math.sqrt(s);
     }
 
-    private void addDataToCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+    private int findBoundedRing(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
         //
         SortedSet<Double> sortedRangeList = new TreeSet<>();
         for (double ubRange: centreUBRangeList) {
             sortedRangeList.add(ubRange);
+        }
+        HashMap<Double, Integer> sortedRangeMap = new HashMap<>();
+        Double[] sortedRangeArray = new Double[sortedRangeList.size()];
+        sortedRangeArray = sortedRangeList.toArray(sortedRangeArray);
+        for (int i=0; i<sortedRangeList.size(); i++) {
+            sortedRangeMap.put(sortedRangeArray[i], i);
         }
 
         double dist = distance(eventCoord, centreCoord);
         SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
 
         int selectedRingId;
-        int selectedRingCapacity;
-
-        BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
         if (distGreaterList.size() == 0) {
+            BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
+            logger.info("********* DispatcherBolt **********: create new bounding ring");
             // add new bounded ring
             int ringId = centreUBRangeList.size();
             double lbRange = sortedRangeList.size() == 0 
@@ -148,18 +162,23 @@ public class DispatcherBolt extends BaseRichBolt {
             
             addDataToCentre.addStatement(updateUBListStatement);
 
-            selectedRingId = ringId;
-            selectedRingCapacity = 0;
-        } else {
-        }
-    }
+            this.repositoryFactory.executeStatement(addDataToCentre.build(), KEYSPACE_FIELD);
 
-    private void deleteDataFromCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
-        //
+            selectedRingId = ringId;
+        } else {
+            logger.info("********* DispatcherBolt **********: find existed bounding ring");
+            double selectedRingUBRange = distGreaterList.first();
+            selectedRingId = sortedRangeMap.get(selectedRingUBRange);
+        }
+
+        logger.info("********* DispatcherBolt **********: Attemp adding data to bounded ring with ringId = " + selectedRingId);
+
+        return selectedRingId;
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sink-bolt"));
+        declarer.declareStream(ADD_DATA_TO_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
+        declarer.declareStream(DELETE_DATA_FROM_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
     }
 }
