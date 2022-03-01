@@ -3,11 +3,13 @@ package vn.datnguyen.recommender.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
+import com.datastax.oss.driver.api.querybuilder.update.Assignment;
 
 public class IndexesCoordRepository implements IndexesCoordInterface {
     private final static String INDEXES_COORD_ROW = "indexes_coord_row";
@@ -46,5 +48,16 @@ public class IndexesCoordRepository implements IndexesCoordInterface {
                 Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(id))
             )
             .build();
-    } 
+    }
+
+    public SimpleStatement updateUBRangeListById(int id, List<Double> ubRangeList) {
+        return QueryBuilder.update(INDEXES_COORD_ROW)
+            .set(
+                Assignment.setColumn(CENTRE_UPPER_BOUND_RANGE_LIST, QueryBuilder.literal(ubRangeList))
+            )
+            .where(
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(id))
+            )
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
+    }
 }

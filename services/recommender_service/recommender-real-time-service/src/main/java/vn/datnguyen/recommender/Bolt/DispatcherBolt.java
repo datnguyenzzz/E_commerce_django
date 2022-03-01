@@ -123,6 +123,9 @@ public class DispatcherBolt extends BaseRichBolt {
         double dist = distance(eventCoord, centreCoord);
         SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
 
+        int selectedRingId;
+        int selectedRingCapacity;
+
         BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
         if (distGreaterList.size() == 0) {
             // add new bounded ring
@@ -132,13 +135,22 @@ public class DispatcherBolt extends BaseRichBolt {
                             : sortedRangeList.last();
             double ubRange = dist;
             
+            // add new bounded ring
             SimpleStatement addNewBoundedRingStatement = 
                 this.boundedRingRepository.addNewBoundedRing(ringId, centreId, lbRange, ubRange);
             
             addDataToCentre.addStatement(addNewBoundedRingStatement);
-
-        } else {
+            //update centreUBList
+            List<Double> tmp = List.copyOf(centreUBRangeList);
+            tmp.add(ubRange);
+            SimpleStatement updateUBListStatement = 
+                this.indexesCoordRepository.updateUBRangeListById(centreId, tmp);
             
+            addDataToCentre.addStatement(updateUBListStatement);
+
+            selectedRingId = ringId;
+            selectedRingCapacity = 0;
+        } else {
         }
     }
 

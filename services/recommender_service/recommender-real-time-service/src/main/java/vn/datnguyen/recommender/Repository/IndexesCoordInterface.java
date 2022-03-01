@@ -9,4 +9,6 @@ public interface IndexesCoordInterface {
     SimpleStatement insertNewIndex(int id, List<Integer> coord);
     SimpleStatement selectAllCentre();
     SimpleStatement selectCentreById(int id);
+    //
+    SimpleStatement updateUBRangeListById(int id, List<Double> ubRangeList);
 }
