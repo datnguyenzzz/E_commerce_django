@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +156,7 @@ public class DispatcherBolt extends BaseRichBolt {
             
             addDataToCentre.addStatement(addNewBoundedRingStatement);
             //update centreUBList
-            List<Double> tmp = List.copyOf(centreUBRangeList);
+            List<Double> tmp = new ArrayList<Double>(centreUBRangeList);
             tmp.add(ubRange);
             SimpleStatement updateUBListStatement = 
                 this.indexesCoordRepository.updateUBRangeListById(centreId, tmp);

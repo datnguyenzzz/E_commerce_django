@@ -32,6 +32,8 @@ public class TopologyDefinition {
     private final static String ITEM_BASED_STREAM = customProperties.getProp("ITEM_BASED_STREAM");
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
+    private final static String ADD_DATA_TO_CENTRE_STREAM = customProperties.getProp("ADD_DATA_TO_CENTRE_STREAM");
+    private final static String DELETE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("DELETE_DATA_FROM_CENTRE_STREAM");
     //IDs
     private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
     private final static String WEIGHT_APPLIER_BOLT = customProperties.getProp("WEIGHT_APPLIER_BOLT");
@@ -80,14 +82,14 @@ public class TopologyDefinition {
     private static void createTopology() throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
-        // item based recommender
         topologyBuilder.setSpout(KAFKA_SPOUT, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD))
             .setNumTasks(Integer.parseInt(SPOUT_TASKS));
 
         topologyBuilder.setBolt(WEIGHT_APPLIER_BOLT, boltFactory.createWeightApplierBolt(), Integer.parseInt(WEIGHT_APPLIER_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(WEIGHT_APPLIER_BOLT_TASKS))
             .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
-
+        /*
+        // item based recommender
         topologyBuilder.setBolt(NEW_RECORD_BOLT, boltFactory.createNewRecordBolt(), Integer.parseInt(NEW_RECORD_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(NEW_RECORD_BOLT_TASKS))
             .fieldsGrouping(WEIGHT_APPLIER_BOLT, ITEM_BASED_STREAM, new Fields(ITEM_ID_FIELD));
@@ -112,7 +114,7 @@ public class TopologyDefinition {
             .setNumTasks(Integer.parseInt(SIMILARITIES_BOLT_TASKS))
             .fieldsGrouping(PAIR_COUNT_BOLT, new Fields(ITEM_1_ID_FIELD, ITEM_2_ID_FIELD))
             .fieldsGrouping(ITEM_COUNT_BOLT, new Fields(ITEM_ID_FIELD));
-
+        */
         // content based
         topologyBuilder.setBolt(DISPATCHER_BOLT, boltFactory.createDispatcherBolt(), Integer.parseInt(DISPATCHER_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(DISPATCHER_BOLT_TASKS))
