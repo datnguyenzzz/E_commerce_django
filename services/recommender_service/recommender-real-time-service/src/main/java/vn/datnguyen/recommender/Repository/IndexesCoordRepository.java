@@ -20,14 +20,13 @@ public class IndexesCoordRepository implements IndexesCoordInterface {
             .ifNotExists()
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withColumn(CENTRE_COORD, DataTypes.listOf(DataTypes.INT))
-            .withColumn(CENTRE_UPPER_BOUND_RANGE_LIST, DataTypes.listOf(DataTypes.INT))
+            .withColumn(CENTRE_UPPER_BOUND_RANGE_LIST, DataTypes.listOf(DataTypes.DOUBLE))
             .build();
     }
 
     public SimpleStatement insertNewIndex(int id, List<Integer> coord) {
 
-        List<Integer> initial = new ArrayList<>();
-        initial.add(0);
+        List<Double> initial = new ArrayList<>();
 
         return QueryBuilder.insertInto(INDEXES_COORD_ROW)
             .value(CENTRE_ID, QueryBuilder.literal(id))

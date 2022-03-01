@@ -2,6 +2,8 @@ package vn.datnguyen.recommender.Bolt;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
@@ -81,26 +83,56 @@ public class DispatcherBolt extends BaseRichBolt {
         SimpleStatement selectedCentreStatment = this.indexesCoordRepository.selectCentreById(centreId);
         Row selectedCentre = this.repositoryFactory.executeStatement(selectedCentreStatment, KEYSPACE_FIELD).one();
 
-        List<Integer> centreCoord = this.repositoryFactory.getListFromRow(selectedCentre, CENTRE_COORD);
-        List<Integer> centreUBRangeList = this.repositoryFactory.getListFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(selectedCentre, CENTRE_COORD);
+        List<Double> centreUBRangeList = this.repositoryFactory.getListDoubleFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        List<Integer> eventCoord = incomeEvent.getCoord();
 
         logger.info("********* DispatcherBolt **********" + incomeEvent + " with centre ID = " + centreId 
                     + " with event coord = " + incomeEvent.getCoord() 
                     + " list of upperbound range = " + centreUBRangeList
-                    + " with coordinate = " + centreCoord);
+                    + " with centre coordinate = " + centreCoord);
 
         if (eventType.equals(avroAddItemEvent)) {
-            addDatatoToCentre(centreId, centreCoord, centreUBRangeList);
+            addDatatoToCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
-            deleteDatatoFromCentre(centreId, centreCoord, centreUBRangeList);
+            deleteDatatoFromCentre(centreId, centreCoord, centreUBRangeList, eventCoord);
         }
         collector.ack(input);
     }
 
-    private void addDatatoToCentre(int centreId, List<Integer> centreCoord, List<Integer> centreUBRangeList) {}
+    private double distance(List<Integer> a, List<Integer> b) {
+        double s = 0; 
+        for (int i = 0; i<a.size(); i++) {
+            s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
+        }
 
-    private void deleteDatatoFromCentre(int centreId, List<Integer> centreCoord, List<Integer> centreUBRangeList) {}
+        return Math.sqrt(s);
+    }
+
+    private void addDatatoToCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+        //
+        SortedSet<Double> sortedRangeList = new TreeSet<>();
+        for (double ubRange: centreUBRangeList) {
+            sortedRangeList.add(ubRange);
+        }
+
+        double dist = distance(eventCoord, centreCoord);
+
+        SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
+
+        if (distGreaterList.size() == 0) {
+            // add new bounded ring
+            int maxRingId = centreUBRangeList.size() - 1; 
+
+        } else {
+
+        }
+    }
+
+    private void deleteDatatoFromCentre(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+        //
+    }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

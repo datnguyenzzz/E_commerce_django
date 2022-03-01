@@ -124,8 +124,12 @@ public class RepositoryFactory {
         return row.getObject(col);
     }
 
-    public List<Integer> getListFromRow(Row row, String col) {
+    public List<Integer> getListIntegerFromRow(Row row, String col) {
         return row.getList(col, Integer.class);
+    }
+
+    public List<Double> getListDoubleFromRow(Row row, String col) {
+        return row.getList(col, Double.class);
     }
 
 }

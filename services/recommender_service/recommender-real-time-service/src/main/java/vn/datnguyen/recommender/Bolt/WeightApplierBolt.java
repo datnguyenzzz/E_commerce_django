@@ -226,7 +226,7 @@ public class WeightApplierBolt extends BaseRichBolt {
 
         for (Row r: findAllCentre) {
             int id = (int) this.repositoryFactory.getFromRow(r, CENTRE_ID);
-            List<Integer> centreCoord = this.repositoryFactory.getListFromRow(r, CENTRE_COORD);
+            List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(r, CENTRE_COORD);
 
             if (minDist > distance(centreCoord, itemProp)) {
                 minDist = distance(centreCoord, itemProp); 

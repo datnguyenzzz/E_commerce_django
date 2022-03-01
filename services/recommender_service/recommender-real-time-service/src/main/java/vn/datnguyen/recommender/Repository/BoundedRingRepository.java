@@ -16,8 +16,8 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .ifNotExists()
             .withPartitionKey(RING_ID, DataTypes.INT)
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
-            .withColumn(LOWER_BOUND_RANGE, DataTypes.INT)
-            .withColumn(UPPER_BOUND_RANGE, DataTypes.INT)
+            .withColumn(LOWER_BOUND_RANGE, DataTypes.DOUBLE)
+            .withColumn(UPPER_BOUND_RANGE, DataTypes.DOUBLE)
             .build();
     }
 }
