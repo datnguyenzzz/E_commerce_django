@@ -1,6 +1,7 @@
 package vn.datnguyen.recommender.Repository;
 
 
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
@@ -67,6 +68,14 @@ public class RepositoryFactory {
         return new SimilaritiesRepository();
     }
 
+    public IndexesCoordRepository getIndexesCoordRepository() {
+        return new IndexesCoordRepository();
+    }
+
+    public BoundedRingRepository getBoundedRingRepository() {
+        return new BoundedRingRepository();
+    }
+
     /**
      * 
      * @param statement
@@ -114,4 +123,13 @@ public class RepositoryFactory {
     public Object getFromRow(Row row, String col) {
         return row.getObject(col);
     }
+
+    public List<Integer> getListIntegerFromRow(Row row, String col) {
+        return row.getList(col, Integer.class);
+    }
+
+    public List<Double> getListDoubleFromRow(Row row, String col) {
+        return row.getList(col, Double.class);
+    }
+
 }

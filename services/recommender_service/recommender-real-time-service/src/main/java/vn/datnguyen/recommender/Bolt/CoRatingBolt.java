@@ -195,19 +195,26 @@ public class CoRatingBolt extends BaseRichBolt {
 
             logger.info("********* CoRatingBolt **********: Found item2Id = " + item2Id + " with rating = " + item2Rating);
 
-            SimpleStatement updateScoreItem;
+            SimpleStatement updateScoreItem, updateRatingItem;
 
-            if (newRating < item2Rating) {
+            if (itemId.equals(item2Id)) {
                 int deltaScore = newRating - oldRating;
                 updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, newRating, deltaScore);
                 emitDeltaScore(itemId, item2Id, deltaScore);
-            } else {
-                int deltaScore = item2Rating - Math.min(oldRating, item2Rating);
-                updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, item2Rating, deltaScore);
-                emitDeltaScore(itemId, item2Id, deltaScore);
+            }
+            else {
+                if (newRating < item2Rating) {
+                    int deltaScore = newRating - oldRating;
+                    updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, newRating, deltaScore);
+                    emitDeltaScore(itemId, item2Id, deltaScore);
+                } else {
+                    int deltaScore = item2Rating - Math.min(oldRating, item2Rating);
+                    updateScoreItem = this.coRatingRepository.updateItemScore(itemId, item2Id, clientId, item2Rating, deltaScore);
+                    emitDeltaScore(itemId, item2Id, deltaScore);
+                }
             }
 
-            SimpleStatement updateRatingItem = this.coRatingRepository.updateItem1Rating(itemId, item2Id, clientId, newRating);
+            updateRatingItem = this.coRatingRepository.updateItem1Rating(itemId, item2Id, clientId, newRating);
 
             executeWhenItemFoundBatch.addStatement(updateScoreItem)
                 .addStatement(updateRatingItem);
@@ -218,6 +225,9 @@ public class CoRatingBolt extends BaseRichBolt {
             int item1Rating = (int) this.repositoryFactory.getFromRow(r, RATING_ITEM_1);
 
             if (item1Id.equals(itemId)) {
+                SimpleStatement updateRatingItem = this.coRatingRepository.updateItem2Rating(item1Id, itemId, clientId, newRating);
+
+                executeWhenItemFoundBatch.addStatement(updateRatingItem);
                 continue;
             }
 

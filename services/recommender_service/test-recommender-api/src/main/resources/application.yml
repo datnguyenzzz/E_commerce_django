@@ -7,6 +7,9 @@ incomingEvent:
   avroDeleteRatingEvent: AvroDeleteRatingEvent
   avroBuyBehaviorEvent: AvroBuyBehaviorEvent
   avroAddToCartBehaviorEvent: AvroAddToCartBehaviorEvent
+  avroAddItemEvent: AvroAddItemEvent
+  avroDeleteItemEvent: AvroDeleteItemEvent
+
 
 
 transactionKafka:
@@ -14,6 +17,7 @@ transactionKafka:
   partitionIdQueryRating: 2 
   partitionIdBuyBehavior: 3 
   partitionIdAddToCartBehavior: 4
+  partitionIdCommandItem: 5
   bootstrapServers: kafka:9092
   transactionIdPrefix: ratingCommand
   topic: ratingCommandForRecommendation

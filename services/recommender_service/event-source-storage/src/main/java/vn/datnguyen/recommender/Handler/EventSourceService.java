@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
 import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
@@ -44,6 +46,15 @@ public class EventSourceService implements EventHandler {
 
     @Value("${DBTable.eventTypeCol}")
     private String eventTypeCol;
+
+    @Value("${DBTable.property1Col}")
+    private String property1Col;
+
+    @Value("${DBTable.property2Col}")
+    private String property2Col;
+
+    @Value("${DBTable.property3Col}")
+    private String property3Col;
 
     private Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
@@ -147,6 +158,12 @@ public class EventSourceService implements EventHandler {
         else if (data instanceof AvroAddToCartBehavior) {
             return payloadFrom((AvroAddToCartBehavior) data);
         }
+        else if (data instanceof AvroAddItem) {
+            return payloadFrom((AvroAddItem) data);
+        }
+        else if (data instanceof AvroDeleteItem) {
+            return payloadFrom((AvroDeleteItem) data);
+        }
         return null;
     }
 
@@ -197,6 +214,25 @@ public class EventSourceService implements EventHandler {
         payload.put(clientIdCol, data.getClientId());
         payload.put(itemIdCol, data.getItemId());
         logger.info("EVENT-SOURCE-STORAGE: load data from AvroAddToCartBehavior: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroAddItem data) {
+        Map<String, Object> payload = new HashMap<>(); 
+        payload.put(clientIdCol, data.getClientId());
+        payload.put(itemIdCol, data.getItemId());
+        payload.put(property1Col, data.getProperties1());
+        payload.put(property2Col, data.getProperties2());
+        payload.put(property3Col, data.getProperties3());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroAddItem: " + payload);
+        return payload;
+    }
+
+    private Map<String, Object> payloadFrom(AvroDeleteItem data) {
+        Map<String, Object> payload = new HashMap<>(); 
+        payload.put(clientIdCol, data.getClientId());
+        payload.put(itemIdCol, data.getItemId());
+        logger.info("EVENT-SOURCE-STORAGE: load data from AvroDeleteItem: " + payload);
         return payload;
     }
 

@@ -24,6 +24,9 @@ DBTable:
   itemIdCol: itemId
   scoreCol: score
   eventTypeCol: eventType
+  property1Col: property1
+  property2Col: property2
+  property3Col: property3
 
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
 spring.jpa.hibernate.ddl-auto: create

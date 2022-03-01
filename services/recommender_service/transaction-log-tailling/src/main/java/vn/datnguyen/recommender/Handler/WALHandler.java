@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
 import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
+import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
@@ -38,6 +40,9 @@ public class WALHandler {
     @Value("${transactionKafka.partitionIdAddToCartBehavior}")
     private String partitionIdAddToCartBehavior;
 
+    @Value("${transactionKafka.partitionIdCommandItem}")
+    private String partitionIdCommandItem;
+
     @Value("${incomingEvent.avroPublishRatingEvent}")
     private String avroPublishRatingEvent;
 
@@ -56,6 +61,12 @@ public class WALHandler {
     @Value("${incomingEvent.avroAddToCartBehaviorEvent}")
     private String avroAddToCartBehaviorEvent;
 
+    @Value("${incomingEvent.avroAddItemEvent}")
+    private String avroAddItemEvent;
+
+    @Value("${incomingEvent.avroDeleteItemEvent}")
+    private String avroDeleteItemEvent;
+
     @Value("${DBTable.clientIdCol}")
     private String clientIdCol;
 
@@ -67,6 +78,15 @@ public class WALHandler {
 
     @Value("${DBTable.eventTypeCol}")
     private String eventTypeCol;
+
+    @Value("${DBTable.property1Col}")
+    private String property1Col;
+
+    @Value("${DBTable.property2Col}")
+    private String property2Col;
+
+    @Value("${DBTable.property3Col}")
+    private String property3Col;
 
     private final Logger logger = LoggerFactory.getLogger(WALHandler.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -173,6 +193,21 @@ public class WALHandler {
                         .setItemId((String)walPayload.get(itemIdCol))
                         .build();
         }
+        else if (eventType.equals(avroAddItemEvent)) {
+            payload = (AvroAddItem)AvroAddItem.newBuilder()
+                .setClientId((String)walPayload.get(clientIdCol))
+                .setItemId((String)walPayload.get(itemIdCol))
+                .setProperties1((int)walPayload.get(property1Col))
+                .setProperties2((int)walPayload.get(property2Col))
+                .setProperties3((int)walPayload.get(property3Col))
+                .build();
+        }
+        else if (eventType.equals(avroDeleteItemEvent)) {
+            payload = (AvroDeleteItem)AvroDeleteItem.newBuilder()
+                        .setClientId((String)walPayload.get(clientIdCol))
+                        .setItemId((String)walPayload.get(itemIdCol))
+                        .build();
+        }
 
         return wrapper(payload, eventType);
     }
@@ -194,6 +229,10 @@ public class WALHandler {
 
         else if (eventType.equals(avroAddToCartBehaviorEvent)) {
             partitionId = Integer.parseInt(partitionIdAddToCartBehavior);
+        }
+        else if (eventType.equals(avroAddItemEvent) || 
+                 eventType.equals(avroDeleteItemEvent)) {
+            partitionId = Integer.parseInt(partitionIdCommandItem);
         }
 
         return AvroEvent.newBuilder()

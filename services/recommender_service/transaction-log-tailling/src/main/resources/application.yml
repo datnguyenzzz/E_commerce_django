@@ -6,6 +6,9 @@ DBTable:
   itemIdCol: itemId
   scoreCol: score
   eventTypeCol: eventType
+  property1Col: property1
+  property2Col: property2
+  property3Col: property3
 
 incomingEvent:
   avroPublishRatingEvent: AvroPublishRatingEvent
@@ -14,12 +17,15 @@ incomingEvent:
   avroQueryRatingEvent: AvroQueryRatingEvent
   avroBuyBehaviorEvent: AvroBuyBehaviorEvent
   avroAddToCartBehaviorEvent: AvroAddToCartBehaviorEvent
+  avroAddItemEvent: AvroAddItemEvent
+  avroDeleteItemEvent: AvroDeleteItemEvent
 
 transactionKafka:
   partitionIdCommandRating: 1
   partitionIdQueryRating: 2 
   partitionIdBuyBehavior: 3 
   partitionIdAddToCartBehavior: 4
+  partitionIdCommandItem: 5
   bootstrapServers: kafka:9092
   transactionIdPrefix: fromEventSource
   topicToQueryService: ratingCommandFromEventSource
