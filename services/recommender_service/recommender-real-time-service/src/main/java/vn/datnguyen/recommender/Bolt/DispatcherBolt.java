@@ -46,15 +46,11 @@ public class DispatcherBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
-    //incoming event 
-    private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
-    private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     //
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
     // stream 
-    private final static String ADD_DATA_TO_CENTRE_STREAM = customProperties.getProp("ADD_DATA_TO_CENTRE_STREAM");
-    private final static String DELETE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("DELETE_DATA_FROM_CENTRE_STREAM");
+    private final static String UPDATE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("UPDATE_DATA_FROM_CENTRE_STREAM");
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -87,7 +83,6 @@ public class DispatcherBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
-        String eventType = incomeEvent.getEventType();
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
 
         SimpleStatement selectedCentreStatment = this.indexesCoordRepository.selectCentreById(centreId);
@@ -105,12 +100,7 @@ public class DispatcherBolt extends BaseRichBolt {
         int selectedRing = findBoundedRing(centreId, centreCoord, centreUBRangeList, eventCoord);
         Values values = new Values(incomeEvent, centreId, selectedRing);
 
-        if (eventType.equals(avroAddItemEvent)) {
-            collector.emit(ADD_DATA_TO_CENTRE_STREAM, values);
-        } 
-        else if (eventType.equals(avroDeleteItemEvent)) {
-            collector.emit(DELETE_DATA_FROM_CENTRE_STREAM, values);
-        }
+        collector.emit(UPDATE_DATA_FROM_CENTRE_STREAM, values);
         collector.ack(input);
     }
 
@@ -179,7 +169,6 @@ public class DispatcherBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declareStream(ADD_DATA_TO_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
-        declarer.declareStream(DELETE_DATA_FROM_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
+        declarer.declareStream(UPDATE_DATA_FROM_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
     }
 }
