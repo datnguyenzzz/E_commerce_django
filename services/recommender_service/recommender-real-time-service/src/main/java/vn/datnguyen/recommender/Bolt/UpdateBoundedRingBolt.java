@@ -1,6 +1,9 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.CqlSession;
@@ -48,6 +51,9 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //
+    private final static String DISTANCE_TO_CENTRE = "distance_to_centre"; 
+    private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
+    private final static String CENTRE_COORD = "centre_coord";
     private final static String CAPACITY = "capacity";
     //
     private OutputCollector collector;
@@ -93,7 +99,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         if (eventType.equals(avroAddItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp add data to ringId = " + ringId + " centreId = " + centreId);
-            addDataIntoBoundedRing(itemId, clientId, centreId, ringId);
+            addDataIntoBoundedRing(itemId, clientId, incomeEvent.getCoord(), centreId, ringId);
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp delete data from ringId = " + ringId + " centreId = " + centreId);
@@ -102,7 +108,31 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private void addDataIntoBoundedRing(String itemId, String clientId, int centreId, UUID ringId) {
+    private double findMedianFromDataSet(List<Row> getAllDataInRing) {
+        SortedSet<Double> dist = new TreeSet<Double>();
+
+        for (Row r: getAllDataInRing) {
+            double d = (Double)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+            dist.add(d);
+        }
+
+        Double[] distArray = new Double[dist.size()];
+        distArray = dist.toArray(distArray);
+
+        return distArray[dist.size()/2];
+    }
+
+    private double distance(List<Integer> a, List<Integer> b) {
+        double s = 0; 
+        for (int i = 0; i<a.size(); i++) {
+            s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
+        }
+
+        return Math.sqrt(s);
+    }
+
+    private void addDataIntoBoundedRing(String itemId, String clientId, List<Integer> eventCoord, int centreId, UUID ringId) {
+        //bouded ring 
         SimpleStatement findBoundedRingStatement = this.boundedRingRepository.findBoundedRingById(ringId, centreId);
         ResultSet findBoundedRingResult = this.repositoryFactory.executeStatement(findBoundedRingStatement, KEYSPACE_FIELD);
         int findBoundedRingSize = findBoundedRingResult.getAvailableWithoutFetching(); 
@@ -113,17 +143,48 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         Row findBoundedRing = findBoundedRingResult.one();
         int currCapacity = (int)this.repositoryFactory.getFromRow(findBoundedRing, CAPACITY); 
+        // center 
+        SimpleStatement getCentreStatement = 
+                this.indexesCoordRepository.selectCentreById(centreId);
+        ResultSet getCentreResult = 
+            this.repositoryFactory.executeStatement(getCentreStatement, KEYSPACE_FIELD);
+        if (getCentreResult.getAvailableWithoutFetching() != 1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: Find centre by id result must equal to 1, not " + getCentreResult.getAvailableWithoutFetching());
+        }
+        Row getCentre = getCentreResult.one();
 
         BatchStatementBuilder addDataToBoundedRing = BatchStatement.builder(BatchType.LOGGED);
-        
+
         if (currCapacity == MAX_CAPACITY) {
             logger.info("********* UpdateBoundedRingBolt **********: Exceed max capacity, attemp splitting bounded ring");
             //get all data in bounded ring 
+            SimpleStatement getAllDataInRingStatement = 
+                this.itemStatusRepository.findAllByRingId(ringId, centreId);
+            List<Row> getAllDataInRing = 
+                this.repositoryFactory.executeStatement(getAllDataInRingStatement, KEYSPACE_FIELD).all();
+
+            //get UBRANGE list 
+            List<Double> centreUBRangeList = 
+                this.repositoryFactory.getListDoubleFromRow(getCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+
+            SortedSet<Double> centreUBRangeSet = new TreeSet<>();
+            for (double ubRange: centreUBRangeList) {
+                centreUBRangeSet.add(ubRange);
+            }
+
+            //logic
+            double medianRangeInBoundedRing = findMedianFromDataSet(getAllDataInRing);
+
         } else {
             logger.info("********* UpdateBoundedRingBolt **********: Within max capacity, attemp adding to bounded ring");
+            List<Integer> centreCoord = 
+                this.repositoryFactory.getListIntegerFromRow(getCentre, CENTRE_COORD);
+            
+            double dist = distance(eventCoord, centreCoord);
+
             //add new item status 
             SimpleStatement addNewItemStatusStatement = 
-                this.itemStatusRepository.addNewItemStatus(itemId, clientId, ringId, centreId);
+                this.itemStatusRepository.addNewItemStatus(itemId, clientId, ringId, centreId, dist);
             
             //update curr capacity 
             SimpleStatement increaseCapacityStatement =

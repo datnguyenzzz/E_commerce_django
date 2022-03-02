@@ -11,7 +11,9 @@ public interface ItemStatusInterface {
     public final static String ADD_BY_CLIENT_ID = "add_by_client_id"; // string
     public final static String BOUNDED_RING_ID = "bounded_ring_id"; // UUID
     public final static String CENTRE_ID = "centre_id"; //int
+    public final static String DISTANCE_TO_CENTRE = "distance_to_centre"; //double
 
     SimpleStatement createRowIfNotExists();
-    SimpleStatement addNewItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId);
+    SimpleStatement addNewItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId, double dist);
+    SimpleStatement findAllByRingId(UUID boundedRingId, int centreId);
 }
