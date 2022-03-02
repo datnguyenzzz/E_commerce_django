@@ -1,6 +1,7 @@
 package vn.datnguyen.recommender.Bolt;
 
 import java.util.Map;
+import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BatchStatement;
@@ -85,8 +86,10 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         String eventType = incomeEvent.getEventType();
         String itemId = incomeEvent.getItemId();
         String clientId = incomeEvent.getClientId();
+        String ringIdStr = (String) input.getValueByField(RING_ID_FIELD);
+
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
-        int ringId = (int) input.getValueByField(RING_ID_FIELD);
+        UUID ringId = UUID.fromString(ringIdStr);
 
         if (eventType.equals(avroAddItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp add data to ringId = " + ringId + " centreId = " + centreId);
@@ -99,7 +102,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private void addDataIntoBoundedRing(String itemId, String clientId, int centreId, int ringId) {
+    private void addDataIntoBoundedRing(String itemId, String clientId, int centreId, UUID ringId) {
         SimpleStatement findBoundedRingStatement = this.boundedRingRepository.findBoundedRingById(ringId, centreId);
         ResultSet findBoundedRingResult = this.repositoryFactory.executeStatement(findBoundedRingStatement, KEYSPACE_FIELD);
         int findBoundedRingSize = findBoundedRingResult.getAvailableWithoutFetching(); 
@@ -111,12 +114,13 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         Row findBoundedRing = findBoundedRingResult.one();
         int currCapacity = (int)this.repositoryFactory.getFromRow(findBoundedRing, CAPACITY); 
 
+        BatchStatementBuilder addDataToBoundedRing = BatchStatement.builder(BatchType.LOGGED);
+        
         if (currCapacity == MAX_CAPACITY) {
             logger.info("********* UpdateBoundedRingBolt **********: Exceed max capacity, attemp splitting bounded ring");
+            //get all data in bounded ring 
         } else {
             logger.info("********* UpdateBoundedRingBolt **********: Within max capacity, attemp adding to bounded ring");
-
-            BatchStatementBuilder addDataToBoundedRing = BatchStatement.builder(BatchType.LOGGED);
             //add new item status 
             SimpleStatement addNewItemStatusStatement = 
                 this.itemStatusRepository.addNewItemStatus(itemId, clientId, ringId, centreId);
@@ -128,8 +132,10 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             addDataToBoundedRing.addStatement(addNewItemStatusStatement)
                 .addStatement(increaseCapacityStatement);
 
-            this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
         }
+
+        this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
+
     }
     
     @Override
