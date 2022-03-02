@@ -17,4 +17,5 @@ public interface BoundedRingInterface {
     SimpleStatement findBoundedRingById(UUID ringId, int centreId);
     SimpleStatement findBoundedRingByUBRange(int centreId, double ubRange);
     SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, int capacity);
+    SimpleStatement updateBoundedRingRange(UUID ringId, int centreId, double lbRange, double ubRange);
 }

@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -13,6 +14,7 @@ import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -53,6 +55,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
     //
     private final static String DISTANCE_TO_CENTRE = "distance_to_centre"; 
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
+    private final static String UPPER_BOUND_RANGE = "upper_bound_range";
+    private final static String LOWER_BOUND_RANGE = "lower_bound_range";
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CAPACITY = "capacity";
     //
@@ -174,6 +178,48 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
             //logic
             double medianRangeInBoundedRing = findMedianFromDataSet(getAllDataInRing);
+            double oldMaxRange = Double.MIN_VALUE;
+            int newRingCapacity = 0;
+            int oldCapacity = getAllDataInRing.size();
+            UUID newRingId = Uuids.random();
+            //update item status 
+            for (Row r: getAllDataInRing) {
+                double d = (Double)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+                if (d <= medianRangeInBoundedRing) {
+                    oldMaxRange = Math.max(oldMaxRange, d);
+                    continue;
+                }
+
+                newRingCapacity += 1;
+                SimpleStatement changeToNewBoundedRingStatement = 
+                    this.itemStatusRepository.updateItemStatusRingId(itemId, clientId, newRingId);
+                addDataToBoundedRing.addStatement(changeToNewBoundedRingStatement);
+            }
+            //update bounded ring
+            double lbRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
+            double ubRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
+            SimpleStatement updateOldRingRangeStatement = 
+                this.boundedRingRepository.updateBoundedRingRange(ringId, centreId, lbRange, oldMaxRange);
+            SimpleStatement updateOldRingCapacityStatement = 
+                this.boundedRingRepository.updateBoundedRingCapacityById(ringId, centreId, oldCapacity - newRingCapacity);
+            
+            SimpleStatement insertNewRingStatement = 
+                this.boundedRingRepository.addNewBoundedRing(newRingId, centreId, oldMaxRange, ubRange);
+            SimpleStatement updateNewRingCapacityStatement = 
+                this.boundedRingRepository.updateBoundedRingCapacityById(newRingId, centreId, newRingCapacity);
+            
+            addDataToBoundedRing.addStatement(updateOldRingRangeStatement)
+                .addStatement(updateOldRingCapacityStatement)
+                .addStatement(insertNewRingStatement)
+                .addStatement(updateNewRingCapacityStatement);
+            
+            //update centre
+            centreUBRangeSet.add(oldMaxRange);
+            List<Double> centreUBRangeArrayList = new ArrayList<Double>(centreUBRangeSet);
+            SimpleStatement updateUBListStatement = 
+                this.indexesCoordRepository.updateUBRangeListById(centreId, centreUBRangeArrayList);
+            
+            addDataToBoundedRing.addStatement(updateUBListStatement);
 
         } else {
             logger.info("********* UpdateBoundedRingBolt **********: Within max capacity, attemp adding to bounded ring");

@@ -62,4 +62,17 @@ public class BoundedRingRepository implements BoundedRingInterface {
             )
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
+
+    public SimpleStatement updateBoundedRingRange(UUID ringId, int centreId, double lbRange, double ubRange) {
+        return QueryBuilder.update(BOUNDED_RING_ROW)
+            .set(
+                Assignment.setColumn(LOWER_BOUND_RANGE, QueryBuilder.literal(lbRange)), 
+                Assignment.setColumn(UPPER_BOUND_RANGE, QueryBuilder.literal(ubRange))
+            )
+            .where(
+                Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId))
+            )
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
+    }
 }
