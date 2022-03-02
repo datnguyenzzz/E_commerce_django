@@ -134,7 +134,7 @@ public class DispatcherBolt extends BaseRichBolt {
             BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
             logger.info("********* DispatcherBolt **********: create new bounding ring");
             // add new bounded ring
-            int ringId = centreUBRangeList.size();
+            int ringId = ;
             double lbRange = sortedRangeList.size() == 0 
                             ? 0.0
                             : sortedRangeList.last();

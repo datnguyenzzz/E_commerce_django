@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Repository;
 import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
@@ -13,7 +14,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
     public SimpleStatement createRowIfNotExists() {
         return SchemaBuilder.createTable(BOUNDED_RING_ROW)
             .ifNotExists()
-            .withPartitionKey(RING_ID, DataTypes.INT)
+            .withPartitionKey(RING_ID, DataTypes.UUID)
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withColumn(LOWER_BOUND_RANGE, DataTypes.DOUBLE)
             .withColumn(UPPER_BOUND_RANGE, DataTypes.DOUBLE)
@@ -21,7 +22,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .build();
     }
 
-    public SimpleStatement addNewBoundedRing(int ringId, int centreId, double lbRange, double ubRange) {
+    public SimpleStatement addNewBoundedRing(Uuids ringId, int centreId, double lbRange, double ubRange) {
         return QueryBuilder.insertInto(BOUNDED_RING_ROW)
             .value(RING_ID, QueryBuilder.literal(ringId))
             .value(CENTRE_ID, QueryBuilder.literal(centreId))
@@ -31,7 +32,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .build();
     }
 
-    public SimpleStatement findBoundedRingById(int ringId, int centreId) {
+    public SimpleStatement findBoundedRingById(Uuids ringId, int centreId) {
         return QueryBuilder.selectFrom(BOUNDED_RING_ROW).all()
             .where(
                 Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
@@ -40,7 +41,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
-    public SimpleStatement updateBoundedRingCapacityById(int ringId, int centreId, int capacity) {
+    public SimpleStatement updateBoundedRingCapacityById(Uuids ringId, int centreId, int capacity) {
         return QueryBuilder.update(BOUNDED_RING_ROW)
             .set(
                 Assignment.setColumn(CAPACITY, QueryBuilder.literal(capacity))
