@@ -3,5 +3,13 @@ package vn.datnguyen.recommender.Repository;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 public interface ItemStatusInterface {
+
+    public final static String ITEM_STATUS_ROW = "item_status_row";
+    public final static String ITEM_ID = "item_id"; // string
+    public final static String ADD_BY_CLIENT_ID = "add_by_client_id"; // string
+    public final static String BOUNDED_RING_ID = "bounded_ring_id"; // int
+    public final static String CENTRE_ID = "centre_id"; //int
+
     SimpleStatement createRowIfNotExists();
+    SimpleStatement addNewItemStatus(String itemId, String clientId, int boundedRingId, int centreId);
 }

@@ -3,6 +3,11 @@ package vn.datnguyen.recommender.Bolt;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
+import com.datastax.oss.driver.api.core.cql.BatchType;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -35,10 +40,14 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
+    private final static int MIN_CAPACITY = Integer.parseInt(customProperties.getProp("MIN_CAPACITY"));
+    private final static int MAX_CAPACITY = Integer.parseInt(customProperties.getProp("MAX_CAPACITY"));
     //CASSANDRA PROPS
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //
+    private final static String CAPACITY = "capacity";
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -74,17 +83,42 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         String eventType = incomeEvent.getEventType();
+        String itemId = incomeEvent.getItemId();
+        String clientId = incomeEvent.getClientId();
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
         int ringId = (int) input.getValueByField(RING_ID_FIELD);
 
         if (eventType.equals(avroAddItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp add data to ringId = " + ringId + " centreId = " + centreId);
+            addDataIntoBoundedRing(itemId, clientId, centreId, ringId);
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp delete data from ringId = " + ringId + " centreId = " + centreId);
         }
 
         collector.ack(input);
+    }
+
+    private void addDataIntoBoundedRing(String itemId, String clientId, int centreId, int ringId) {
+        SimpleStatement findBoundedRingStatement = this.boundedRingRepository.findBoundedRingById(ringId, centreId);
+        ResultSet findBoundedRingResult = this.repositoryFactory.executeStatement(findBoundedRingStatement, KEYSPACE_FIELD);
+        int findBoundedRingSize = findBoundedRingResult.getAvailableWithoutFetching(); 
+
+        if (findBoundedRingSize != 1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: Find bounded ring by id result must equal to 1, not " + findBoundedRingSize);
+        }
+
+        Row findBoundedRing = findBoundedRingResult.one();
+        int currCapacity = (int)this.repositoryFactory.getFromRow(findBoundedRing, CAPACITY); 
+
+        if (currCapacity == MAX_CAPACITY) {
+            logger.info("********* UpdateBoundedRingBolt **********: Exceed max capacity, attemp splitting bounded ring");
+        } else {
+            logger.info("********* UpdateBoundedRingBolt **********: Within max capacity, attemp adding to bounded ring");
+
+            BatchStatementBuilder addDataToBoundedRing = BatchStatement.builder(BatchType.LOGGED);
+            //add new item status 
+        }
     }
     
     @Override
