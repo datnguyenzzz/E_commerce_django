@@ -1,7 +1,8 @@
 package vn.datnguyen.recommender.Repository;
 
+import java.util.UUID;
+
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 
 public interface BoundedRingInterface {
     public final static String BOUNDED_RING_ROW = "bounded_ring_row";
@@ -12,7 +13,8 @@ public interface BoundedRingInterface {
     public final static String CAPACITY = "capacity"; // int
 
     SimpleStatement createRowIfNotExists();
-    SimpleStatement addNewBoundedRing(Uuids ringId, int centreId, double lbRange, double ubRange);
-    SimpleStatement findBoundedRingById(Uuids ringId, int centreId);
-    SimpleStatement updateBoundedRingCapacityById(Uuids ringId, int centreId, int capacity);
+    SimpleStatement addNewBoundedRing(UUID ringId, int centreId, double lbRange, double ubRange);
+    SimpleStatement findBoundedRingById(UUID ringId, int centreId);
+    SimpleStatement findBoundedRingByUBRange(int centreId, double ubRange);
+    SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, int capacity);
 }
