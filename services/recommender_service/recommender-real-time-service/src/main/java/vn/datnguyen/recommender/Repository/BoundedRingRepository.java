@@ -6,14 +6,9 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
+import com.datastax.oss.driver.api.querybuilder.update.Assignment;
 
 public class BoundedRingRepository implements BoundedRingInterface {
-    private final static String BOUNDED_RING_ROW = "bounded_ring_row";
-    private final static String RING_ID = "ring_id";
-    private final static String CENTRE_ID = "centre_id";
-    private final static String LOWER_BOUND_RANGE = "lower_bound_range";
-    private final static String UPPER_BOUND_RANGE = "upper_bound_range";
-    private final static String CAPACITY = "capacity";
 
     public SimpleStatement createRowIfNotExists() {
         return SchemaBuilder.createTable(BOUNDED_RING_ROW)
@@ -45,5 +40,15 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
-    
+    public SimpleStatement updateBoundedRingCapacityById(int ringId, int centreId, int capacity) {
+        return QueryBuilder.update(BOUNDED_RING_ROW)
+            .set(
+                Assignment.setColumn(CAPACITY, QueryBuilder.literal(capacity))
+            )
+            .where(
+                Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId))
+            )
+            .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
+    }
 }

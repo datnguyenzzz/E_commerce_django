@@ -118,6 +118,17 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
             BatchStatementBuilder addDataToBoundedRing = BatchStatement.builder(BatchType.LOGGED);
             //add new item status 
+            SimpleStatement addNewItemStatusStatement = 
+                this.itemStatusRepository.addNewItemStatus(itemId, clientId, ringId, centreId);
+            
+            //update curr capacity 
+            SimpleStatement increaseCapacityStatement =
+                this.boundedRingRepository.updateBoundedRingCapacityById(ringId, centreId, currCapacity+1);
+            
+            addDataToBoundedRing.addStatement(addNewItemStatusStatement)
+                .addStatement(increaseCapacityStatement);
+
+            this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
         }
     }
     
