@@ -17,8 +17,8 @@ public class ItemStatusRepository implements ItemStatusInterface {
             .ifNotExists()
             .withPartitionKey(BOUNDED_RING_ID, DataTypes.UUID)
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
-            .withColumn(ITEM_ID, DataTypes.TEXT)
-            .withColumn(ADD_BY_CLIENT_ID, DataTypes.TEXT)
+            .withClusteringColumn(ITEM_ID, DataTypes.TEXT)
+            .withClusteringColumn(ADD_BY_CLIENT_ID, DataTypes.TEXT)
             .withColumn(DISTANCE_TO_CENTRE, DataTypes.DOUBLE)
             .build();
     }
