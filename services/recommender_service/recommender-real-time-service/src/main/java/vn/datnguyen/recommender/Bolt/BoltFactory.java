@@ -59,4 +59,8 @@ public class BoltFactory {
     public DispatcherBolt createDispatcherBolt() {
         return new DispatcherBolt();
     }
+
+    public UpdateBoundedRingBolt createUpdateBoundedRingBolt() {
+        return new UpdateBoundedRingBolt();
+    }
 }

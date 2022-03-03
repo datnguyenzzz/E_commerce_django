@@ -76,6 +76,10 @@ public class RepositoryFactory {
         return new BoundedRingRepository();
     }
 
+    public ItemStatusRepository getItemStatusRepository() {
+        return new ItemStatusRepository();
+    }
+
     /**
      * 
      * @param statement

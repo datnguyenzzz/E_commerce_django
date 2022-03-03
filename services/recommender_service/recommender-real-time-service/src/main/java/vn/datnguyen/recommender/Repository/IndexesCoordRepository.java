@@ -12,10 +12,6 @@ import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.update.Assignment;
 
 public class IndexesCoordRepository implements IndexesCoordInterface {
-    private final static String INDEXES_COORD_ROW = "indexes_coord_row";
-    private final static String CENTRE_ID = "centre_id";
-    private final static String CENTRE_COORD = "centre_coord";
-    private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
 
     public SimpleStatement createRowIfNotExists() {
         return SchemaBuilder.createTable(INDEXES_COORD_ROW)

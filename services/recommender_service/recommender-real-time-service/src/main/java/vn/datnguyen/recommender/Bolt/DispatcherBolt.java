@@ -1,11 +1,11 @@
 package vn.datnguyen.recommender.Bolt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BatchStatement;
@@ -13,6 +13,7 @@ import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
 import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -46,15 +47,13 @@ public class DispatcherBolt extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
-    //incoming event 
-    private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
-    private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     //
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
+    private final static String RING_ID = "ring_id"; // UUID
+    private final static String UPPER_BOUND_RANGE = "upper_bound_range";
     // stream 
-    private final static String ADD_DATA_TO_CENTRE_STREAM = customProperties.getProp("ADD_DATA_TO_CENTRE_STREAM");
-    private final static String DELETE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("DELETE_DATA_FROM_CENTRE_STREAM");
+    private final static String UPDATE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("UPDATE_DATA_FROM_CENTRE_STREAM");
     //
     private OutputCollector collector;
     private RepositoryFactory repositoryFactory;
@@ -87,7 +86,6 @@ public class DispatcherBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
-        String eventType = incomeEvent.getEventType();
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
 
         SimpleStatement selectedCentreStatment = this.indexesCoordRepository.selectCentreById(centreId);
@@ -102,15 +100,10 @@ public class DispatcherBolt extends BaseRichBolt {
                     + " list of upperbound range = " + centreUBRangeList
                     + " with centre coordinate = " + centreCoord);
 
-        int selectedRing = findBoundedRing(centreId, centreCoord, centreUBRangeList, eventCoord);
-        Values values = new Values(incomeEvent, centreId, selectedRing);
+        UUID selectedRing = findBoundedRing(centreId, centreCoord, centreUBRangeList, eventCoord);
+        Values values = new Values(incomeEvent, centreId, selectedRing.toString());
 
-        if (eventType.equals(avroAddItemEvent)) {
-            collector.emit(ADD_DATA_TO_CENTRE_STREAM, values);
-        } 
-        else if (eventType.equals(avroDeleteItemEvent)) {
-            collector.emit(DELETE_DATA_FROM_CENTRE_STREAM, values);
-        }
+        collector.emit(UPDATE_DATA_FROM_CENTRE_STREAM, values);
         collector.ack(input);
     }
 
@@ -123,28 +116,22 @@ public class DispatcherBolt extends BaseRichBolt {
         return Math.sqrt(s);
     }
 
-    private int findBoundedRing(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+    private UUID findBoundedRing(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
         //
         SortedSet<Double> sortedRangeList = new TreeSet<>();
         for (double ubRange: centreUBRangeList) {
             sortedRangeList.add(ubRange);
         }
-        HashMap<Double, Integer> sortedRangeMap = new HashMap<>();
-        Double[] sortedRangeArray = new Double[sortedRangeList.size()];
-        sortedRangeArray = sortedRangeList.toArray(sortedRangeArray);
-        for (int i=0; i<sortedRangeList.size(); i++) {
-            sortedRangeMap.put(sortedRangeArray[i], i);
-        }
 
         double dist = distance(eventCoord, centreCoord);
         SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
 
-        int selectedRingId;
+        UUID selectedRingId;
         if (distGreaterList.size() == 0) {
             BatchStatementBuilder addDataToCentre = BatchStatement.builder(BatchType.LOGGED);
             logger.info("********* DispatcherBolt **********: create new bounding ring");
             // add new bounded ring
-            int ringId = centreUBRangeList.size();
+            UUID ringId = Uuids.random();
             double lbRange = sortedRangeList.size() == 0 
                             ? 0.0
                             : sortedRangeList.last();
@@ -167,9 +154,35 @@ public class DispatcherBolt extends BaseRichBolt {
 
             selectedRingId = ringId;
         } else {
+            selectedRingId = null;
+
             logger.info("********* DispatcherBolt **********: find existed bounding ring");
             double selectedRingUBRange = distGreaterList.first();
-            selectedRingId = sortedRangeMap.get(selectedRingUBRange);
+
+            // set to array 
+            Double[] sortedRangeArray = new Double[sortedRangeList.size()];
+            sortedRangeArray = sortedRangeList.toArray(sortedRangeArray);
+            // find all bounded ring within centre 
+            SimpleStatement findAllBoundedRingInCentreStatement = 
+                this.boundedRingRepository.findAllBoundedRingInCentre(centreId);
+            
+            List<Row> findAllBoundedRingInCentre = 
+                this.repositoryFactory.executeStatement(findAllBoundedRingInCentreStatement, KEYSPACE_FIELD)
+                    .all();
+            
+            for (Row r: findAllBoundedRingInCentre) {
+                double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+                UUID tmpRingId = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
+                if (ubRange == selectedRingUBRange) {
+                    selectedRingId = tmpRingId;
+                    break;
+                }
+            }
+
+            if (selectedRingId == null) {
+                logger.warn("********* DispatcherBolt **********: cannot find bounding ring");
+            }
+
         }
 
         logger.info("********* DispatcherBolt **********: Attemp adding data to bounded ring with ringId = " + selectedRingId);
@@ -179,7 +192,6 @@ public class DispatcherBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declareStream(ADD_DATA_TO_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
-        declarer.declareStream(DELETE_DATA_FROM_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
+        declarer.declareStream(UPDATE_DATA_FROM_CENTRE_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD));
     }
 }
