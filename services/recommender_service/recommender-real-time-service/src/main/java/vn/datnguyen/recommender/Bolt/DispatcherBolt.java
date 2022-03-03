@@ -11,7 +11,6 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BatchStatement;
 import com.datastax.oss.driver.api.core.cql.BatchStatementBuilder;
 import com.datastax.oss.driver.api.core.cql.BatchType;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
@@ -52,6 +51,7 @@ public class DispatcherBolt extends BaseRichBolt {
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
     private final static String RING_ID = "ring_id"; // UUID
+    private final static String UPPER_BOUND_RANGE = "upper_bound_range";
     // stream 
     private final static String UPDATE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("UPDATE_DATA_FROM_CENTRE_STREAM");
     //
@@ -154,23 +154,35 @@ public class DispatcherBolt extends BaseRichBolt {
 
             selectedRingId = ringId;
         } else {
+            selectedRingId = null;
+
             logger.info("********* DispatcherBolt **********: find existed bounding ring");
             double selectedRingUBRange = distGreaterList.first();
 
-            SimpleStatement findBoundedRingStatement = 
-                this.boundedRingRepository.findBoundedRingByUBRange(centreId, selectedRingUBRange);
+            // set to array 
+            Double[] sortedRangeArray = new Double[sortedRangeList.size()];
+            sortedRangeArray = sortedRangeList.toArray(sortedRangeArray);
+            // find all bounded ring within centre 
+            SimpleStatement findAllBoundedRingInCentreStatement = 
+                this.boundedRingRepository.findAllBoundedRingInCentre(centreId);
             
-            ResultSet findBoundedRingResult = 
-                this.repositoryFactory.executeStatement(findBoundedRingStatement, KEYSPACE_FIELD);
+            List<Row> findAllBoundedRingInCentre = 
+                this.repositoryFactory.executeStatement(findAllBoundedRingInCentreStatement, KEYSPACE_FIELD)
+                    .all();
             
-            int findBoundedRingSize = findBoundedRingResult.getAvailableWithoutFetching(); 
-
-            if (findBoundedRingSize != 1) {
-                logger.warn("********* DispatcherBolt **********: Find bounded ring by UBRANGE result must equal to 1, not " + findBoundedRingSize);
+            for (Row r: findAllBoundedRingInCentre) {
+                double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+                UUID tmpRingId = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
+                if (ubRange == selectedRingUBRange) {
+                    selectedRingId = tmpRingId;
+                    break;
+                }
             }
 
-            Row findBoundedRing = findBoundedRingResult.one();
-            selectedRingId = (UUID)this.repositoryFactory.getFromRow(findBoundedRing, RING_ID);
+            if (selectedRingId == null) {
+                logger.warn("********* DispatcherBolt **********: cannot find bounding ring");
+            }
+
         }
 
         logger.info("********* DispatcherBolt **********: Attemp adding data to bounded ring with ringId = " + selectedRingId);

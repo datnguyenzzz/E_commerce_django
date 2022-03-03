@@ -177,6 +177,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         //logic
         double medianRangeInBoundedRing = findMedianFromDataSet(getAllDataInRing);
+        logger.info("********* UpdateBoundedRingBolt **********: Distance threshold for splitting = " + medianRangeInBoundedRing);
+
         double oldMaxRange = Double.MIN_VALUE;
         int newRingCapacity = 0;
         int oldCapacity = getAllDataInRing.size();
@@ -193,8 +195,11 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             String clientId = (String) this.repositoryFactory.getFromRow(r, ADD_BY_CLIENT_ID);
             newRingCapacity += 1;
             SimpleStatement changeToNewBoundedRingStatement = 
-                this.itemStatusRepository.updateItemStatusRingId(itemId, clientId, newRingId);
-            splitBoundedRing.addStatement(changeToNewBoundedRingStatement);
+                this.itemStatusRepository.addNewItemStatus(itemId, clientId, newRingId, centreId, d);
+            SimpleStatement deleteCurrDataFromRingStatement = 
+                this.itemStatusRepository.deleteItemStatus(itemId, clientId, ringId, centreId);
+            splitBoundedRing.addStatement(deleteCurrDataFromRingStatement)
+                .addStatement(changeToNewBoundedRingStatement);
         }
         //update bounded ring
         double lbRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
