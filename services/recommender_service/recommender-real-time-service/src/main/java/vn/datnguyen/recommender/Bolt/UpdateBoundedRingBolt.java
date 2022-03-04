@@ -286,7 +286,13 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
     }
     
+    private List<SimpleStatement> mergeBoundedRings() {
+        return null;
+    }
+
     private void deleteDataFromBoundedRing(String itemId, String clientId, List<Integer> eventCoord, int centreId, UUID ringId) {
+        //batch statement 
+        BatchStatementBuilder deleteDataFromBoundedRing = BatchStatement.builder(BatchType.LOGGED);
         //bounded ring
         SimpleStatement selectedBoundedRingStatement = 
             this.boundedRingRepository.findBoundedRingById(ringId, centreId);
@@ -301,6 +307,23 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         int currentCapacity = (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
 
         // delete item from bouneded ring
+        SimpleStatement deleteItemStatus = 
+            this.itemStatusRepository.deleteItemStatus(itemId, clientId, ringId, centreId);
+        deleteDataFromBoundedRing.addStatement(deleteItemStatus);
+
+        // update capacity 
+        SimpleStatement decreaseRingCapacity = 
+            this.boundedRingRepository.updateBoundedRingCapacityById(ringId, centreId, currentCapacity-1);
+        deleteDataFromBoundedRing.addStatement(decreaseRingCapacity);
+
+        if (currentCapacity == MIN_CAPACITY) {
+            List<SimpleStatement> mergeBoundedRings = mergeBoundedRings(); 
+            for (SimpleStatement statement: mergeBoundedRings) {
+                deleteDataFromBoundedRing.addStatement(statement);
+            }
+        }
+
+        this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
     }
 
     @Override
