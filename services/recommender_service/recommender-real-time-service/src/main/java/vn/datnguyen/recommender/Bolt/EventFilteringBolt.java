@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-/*
 import com.datastax.oss.driver.api.core.cql.Row;
-*/
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.storm.task.OutputCollector;
@@ -43,7 +41,7 @@ import vn.datnguyen.recommender.Repository.RepositoryFactory;
 import vn.datnguyen.recommender.utils.AvroEventScheme;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
-public class WeightApplierBolt extends BaseRichBolt {
+public class EventFilteringBolt extends BaseRichBolt {
     
     public static Charset charset = Charset.forName("UTF-8");
     public static CharsetEncoder encoder = charset.newEncoder();
@@ -78,10 +76,8 @@ public class WeightApplierBolt extends BaseRichBolt {
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //
-    /*
     private final static String CENTRE_ID = "centre_id";
     private final static String CENTRE_COORD = "centre_coord";
-    */
 
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private OutputCollector collector;
@@ -211,7 +207,7 @@ public class WeightApplierBolt extends BaseRichBolt {
         initCoord = this.indexesCoordRepository.insertNewIndex(rowId++, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
     }
-    /*
+
     private double distance(List<Integer> a, List<Integer> b) {
         double s = 0; 
         for (int i = 0; i<a.size(); i++) {
@@ -220,7 +216,7 @@ public class WeightApplierBolt extends BaseRichBolt {
 
         return Math.sqrt(s);
     }
-    
+
     private int findCentreId(List<Integer> itemProp) {
         SimpleStatement findAllCentreStatement = this.indexesCoordRepository.selectAllCentre();
         List<Row> findAllCentre = this.repositoryFactory.executeStatement(findAllCentreStatement, KEYSPACE_FIELD).all();
@@ -239,7 +235,7 @@ public class WeightApplierBolt extends BaseRichBolt {
 
         }
         return centreId;
-    }*/
+    }
     
     @Override
     public void execute(Tuple tuple) {
@@ -253,13 +249,13 @@ public class WeightApplierBolt extends BaseRichBolt {
             Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight, this.coord);
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
-                //int centreId = findCentreId(this.coord);
-                //Values values = new Values(ouputEvent,centreId);
-                ///collector.emit(CONTENT_BASED_STREAM, values);
-                //do nothing
+                int centreId = findCentreId(this.coord);
+                Values values = new Values(ouputEvent,centreId);
+                collector.emit(CONTENT_BASED_STREAM, values);
             } else {
-                Values values = new Values(ouputEvent, this.itemId);
-                collector.emit(ITEM_BASED_STREAM, values);
+                //Values values = new Values(ouputEvent, this.itemId);
+                //collector.emit(ITEM_BASED_STREAM, values);
+                //do nothing
             }
         }
 

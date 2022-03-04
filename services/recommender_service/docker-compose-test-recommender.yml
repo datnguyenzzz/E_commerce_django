@@ -37,6 +37,20 @@ services:
     ports:
       - 6379:6379
 
+  #cassandra1:
+  #  image: cassandra:latest
+  #  container_name: cassandra-1
+  #  restart: always 
+  #  ports: 
+  #    - 9042:9042
+  #  environment:
+  #    CASSANDRA_CLUSTER_NAME: Realtime_recommender_engine
+  #    CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+  #    CASSANDRA_DC: datacenter1
+  #  volumes:
+  #    - ./cassandra/1/data:/var/lib/cassandra/data
+  #    - ./cassandra/1/logs:/var/log/cassandra
+
   cassandra2:
     image: cassandra:latest
     container_name: cassandra-2
@@ -72,8 +86,8 @@ services:
     volumes:
       - ./storm/supervisor/logs:/logs
     command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
-    #command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m
-  
+    #command: storm supervisor -c worker.childopts=-Xmx%HEAP-MEM%m  
+
   ui:
     image: storm:1.2.4
     container_name: ui

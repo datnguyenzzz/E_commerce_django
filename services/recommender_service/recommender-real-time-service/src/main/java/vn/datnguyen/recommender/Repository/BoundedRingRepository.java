@@ -75,4 +75,13 @@ public class BoundedRingRepository implements BoundedRingInterface {
             )
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
+
+    public SimpleStatement deleteBoundedRingById(UUID ringId, int centreId) {
+        return QueryBuilder.deleteFrom(BOUNDED_RING_ROW)
+            .where(
+                Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId))
+            )
+            .build();
+    }
 }
