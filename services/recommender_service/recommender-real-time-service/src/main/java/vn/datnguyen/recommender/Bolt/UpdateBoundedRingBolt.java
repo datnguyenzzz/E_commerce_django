@@ -109,6 +109,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         } 
         else if (eventType.equals(avroDeleteItemEvent)) {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp delete data from ringId = " + ringId + " centreId = " + centreId);
+            deleteDataFromBoundedRing(itemId, clientId, incomeEvent.getCoord(), centreId, ringId);
         }
 
         collector.ack(input);
@@ -137,8 +138,10 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         return Math.sqrt(s);
     }
 
-    private BatchStatement splitBoundedRing(int centreId, UUID ringId) {
-        BatchStatementBuilder splitBoundedRing = BatchStatement.builder(BatchType.LOGGED);
+    private List<SimpleStatement> splitBoundedRing(int centreId, UUID ringId) {
+
+        List<SimpleStatement> splitBoundedRing = new ArrayList<SimpleStatement>();
+        
         //bouded ring 
         SimpleStatement findBoundedRingStatement = this.boundedRingRepository.findBoundedRingById(ringId, centreId);
         ResultSet findBoundedRingResult = this.repositoryFactory.executeStatement(findBoundedRingStatement, KEYSPACE_FIELD);
@@ -198,8 +201,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
                 this.itemStatusRepository.addNewItemStatus(itemId, clientId, newRingId, centreId, d);
             SimpleStatement deleteCurrDataFromRingStatement = 
                 this.itemStatusRepository.deleteItemStatus(itemId, clientId, ringId, centreId);
-            splitBoundedRing.addStatement(deleteCurrDataFromRingStatement)
-                .addStatement(changeToNewBoundedRingStatement);
+            splitBoundedRing.add(deleteCurrDataFromRingStatement);
+            splitBoundedRing.add(changeToNewBoundedRingStatement);
         }
         //update bounded ring
         double lbRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
@@ -214,10 +217,10 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         SimpleStatement updateNewRingCapacityStatement = 
             this.boundedRingRepository.updateBoundedRingCapacityById(newRingId, centreId, newRingCapacity);
             
-        splitBoundedRing.addStatement(updateOldRingRangeStatement)
-            .addStatement(updateOldRingCapacityStatement)
-            .addStatement(insertNewRingStatement)
-            .addStatement(updateNewRingCapacityStatement);
+        splitBoundedRing.add(updateOldRingRangeStatement);
+        splitBoundedRing.add(updateOldRingCapacityStatement);
+        splitBoundedRing.add(insertNewRingStatement);
+        splitBoundedRing.add(updateNewRingCapacityStatement);
             
         //update centre
         centreUBRangeSet.add(oldMaxRange);
@@ -225,9 +228,9 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         SimpleStatement updateUBListStatement = 
             this.indexesCoordRepository.updateUBRangeListById(centreId, centreUBRangeArrayList);
             
-        splitBoundedRing.addStatement(updateUBListStatement);
+        splitBoundedRing.add(updateUBListStatement);
         
-        return splitBoundedRing.build();
+        return splitBoundedRing;
     }
 
     private void addDataIntoBoundedRing(String itemId, String clientId, List<Integer> eventCoord, int centreId, UUID ringId) {
@@ -272,16 +275,34 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         addDataToBoundedRing.addStatement(addNewItemStatusStatement)
             .addStatement(increaseCapacityStatement);
 
-        this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
-
         // split if exceed range
         if (currCapacity == MAX_CAPACITY) {
-            BatchStatement splitBoundedRingBatch = splitBoundedRing(centreId, ringId);
-            this.repositoryFactory.executeStatement(splitBoundedRingBatch, KEYSPACE_FIELD);
+            List<SimpleStatement> splitBoundedRingListStatements = splitBoundedRing(centreId, ringId);
+            for (SimpleStatement statement: splitBoundedRingListStatements) {
+                addDataToBoundedRing.addStatement(statement);
+            }
         }
 
+        this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
     }
     
+    private void deleteDataFromBoundedRing(String itemId, String clientId, List<Integer> eventCoord, int centreId, UUID ringId) {
+        //bounded ring
+        SimpleStatement selectedBoundedRingStatement = 
+            this.boundedRingRepository.findBoundedRingById(ringId, centreId);
+        ResultSet selectedBoundedRingResult = 
+            this.repositoryFactory.executeStatement(selectedBoundedRingStatement, KEYSPACE_FIELD);
+        
+        if (selectedBoundedRingResult.getAvailableWithoutFetching() != 1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: Find centre by id result must equal to 1, not " + selectedBoundedRingResult.getAvailableWithoutFetching());
+        }
+
+        Row selectedBoundedRing = selectedBoundedRingResult.one();
+        int currentCapacity = (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
+
+        // delete item from bouneded ring
+    }
+
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("sink-bolt"));
