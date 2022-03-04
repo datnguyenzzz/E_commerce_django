@@ -280,12 +280,12 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         // split if exceed range
         if (currCapacity == MAX_CAPACITY) {
-            BatchStatementBuilder splitBoundedRing = BatchStatement.builder(BatchType.LOGGED);
+            BatchStatementBuilder splitBoundedRingBatch = BatchStatement.builder(BatchType.LOGGED);
             List<SimpleStatement> splitBoundedRingListStatements = splitBoundedRing(centreId, ringId);
             for (SimpleStatement statement: splitBoundedRingListStatements) {
-                splitBoundedRing.addStatement(statement);
+                splitBoundedRingBatch.addStatement(statement);
             }
-            this.repositoryFactory.executeStatement(splitBoundedRing.build(), KEYSPACE_FIELD);
+            this.repositoryFactory.executeStatement(splitBoundedRingBatch.build(), KEYSPACE_FIELD);
         }
 
     }
@@ -457,9 +457,32 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
 
         if (currentCapacity == MIN_CAPACITY && currentCapacity>1) {
+            BatchStatementBuilder mergeBoundedRingsBatch = BatchStatement.builder(BatchType.LOGGED);
             List<SimpleStatement> mergeBoundedRings = mergeBoundedRings(centreId, ringId); 
             for (SimpleStatement statement: mergeBoundedRings) {
-                deleteDataFromBoundedRing.addStatement(statement);
+                mergeBoundedRingsBatch.addStatement(statement);
+            }
+            this.repositoryFactory.executeStatement(mergeBoundedRingsBatch.build(), KEYSPACE_FIELD);
+
+            // split if exceed MAX CAP
+            selectedBoundedRingStatement = 
+                this.boundedRingRepository.findBoundedRingById(ringId, centreId);
+            selectedBoundedRingResult =  
+                this.repositoryFactory.executeStatement(selectedBoundedRingStatement, KEYSPACE_FIELD);
+            
+            if (selectedBoundedRingResult.getAvailableWithoutFetching() != 1) {
+                logger.warn("********* UpdateBoundedRingBolt **********: Find ring by id result must equal to 1, not " + selectedBoundedRingResult.getAvailableWithoutFetching());
+            }
+
+            selectedBoundedRing = selectedBoundedRingResult.one();
+            currentCapacity = (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
+            if (currentCapacity > MAX_CAPACITY) {
+                BatchStatementBuilder splitBoundedRingBatch = BatchStatement.builder(BatchType.LOGGED);
+                List<SimpleStatement> splitBoundedRingListStatements = splitBoundedRing(centreId, ringId);
+                for (SimpleStatement statement: splitBoundedRingListStatements) {
+                    splitBoundedRingBatch.addStatement(statement);
+                }
+                this.repositoryFactory.executeStatement(splitBoundedRingBatch.build(), KEYSPACE_FIELD);
             }
         } else if (currentCapacity == 1) {
             // delete current bounded ring
