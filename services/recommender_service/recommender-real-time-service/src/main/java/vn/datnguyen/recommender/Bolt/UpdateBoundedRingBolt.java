@@ -54,6 +54,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //
     private final static String ITEM_ID = "item_id"; // string
+    private final static String RING_ID = "ring_id";
     private final static String ADD_BY_CLIENT_ID = "add_by_client_id"; // string
     private final static String DISTANCE_TO_CENTRE = "distance_to_centre"; 
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
@@ -274,20 +275,157 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             
         addDataToBoundedRing.addStatement(addNewItemStatusStatement)
             .addStatement(increaseCapacityStatement);
+        
+        this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
 
         // split if exceed range
         if (currCapacity == MAX_CAPACITY) {
+            BatchStatementBuilder splitBoundedRing = BatchStatement.builder(BatchType.LOGGED);
             List<SimpleStatement> splitBoundedRingListStatements = splitBoundedRing(centreId, ringId);
             for (SimpleStatement statement: splitBoundedRingListStatements) {
-                addDataToBoundedRing.addStatement(statement);
+                splitBoundedRing.addStatement(statement);
+            }
+            this.repositoryFactory.executeStatement(splitBoundedRing.build(), KEYSPACE_FIELD);
+        }
+
+    }
+    
+    private List<SimpleStatement> mergeBoundedRings(int centreId, UUID ringId) {
+
+        List<SimpleStatement> mergeBoundedRingsList = new ArrayList<>();
+
+        //centre 
+        SimpleStatement selectedCentreStatement = this.indexesCoordRepository.selectCentreById(centreId);
+        ResultSet selectedCentreResult = 
+            this.repositoryFactory.executeStatement(selectedCentreStatement, KEYSPACE_FIELD);
+        if (selectedCentreResult.getAvailableWithoutFetching() > 1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: Find centre by id result must equal to 1, not " + selectedCentreResult.getAvailableWithoutFetching());
+        }
+        Row selectedCentre = selectedCentreResult.one();
+        List<Double> ubRangeList = 
+            this.repositoryFactory.getListDoubleFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        
+        if (ubRangeList.size() == 1) {
+            return mergeBoundedRingsList;
+        }
+
+        SortedSet<Double> ubRangeSet = new TreeSet<>();
+        for (double ubRange: ubRangeList) {
+            ubRangeSet.add(ubRange);
+        }
+
+        //current bounded ring 
+        SimpleStatement selectedBoundedRingStatement =
+            this.boundedRingRepository.findBoundedRingById(ringId, centreId);
+        ResultSet selectedBoundedRingResult = 
+            this.repositoryFactory.executeStatement(selectedBoundedRingStatement, KEYSPACE_FIELD);
+        if (selectedBoundedRingResult.getAvailableWithoutFetching() > 1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: Find ring by id result must equal to 1, not " + selectedBoundedRingResult.getAvailableWithoutFetching());
+        }
+        Row selectedBoundedRing = selectedBoundedRingResult.one();
+        UUID selectedBoundedRingId = ringId;
+        double selectedRingLBRange = 
+            (double) this.repositoryFactory.getFromRow(selectedBoundedRing, LOWER_BOUND_RANGE);
+        double selectedRingUBRange = 
+            (double) this.repositoryFactory.getFromRow(selectedBoundedRing, UPPER_BOUND_RANGE);
+        int selectedRingCapacity = 
+            (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
+
+        // find partner ring
+        
+        double partnerRingWithUBRange=-1;
+        if (selectedRingLBRange == 0.0) {
+            // 0 -- 1
+            partnerRingWithUBRange = ubRangeList.get(1);
+        } else {
+            // i -- i-1
+            for (double ubRange: ubRangeList) {
+                if (ubRange == selectedRingLBRange) {
+                    partnerRingWithUBRange = ubRange;
+                    break;
+                }
             }
         }
 
-        this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
-    }
-    
-    private List<SimpleStatement> mergeBoundedRings() {
-        return null;
+        if (partnerRingWithUBRange == -1) {
+            logger.warn("********* UpdateBoundedRingBolt **********: can not find previous of ringId " + ringId);
+        }
+
+        SimpleStatement allRingInCentreStatement = this.boundedRingRepository.findAllBoundedRingInCentre(centreId);   
+        List<Row> allRingInCentre = 
+            this.repositoryFactory.executeStatement(allRingInCentreStatement, KEYSPACE_FIELD)
+                .all();
+        
+        UUID partnerRingId = null;
+        double partnerRingLBRange=-1;
+        double partnerRingUBRange=-1;
+        int partnerRingCapacity=0;
+        for (Row r: allRingInCentre) {
+            double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+            UUID id = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
+            if (ubRange == partnerRingWithUBRange) {
+                partnerRingId = id;
+                partnerRingCapacity = (int) this.repositoryFactory.getFromRow(r, CAPACITY);
+                partnerRingLBRange = (double) this.repositoryFactory.getFromRow(r, LOWER_BOUND_RANGE);
+                partnerRingUBRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+                break;
+            }
+        }
+
+        if (partnerRingId == null) {
+            logger.warn("********* UpdateBoundedRingBolt **********: can not find partner of ringId " + ringId);
+        }
+
+        //delete partner ring
+        SimpleStatement deletePartnerRing = 
+            this.boundedRingRepository.deleteBoundedRingById(partnerRingId, centreId);
+        mergeBoundedRingsList.add(deletePartnerRing);
+
+        //move item from partner ring to selected ring
+        SimpleStatement allDataInPartnerRingStatement = 
+            this.itemStatusRepository.findAllByRingId(partnerRingId, centreId);
+        List<Row> allDataInPartnerRing =
+            this.repositoryFactory.executeStatement(allDataInPartnerRingStatement, KEYSPACE_FIELD)
+                .all();
+        for (Row r: allDataInPartnerRing) {
+            String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
+            String clientId = (String) this.repositoryFactory.getFromRow(r, ADD_BY_CLIENT_ID);
+            double dist = (double) this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+
+            SimpleStatement removeDataFromBoundedRing = 
+                this.itemStatusRepository.deleteItemStatus(itemId, clientId, partnerRingId, centreId);
+            SimpleStatement addDataIntoBoundedRing = 
+                this.itemStatusRepository.addNewItemStatus(itemId, clientId, selectedBoundedRingId, centreId, dist);
+
+            mergeBoundedRingsList.add(removeDataFromBoundedRing);
+            mergeBoundedRingsList.add(addDataIntoBoundedRing);
+        }
+        //update props of selected ring
+        int newCapacity = selectedRingCapacity + partnerRingCapacity;
+        SimpleStatement increaseSelectedRingCapacityStatement = 
+            this.boundedRingRepository.updateBoundedRingCapacityById(selectedBoundedRingId, centreId, newCapacity);
+        mergeBoundedRingsList.add(increaseSelectedRingCapacityStatement);
+
+        double newLBRange = Math.min(selectedRingLBRange, partnerRingLBRange);
+        double newUBRange = Math.max(selectedRingUBRange, partnerRingUBRange);
+        double oldUBRange = Math.min(selectedRingUBRange, partnerRingUBRange);
+
+        SimpleStatement updateSelectedRingRangeStatment = 
+            this.boundedRingRepository.updateBoundedRingRange(selectedBoundedRingId, centreId, newLBRange, newUBRange);
+        mergeBoundedRingsList.add(updateSelectedRingRangeStatment);
+
+        // update UBrange list of centre
+        ubRangeSet.remove(partnerRingUBRange);
+        if (ubRangeSet.contains(oldUBRange)) {
+            ubRangeSet.remove(oldUBRange);
+        }
+        ubRangeSet.add(newUBRange);
+        List<Double> tempUBRangeList = new ArrayList<>(ubRangeSet);
+        SimpleStatement updateUBRangeList = 
+            this.indexesCoordRepository.updateUBRangeListById(centreId, tempUBRangeList);
+        mergeBoundedRingsList.add(updateUBRangeList);
+
+        return mergeBoundedRingsList;
     }
 
     private void deleteDataFromBoundedRing(String itemId, String clientId, List<Integer> eventCoord, int centreId, UUID ringId) {
@@ -300,7 +438,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             this.repositoryFactory.executeStatement(selectedBoundedRingStatement, KEYSPACE_FIELD);
         
         if (selectedBoundedRingResult.getAvailableWithoutFetching() != 1) {
-            logger.warn("********* UpdateBoundedRingBolt **********: Find centre by id result must equal to 1, not " + selectedBoundedRingResult.getAvailableWithoutFetching());
+            logger.warn("********* UpdateBoundedRingBolt **********: Find ring by id result must equal to 1, not " + selectedBoundedRingResult.getAvailableWithoutFetching());
         }
 
         Row selectedBoundedRing = selectedBoundedRingResult.one();
@@ -316,14 +454,17 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             this.boundedRingRepository.updateBoundedRingCapacityById(ringId, centreId, currentCapacity-1);
         deleteDataFromBoundedRing.addStatement(decreaseRingCapacity);
 
-        if (currentCapacity == MIN_CAPACITY) {
-            List<SimpleStatement> mergeBoundedRings = mergeBoundedRings(); 
+        this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
+
+        if (currentCapacity == MIN_CAPACITY && currentCapacity>1) {
+            List<SimpleStatement> mergeBoundedRings = mergeBoundedRings(centreId, ringId); 
             for (SimpleStatement statement: mergeBoundedRings) {
                 deleteDataFromBoundedRing.addStatement(statement);
             }
+        } else if (currentCapacity == 1) {
+            // delete current bounded ring
         }
 
-        this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
     }
 
     @Override
