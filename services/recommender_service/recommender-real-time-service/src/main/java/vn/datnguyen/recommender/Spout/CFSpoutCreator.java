@@ -15,19 +15,19 @@ import org.apache.storm.tuple.Values;
 
 import vn.datnguyen.recommender.utils.CustomProperties;
 
-public class CBSpoutCreator {
+public class CFSpoutCreator {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
 
     private final static String BOOTSTRAP_SERVER = customProperties.getProp("BOOTSTRAP_SERVER");
     private final static String LISTEN_FROM_TOPIC = customProperties.getProp("LISTEN_FROM_TOPIC");
-    private final static String CB_METHOD_CONSUMER_GROUP = customProperties.getProp("CB_METHOD_CONSUMER_GROUP");
+    private final static String CF_METHOD_CONSUMER_GROUP = customProperties.getProp("CF_METHOD_CONSUMER_GROUP");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
     private final static String TOPIC_FIELD = customProperties.getProp("TOPIC_FIELD");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
 
-    public CBSpoutCreator() {}
+    public CFSpoutCreator() {}
 
     public KafkaSpout<?,?> kafkaAvroEventSpout() {
         return new KafkaSpout<>(kafkaAvroEventSpoutConfig());
@@ -42,7 +42,7 @@ public class CBSpoutCreator {
         //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});
 
         return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC})
-            .setProp(ConsumerConfig.GROUP_ID_CONFIG, CB_METHOD_CONSUMER_GROUP)
+            .setProp(ConsumerConfig.GROUP_ID_CONFIG, CF_METHOD_CONSUMER_GROUP)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_EARLIEST)

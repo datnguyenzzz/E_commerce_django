@@ -4,7 +4,7 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
 import vn.datnguyen.recommender.Bolt.BoltFactory;
-import vn.datnguyen.recommender.Spout.CBSpoutCreator;
+import vn.datnguyen.recommender.Spout.CFSpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class CollaborativeFiltering {
@@ -49,7 +49,7 @@ public class CollaborativeFiltering {
     //--
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
     //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
-    private static CBSpoutCreator spoutCreator = new CBSpoutCreator();
+    private static CFSpoutCreator spoutCreator = new CFSpoutCreator();
     private static BoltFactory boltFactory = new BoltFactory();
 
     public CollaborativeFiltering () {}
