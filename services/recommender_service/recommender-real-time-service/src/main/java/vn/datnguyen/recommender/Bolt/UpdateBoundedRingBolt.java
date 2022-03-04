@@ -456,7 +456,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
 
-        if (currentCapacity == MIN_CAPACITY && currentCapacity>1) {
+        if (currentCapacity == MIN_CAPACITY) {
             BatchStatementBuilder mergeBoundedRingsBatch = BatchStatement.builder(BatchType.LOGGED);
             List<SimpleStatement> mergeBoundedRings = mergeBoundedRings(centreId, ringId); 
             for (SimpleStatement statement: mergeBoundedRings) {
@@ -484,10 +484,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
                 }
                 this.repositoryFactory.executeStatement(splitBoundedRingBatch.build(), KEYSPACE_FIELD);
             }
-        } else if (currentCapacity == 1) {
-            // delete current bounded ring
         }
-
     }
 
     @Override
