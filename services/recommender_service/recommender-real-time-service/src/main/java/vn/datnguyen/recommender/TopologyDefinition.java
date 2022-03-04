@@ -44,7 +44,6 @@ public class TopologyDefinition {
     private static void createTopology() throws Exception {
         TopologyBuilder colaborativeFilertingTopologyBuilder = collaborativeFiltering.initTopology();
         TopologyBuilder contentBasedTopologyBuilder = contentBased.initTopology();
-        
 
         Config tpCFConfig = getCFConfig();
         StormSubmitter.submitTopology(TOPO_CF, tpCFConfig, colaborativeFilertingTopologyBuilder.createTopology());

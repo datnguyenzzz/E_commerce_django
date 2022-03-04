@@ -29,15 +29,15 @@ public class ContentBased {
     private static final String DISPATCHER_BOLT_TASKS = customProperties.getProp("DISPATCHER_BOLT_TASKS");
     private static final String UPDATE_RING_BOLT_TASKS = customProperties.getProp("UPDATE_RING_BOLT_TASKS");
     //PARALLISM
-    private static final String KAFKA_SPOUT_THREAD = customProperties.getProp("KAFKA_SPOUT_THREAD");
+    private static final String KAFKA_SPOUT_CB_THREADS = customProperties.getProp("KAFKA_SPOUT_CB_THREADS");
     private static final String EVENT_FILTERING_BOLT_THREADS = customProperties.getProp("EVENT_FILTERING_BOLT_THREADS");
     //STREAM
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
     //IDs
-    private final static String KAFKA_SPOUT = customProperties.getProp("KAFKA_SPOUT");
+    private final static String KAFKA_SPOUT_CB = customProperties.getProp("KAFKA_SPOUT_CB");
     //--
     //Tasks size 
-    private final static String SPOUT_TASKS = customProperties.getProp("SPOUT_TASKS");
+    private final static String KAFKA_SPOUT_CB_TASKS = customProperties.getProp("SPOUT_TASKS");
     private final static String EVENT_FILTERING_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_BOLT_TASKS");
     //--
     //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
@@ -50,12 +50,12 @@ public class ContentBased {
     public TopologyBuilder initTopology() throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
-        topologyBuilder.setSpout(KAFKA_SPOUT, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_THREAD))
-            .setNumTasks(Integer.parseInt(SPOUT_TASKS));
+        topologyBuilder.setSpout(KAFKA_SPOUT_CB, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
+            .setNumTasks(Integer.parseInt(KAFKA_SPOUT_CB_TASKS));
 
         topologyBuilder.setBolt(EVENT_FILTERING_BOLT, boltFactory.createEventFilteringBolt(), Integer.parseInt(EVENT_FILTERING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(EVENT_FILTERING_BOLT_TASKS))
-            .shuffleGrouping(KAFKA_SPOUT, EVENTSOURCE_STREAM);
+            .shuffleGrouping(KAFKA_SPOUT_CB, EVENTSOURCE_STREAM);
         
         // content based
         topologyBuilder.setBolt(DISPATCHER_BOLT, boltFactory.createDispatcherBolt(), Integer.parseInt(DISPATCHER_BOLT_THREADS))

@@ -63,7 +63,7 @@ public class BoltFactory {
     public UpdateBoundedRingBolt createUpdateBoundedRingBolt() {
         return new UpdateBoundedRingBolt();
     }
-
+    
     public EventFilteringBolt createEventFilteringBolt() {
         return new EventFilteringBolt();
     }
