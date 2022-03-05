@@ -40,8 +40,6 @@ public class ContentBased {
     private final static String KAFKA_SPOUT_CB_TASKS = customProperties.getProp("SPOUT_TASKS");
     private final static String EVENT_FILTERING_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_BOLT_TASKS");
     //--
-    //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
-    //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private static CBSpoutCreator spoutCreator = new CBSpoutCreator();
     private static BoltFactory boltFactory = new BoltFactory();
 

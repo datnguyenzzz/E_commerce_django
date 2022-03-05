@@ -20,7 +20,7 @@ public class CFSpoutCreator {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
 
     private final static String BOOTSTRAP_SERVER = customProperties.getProp("BOOTSTRAP_SERVER");
-    private final static String LISTEN_FROM_TOPIC = customProperties.getProp("LISTEN_FROM_TOPIC");
+    private final static String EVENT_FOR_COMPUTING_TOPIC = customProperties.getProp("EVENT_FOR_COMPUTING_TOPIC");
     private final static String CF_METHOD_CONSUMER_GROUP = customProperties.getProp("CF_METHOD_CONSUMER_GROUP");
     private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
 
@@ -41,7 +41,7 @@ public class CFSpoutCreator {
         
         //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});
 
-        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC})
+        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{EVENT_FOR_COMPUTING_TOPIC})
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, CF_METHOD_CONSUMER_GROUP)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
