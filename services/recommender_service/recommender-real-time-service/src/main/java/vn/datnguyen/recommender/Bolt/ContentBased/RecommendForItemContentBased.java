@@ -21,7 +21,9 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    //
     private OutputCollector collector;
+    private int K, A, B; 
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -33,6 +35,9 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
         int limit = incomeEvent.getLimit();
         List<Integer> eventCoord = incomeEvent.getCoord();
+        K = limit; 
+        B = 2;
+        A = Math.round(1.5f * limit) / B;
 
         logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
