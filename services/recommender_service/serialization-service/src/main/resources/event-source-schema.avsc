@@ -131,6 +131,30 @@
                             "name": "itemId", "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "AvroRecommendForUser",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "limit", "type": "int"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroRecommendForItem",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "itemId", "type": "string"
+                        },
+                        {
+                            "name": "limit", "type": "int"
+                        }
+                    ]
                 }
             ]
         }

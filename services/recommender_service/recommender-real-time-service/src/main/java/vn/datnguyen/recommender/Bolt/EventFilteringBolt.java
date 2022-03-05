@@ -28,6 +28,8 @@ import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.AvroRecommendForItem;
+import vn.datnguyen.recommender.AvroClasses.AvroRecommendForUser;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.IndexesCoordRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
@@ -44,12 +46,16 @@ public class EventFilteringBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //STREAM 
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
+    private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
+    private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     //INCOME EVENT
     private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
+    private final static String avroRecommendForUserEvent = customProperties.getProp("avroRecommendForUserEvent");
+    private final static String avroRecommendForItemEvent = customProperties.getProp("avroRecommendForItemEvent");
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -65,7 +71,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     private OutputCollector collector;
     private AvroEventScheme avroEventScheme = new AvroEventScheme();
     private String eventId, timestamp, eventType, clientId, itemId;
-    private int weight;
+    private int weight, limit;
     private List<Integer> coord = null;
 
     private RepositoryFactory repositoryFactory;
@@ -114,6 +120,18 @@ public class EventFilteringBolt extends BaseRichBolt {
             this.itemId = payload.getItemId();
             this.weight = 0;
         } 
+        else if (eventType.equals(avroRecommendForItemEvent)) {
+            //do somthing
+            AvroRecommendForItem payload = (AvroRecommendForItem) event.getData();
+            this.itemId = payload.getItemId();
+            this.limit = payload.getLimit();
+        }
+        else if (eventType.equals(avroRecommendForUserEvent)) {
+            //do something
+            AvroRecommendForUser payload = (AvroRecommendForUser) event.getData();
+            this.clientId = payload.getClientId();
+            this.limit = payload.getLimit();
+        }
         else {
             logger.error("NOT EXIST EVENT");
             throw new FailedException("NOT EXIST EVENT");
@@ -192,13 +210,20 @@ public class EventFilteringBolt extends BaseRichBolt {
         if (event.getEventId() != null && event.getEventId() != "") {
             applyWeight(event);
 
-            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight, this.coord);
+            Event ouputEvent = new Event(this.eventId, this.timestamp, this.eventType, this.clientId, this.itemId, this.weight, this.limit, this.coord);
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
                 int centreId = findCentreId(this.coord);
                 Values values = new Values(ouputEvent,centreId);
                 collector.emit(CONTENT_BASED_STREAM, values);
-            } else {
+            } 
+            else if (this.eventType.equals(avroRecommendForItemEvent)) {
+                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Values(ouputEvent));
+            }
+            else if (this.eventType.equals(avroRecommendForUserEvent)) {
+                collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
+            }
+            else {
                 //Values values = new Values(ouputEvent, this.itemId);
                 //collector.emit(ITEM_BASED_STREAM, values);
                 //do nothing
@@ -211,5 +236,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
+        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD));
+        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Fields(EVENT_FIELD));
     }
 }
