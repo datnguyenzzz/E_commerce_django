@@ -67,4 +67,8 @@ public class BoltFactory {
     public EventFilteringBolt createEventFilteringBolt() {
         return new EventFilteringBolt();
     }
+
+    public RecommendForItemContentBased createRecommendForItemContentBased() {
+        return new RecommendForItemContentBased();
+    }
 }

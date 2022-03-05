@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
-public class LoggerBolt extends BaseRichBolt {
+public class RecommendForItemContentBased extends BaseRichBolt {
     
-    private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
+    private final Logger logger = LoggerFactory.getLogger(RecommendForItemContentBased.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
@@ -31,7 +31,7 @@ public class LoggerBolt extends BaseRichBolt {
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
 
-        logger.info("********* LoggerBolt **********" + incomeEvent);
+        logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
     }
     
