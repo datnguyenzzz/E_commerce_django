@@ -126,6 +126,11 @@ public class EventFilteringBolt extends BaseRichBolt {
             AvroRecommendForItem payload = (AvroRecommendForItem) event.getData();
             this.itemId = payload.getItemId();
             this.limit = payload.getLimit();
+            
+            this.coord = new ArrayList<Integer>();
+            this.coord.add(payload.getProperties1());
+            this.coord.add(payload.getProperties2());
+            this.coord.add(payload.getProperties3());
         }
         else if (eventType.equals(avroRecommendForUserEvent)) {
             //do something

@@ -153,6 +153,15 @@
                         },
                         {
                             "name": "limit", "type": "int"
+                        },
+                        {
+                            "name": "properties_1", "type": "int"
+                        },
+                        {
+                            "name": "properties_2", "type": "int"
+                        },
+                        {
+                            "name": "properties_3", "type": "int"
                         }
                     ]
                 }

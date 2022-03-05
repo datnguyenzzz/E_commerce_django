@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.storm.task.OutputCollector;
@@ -30,6 +31,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        int limit = incomeEvent.getLimit();
+        List<Integer> eventCoord = incomeEvent.getCoord();
 
         logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
