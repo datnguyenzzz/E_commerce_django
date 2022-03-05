@@ -26,14 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
 import vn.datnguyen.recommender.AvroClasses.AvroAddItem;
-import vn.datnguyen.recommender.AvroClasses.AvroAddToCartBehavior;
-import vn.datnguyen.recommender.AvroClasses.AvroBuyBehavior;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
-import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
-import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
-import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
-import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.IndexesCoordRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
@@ -49,26 +43,14 @@ public class EventFilteringBolt extends BaseRichBolt {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //STREAM 
-    private final static String ITEM_BASED_STREAM = customProperties.getProp("ITEM_BASED_STREAM");
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
-    private final static String ITEM_ID_FIELD = customProperties.getProp("ITEM_ID_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     //INCOME EVENT
-    private final static String avroPublishRatingEvent = customProperties.getProp("avroPublishRatingEvent");
-    private final static String avroUpdateRatingEvent = customProperties.getProp("avroUpdateRatingEvent");
-    private final static String avroDeleteRatingEvent = customProperties.getProp("avroDeleteRatingEvent");
-    private final static String avroQueryRatingEvent = customProperties.getProp("avroQueryRatingEvent");
-    private final static String avroBuyBehaviorEvent = customProperties.getProp("avroBuyBehaviorEvent");
-    private final static String avroAddToCartBehaviorEvent = customProperties.getProp("avroAddToCartBehaviorEvent");
     private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
     //WEIGHT VALUEs
-    private final static String DELETE_RATING_EVENT_WEIGHT = customProperties.getProp("DELETE_RATING_EVENT_WEIGHT");
-    private final static String QUERY_RATING_EVENT_WEIGHT = customProperties.getProp("QUERY_RATING_EVENT_WEIGHT");
-    private final static String BUY_EVENT_WEIGHT = customProperties.getProp("BUY_EVENT_WEIGHT");
-    private final static String ADD_TO_CART_WEIGHT = customProperties.getProp("ADD_TO_CART_WEIGHT");
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
     //CASSANDRA PROPS
@@ -115,43 +97,7 @@ public class EventFilteringBolt extends BaseRichBolt {
         this.eventType = event.getEventType();
         this.timestamp = event.getTimestamp();
 
-        if (eventType.equals(avroPublishRatingEvent)) {
-            AvroPublishRating payload = (AvroPublishRating) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = payload.getScore();
-        }
-        else if (eventType.equals(avroUpdateRatingEvent)) {
-            AvroUpdateRating payload = (AvroUpdateRating) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = payload.getScore();
-        }
-        else if (eventType.equals(avroDeleteRatingEvent)) {
-            AvroDeleteRating payload = (AvroDeleteRating) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = Integer.parseInt(DELETE_RATING_EVENT_WEIGHT);
-        }
-        else if (eventType.equals(avroQueryRatingEvent)) {
-            AvroQueryRating payload = (AvroQueryRating) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = Integer.parseInt(QUERY_RATING_EVENT_WEIGHT);
-        }
-        else if (eventType.equals(avroBuyBehaviorEvent)) {
-            AvroBuyBehavior payload = (AvroBuyBehavior) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = Integer.parseInt(BUY_EVENT_WEIGHT);
-        }
-        else if (eventType.equals(avroAddToCartBehaviorEvent)) {
-            AvroAddToCartBehavior payload = (AvroAddToCartBehavior) event.getData();
-            this.clientId = payload.getClientId();
-            this.itemId = payload.getItemId();
-            this.weight = Integer.parseInt(ADD_TO_CART_WEIGHT);
-        }
-        else if (eventType.equals(avroAddItemEvent)) {
+        if (eventType.equals(avroAddItemEvent)) {
             AvroAddItem payload = (AvroAddItem) event.getData();
             this.clientId = payload.getClientId();
             this.itemId = payload.getItemId();
@@ -265,6 +211,5 @@ public class EventFilteringBolt extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
-        declarer.declareStream(ITEM_BASED_STREAM, new Fields(EVENT_FIELD, ITEM_ID_FIELD));
     }
 }
