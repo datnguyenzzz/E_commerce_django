@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt;
+package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.Map;
 

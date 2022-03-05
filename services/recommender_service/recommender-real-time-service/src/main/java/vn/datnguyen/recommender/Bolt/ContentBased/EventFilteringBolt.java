@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt;
+package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -30,6 +30,7 @@ import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroRecommendForItem;
 import vn.datnguyen.recommender.AvroClasses.AvroRecommendForUser;
+import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Repository.IndexesCoordRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;

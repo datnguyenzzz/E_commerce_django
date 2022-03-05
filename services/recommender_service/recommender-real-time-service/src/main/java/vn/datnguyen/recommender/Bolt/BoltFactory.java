@@ -3,6 +3,18 @@ package vn.datnguyen.recommender.Bolt;
 
 import org.apache.storm.redis.common.config.JedisPoolConfig;
 
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.ClientRatingBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.CoRatingBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.DuplicateFilterBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.ItemCountBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.NewRecordBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.PairCountBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.SimilaritiesBolt;
+import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.WeightApplierBolt;
+import vn.datnguyen.recommender.Bolt.ContentBased.DispatcherBolt;
+import vn.datnguyen.recommender.Bolt.ContentBased.EventFilteringBolt;
+import vn.datnguyen.recommender.Bolt.ContentBased.RecommendForItemContentBased;
+import vn.datnguyen.recommender.Bolt.ContentBased.UpdateBoundedRingBolt;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class BoltFactory {
