@@ -42,6 +42,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String EVENT_COORD_FIELD = customProperties.getProp("EVENT_COORD_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
@@ -207,14 +208,14 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             UUID ringId = ring.getValue();
 
             //emit to individual bolt 
-            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(centreId, ringId, B));
+            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventCoord, centreId, ringId, B));
             //gather to 1 values 
             centreList.add(centreId);
             ringList.add(ringId);
 
         }
 
-        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(incomeEvent,K, centreList, ringList));
+        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(eventCoord, K, centreList, ringList));
 
         logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
@@ -222,7 +223,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
-        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
+        declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
+        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
     }
 }

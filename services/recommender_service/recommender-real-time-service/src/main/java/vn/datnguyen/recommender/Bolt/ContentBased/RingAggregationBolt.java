@@ -13,7 +13,6 @@ import org.apache.storm.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class RingAggregationBolt extends BaseRichBolt {
@@ -21,7 +20,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final Logger logger = LoggerFactory.getLogger(RingAggregationBolt.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String EVENT_COORD_FIELD = customProperties.getProp("EVENT_COORD_FIELD");
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     private final static String RING_LIST_FIELD = customProperties.getProp("RING_LIST_FIELD");
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
@@ -35,12 +34,12 @@ public class RingAggregationBolt extends BaseRichBolt {
     @SuppressWarnings("unchecked")
     @Override
     public void execute(Tuple input) {
-        Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
         int K = (int) input.getValueByField(KNN_FACTOR_FIELD);
         List<Integer> centreIdList = (List<Integer>) input.getValueByField(CENTRE_LIST_FIELD);
         List<UUID> ringIdList = (List<UUID>) input.getValueByField(RING_LIST_FIELD);
 
-        logger.info("********* RingAggregationBolt **********" + incomeEvent
+        logger.info("********* RingAggregationBolt **********" + eventCoord
                     + " KNN factor = " + K
                     + " centre list = " + centreIdList
                     + " ring list = " + ringIdList);
