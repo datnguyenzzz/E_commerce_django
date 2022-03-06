@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.datnguyen.recommender.Domain.AddItemCommand;
 import vn.datnguyen.recommender.Domain.DeleteItemCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
+import vn.datnguyen.recommender.Domain.RecommendationForItemCommand;
 import vn.datnguyen.recommender.Handler.RatingService;
 
 @RestController
@@ -75,6 +76,22 @@ public class ApiController {
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
                                 String bodyRes = "Delete item sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
+                            });
+    }
+
+    @PostMapping("/testing/learn")
+    public CompletableFuture<ResponseEntity<String>> RecommendForItem(@Validated @RequestBody RecommendationForItemCommand command) {
+        logger.info("TESTING-RATING-SERVICE: " + "recommend for item command = " + command.toString());
+
+        return ratingService.process(command)
+                            .thenApply(result -> {
+                                String bodyRes = "recommend for item sucessfully " + command.toString();
+                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                            })
+                            .exceptionally(e -> {
+                                logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on recommend for item command"+ e);
+                                String bodyRes = "recommend for item sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
     }
