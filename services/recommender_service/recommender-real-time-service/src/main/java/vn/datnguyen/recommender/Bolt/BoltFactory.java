@@ -14,6 +14,7 @@ import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.WeightApplierBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.DispatcherBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.EventFilteringBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.RecommendForItemContentBased;
+import vn.datnguyen.recommender.Bolt.ContentBased.RingAggregationBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.UpdateBoundedRingBolt;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
@@ -82,5 +83,9 @@ public class BoltFactory {
 
     public RecommendForItemContentBased createRecommendForItemContentBased() {
         return new RecommendForItemContentBased();
+    }
+
+    public RingAggregationBolt createRingAggregationBolt() {
+        return new RingAggregationBolt();
     }
 }

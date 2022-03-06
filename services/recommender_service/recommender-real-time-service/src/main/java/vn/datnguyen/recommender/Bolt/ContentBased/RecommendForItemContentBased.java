@@ -40,11 +40,11 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     //STREAM
     private final static String INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM = customProperties.getProp("INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM");
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
-    //FIELDs
+    //VALUE FIELDS
+    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
-    private final static String RINGS_LIST_SIZE_FIELD = customProperties.getProp("RINGS_LIST_SIZE_FIELD");
     private final static String RING_LIST_FIELD = customProperties.getProp("RING_LIST_FIELD");
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
     //WEIGHT VALUEs
@@ -54,8 +54,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
-    //VALUE FIELDS
-    private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     //table col
     private final static String CENTRE_ID = "centre_id";
     private final static String CENTRE_COORD = "centre_coord";
@@ -216,7 +214,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
         }
 
-        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(K, potentialBoundedRings.size(), centreList, ringList));
+        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(incomeEvent,K, centreList, ringList));
 
         logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
@@ -225,6 +223,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
-        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(KNN_FACTOR_FIELD, RINGS_LIST_SIZE_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
+        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
     }
 }
