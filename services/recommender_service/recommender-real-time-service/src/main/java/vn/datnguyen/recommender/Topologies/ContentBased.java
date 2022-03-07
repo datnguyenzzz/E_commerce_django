@@ -27,6 +27,7 @@ public class ContentBased {
     //
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
+    private final static String EVENT_COORD_FIELD = customProperties.getProp("EVENT_COORD_FIELD");
     //TASKS
     private final static String KAFKA_SPOUT_CB_TASKS = customProperties.getProp("SPOUT_TASKS");
     private final static String EVENT_FILTERING_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_BOLT_TASKS");
@@ -74,7 +75,7 @@ public class ContentBased {
 
         topologyBuilder.setBolt(RING_AGGREGRATION_BOLT,boltFactory.createRingAggregationBolt() , Integer.parseInt(RING_AGGREGRATION_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))
-            .shuffleGrouping(AGGREGATE_BOUNDED_RINGS_STREAM, RECOMMEND_FOR_ITEM_BOLT);
+            .fieldsGrouping(AGGREGATE_BOUNDED_RINGS_STREAM, RECOMMEND_FOR_ITEM_BOLT, new Fields(EVENT_COORD_FIELD));
 
         return topologyBuilder;
 
