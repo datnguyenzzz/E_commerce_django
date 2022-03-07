@@ -140,7 +140,7 @@ public class DispatcherBolt extends BaseRichBolt {
             
             // add new bounded ring
             SimpleStatement addNewBoundedRingStatement = 
-                this.boundedRingRepository.addNewBoundedRing(ringId, centreId, lbRange, ubRange);
+                this.boundedRingRepository.addNewBoundedRing(ringId, centreId, lbRange, ubRange, 0);
             
             addDataToCentre.addStatement(addNewBoundedRingStatement);
             //update centreUBList

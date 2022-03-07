@@ -2,6 +2,7 @@ package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -10,6 +11,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
@@ -62,7 +64,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
     //--- bounded ring
     private final static String RING_ID = "ring_id"; // UUID
-    private final static String UPPER_BOUND_RANGE = "upper_bound_range"; // double
     //
     private OutputCollector collector;
     private int K, A, B;
@@ -97,44 +98,65 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         return Math.sqrt(s);
     }
 
-    /*
-        STUPID AS FUCK !!!!!!
-        BUT TOO LAZY TO IMPROVE ALGORITHM ^_^
-    */
-    private UUID findCorrectspondBoundedRing(List<Row> allBoundedRingWithin, double expectedUBRange) {
-        for (Row r: allBoundedRingWithin) {
-            UUID ringId = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
-            double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
-            if (ubRange == expectedUBRange) {
-                return ringId;
-            }
+    private UUID findCorrectspondBoundedRing(int centreId, double expectedUBRange) {
+        SimpleStatement findRingByIdAndRangeStatement = 
+            this.boundedRingRepository.findBoundedRingByIdAndRange(centreId, expectedUBRange);
+        
+        ResultSet findRingByIdAndRangeRes = 
+            this.repositoryFactory.executeStatement(findRingByIdAndRangeStatement, KEYSPACE_FIELD); 
+        
+        if (findRingByIdAndRangeRes.getAvailableWithoutFetching() == 0) {
+            logger.warn("********* RecommendForItemContentBased **********: Must return 1, found 0 in centre - " 
+                        + centreId + " with range - " + expectedUBRange);
+            return null;          
         }
 
-        return null;
+        Row findRingByIdAndRange = findRingByIdAndRangeRes.one();
+        UUID ringId = (UUID) this.repositoryFactory.getFromRow(findRingByIdAndRange, RING_ID);
+        return ringId;
     }
 
     private List<ImmutablePair<Integer, UUID> > findPotentialBoundedRings(List<Integer> eventCoord, int K, int A, int B) {
         
         List<ImmutablePair<Integer, UUID> > result = new ArrayList<>();
+        Map<Integer, List<Double> > UBRangeOfCentre = new HashMap<>();
+        Map<Integer, List<Integer> > CoordOfCentre = new HashMap<>();
 
-        Comparator<ImmutableTriple<Double, Integer, UUID> > customCompare = (tuple1, tuple2) -> {
-            double cmp = tuple2.getLeft() - tuple1.getLeft();
-            if (cmp > 0) {
-                return 1; 
-            } 
-            else if (cmp < 0) {
-                return -1;
-            }
-            return 0;
+        Comparator<ImmutableTriple<Integer, Integer, Boolean> > customCompare = (tuple1, tuple2) -> {
+            int centreId1 = tuple1.getLeft();
+            int ubRangePos1 = tuple1.getMiddle();
+            double ubRange1 = UBRangeOfCentre.get(centreId1).get(ubRangePos1);
+            double dist1 = dist(eventCoord, CoordOfCentre.get(centreId1));
+
+            int centreId2 = tuple2.getLeft();
+            int ubRangePos2 = tuple2.getMiddle();
+            double ubRange2 = UBRangeOfCentre.get(centreId2).get(ubRangePos2);
+            double dist2 = dist(eventCoord, CoordOfCentre.get(centreId2));
+
+            double diff1 = Math.abs(ubRange1 - dist1);
+            double diff2 = Math.abs(ubRange2 - dist2);
+
+            int cmp = (diff2 > diff1) ? 1 : -1;
+            return cmp;
         };
 
-        PriorityQueue<ImmutableTriple<Double, Integer, UUID> > pq = new PriorityQueue<>(customCompare);
+        //CentreId position direction
+        PriorityQueue<ImmutableTriple<Integer, Integer, Boolean> > pq = new PriorityQueue<>(customCompare);
 
         //get all centre and rings within
         SimpleStatement allCentreStatement = this.indexesCoordRepository.selectAllCentre();
         List<Row> allCentre = 
             this.repositoryFactory.executeStatement(allCentreStatement, KEYSPACE_FIELD)
                 .all();
+
+        for (Row r: allCentre) {
+            int centreId = (int) this.repositoryFactory.getFromRow(r, CENTRE_ID);
+            List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(r, CENTRE_COORD);
+            List<Double> ringUBRangeList = this.repositoryFactory.getListDoubleFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
+
+            UBRangeOfCentre.put(centreId, ringUBRangeList);
+            CoordOfCentre.put(centreId, centreCoord);
+        }
 
         for (Row r: allCentre) {
             //centre 
@@ -144,75 +166,53 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             SortedSet<Double> ringUBRangeSet = new TreeSet<>(ringUBRangeList);
             double distFromCentreId = dist(centreCoord, eventCoord);
 
-            //bounded ring within
-            SimpleStatement allBoundedRingWithinStatement = 
-                this.boundedRingRepository.findAllBoundedRingInCentre(centreId);
-            List<Row> allBoundedRingWithin =
-                this.repositoryFactory.executeStatement(allBoundedRingWithinStatement, KEYSPACE_FIELD)
-                    .all();
-
-            //find lower bound in UBRange > distFromCentre
+            // find all lower bound 
             SortedSet<Double> lowerBound = ringUBRangeSet.headSet(distFromCentreId);
+
             if (lowerBound.size() == ringUBRangeSet.size()) {
-                // add to result 
-                UUID potentialRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
-                if (potentialRingId == null) {
-                    logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
-                }
-                result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
-                // add to priority queue 
-                lowerBound.remove(lowerBound.last());
-                if (lowerBound.size() > 0) {
-                    UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
-                    if (tempRingId == null) {
-                        logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
-                        continue;
-                    }
-                    pq.add(new ImmutableTriple<Double,Integer,UUID>(distFromCentreId - lowerBound.last(),
-                                                                    centreId, tempRingId));
-                }
+                boolean isDown = true; 
+                int pos = lowerBound.size() - 1;
+                pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, pos, isDown));
             } else {
-                // add to result 
-                SortedSet<Double> upperBound = ringUBRangeSet.tailSet(distFromCentreId);
-                UUID potentialRingId = findCorrectspondBoundedRing(allBoundedRingWithin, upperBound.first());
-                if (potentialRingId == null) {
-                    logger.warn("Cannot found ring with upper range " + upperBound.first() + " in " + centreId);
-                }
+                int lbPos = lowerBound.size() - 1;
+
+                //ring contain point
+                UUID potentialRingId = findCorrectspondBoundedRing(centreId, ringUBRangeList.get(lbPos+1));
                 result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
 
-                // add to priority queue 
-                if (lowerBound.size() > 0) {
-                    UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
-                    if (tempRingId == null) {
-                        logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
-                    }
-                    pq.add(new ImmutableTriple<Double,Integer,UUID>(distFromCentreId - lowerBound.last(), 
-                                                                    centreId, tempRingId));
+                //add 2 adjacency ring to pq
+                boolean isDown = true;
+                if (lbPos >= 0) {
+                    pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
 
-                if (upperBound.size() > 1) {
-                    double lbRange = upperBound.first(); 
-                    upperBound.remove(lbRange);
-
-                    UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, upperBound.first());
-                    if (tempRingId == null) {
-                        logger.warn("Cannot found ring with upper range " + upperBound.first() + " in " + centreId);
-                    }
-                    pq.add(new ImmutableTriple<Double,Integer,UUID>(lbRange - distFromCentreId, 
-                                                                    centreId, tempRingId));
+                isDown = false; 
+                lbPos += 2; 
+                if (lbPos < ringUBRangeSet.size()) {
+                    pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
             }
 
         }
 
         while (result.size() < A) {
-            ImmutableTriple<Double, Integer, UUID> closestRing = pq.poll();
+            ImmutableTriple<Integer,Integer,Boolean> closestRing = pq.poll();
             if (closestRing == null) {
                 break;
             }
 
-            result.add(new ImmutablePair<Integer,UUID>(closestRing.getMiddle(), 
-                                                       closestRing.getRight()));
+            int centreId = closestRing.getLeft();
+            int ubRangePos = closestRing.getMiddle();
+            boolean isDown = closestRing.getRight();
+            double ubRange = UBRangeOfCentre.get(centreId).get(ubRangePos);
+            UUID ringId = findCorrectspondBoundedRing(centreId, ubRange);
+
+            result.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
+
+            ubRangePos += (isDown) ? -1 : 1;
+            if (ubRangePos >=0 && ubRangePos < UBRangeOfCentre.get(centreId).size()) {
+                pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, ubRangePos, isDown));
+            }
         }
 
         return result;
