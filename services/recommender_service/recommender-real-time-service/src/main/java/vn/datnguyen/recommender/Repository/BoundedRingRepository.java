@@ -8,7 +8,6 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
-import com.datastax.oss.driver.api.querybuilder.update.Assignment;
 
 public class BoundedRingRepository implements BoundedRingInterface {
 
@@ -60,18 +59,19 @@ public class BoundedRingRepository implements BoundedRingInterface {
         .allowFiltering()
         .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
-
-    public SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, int capacity) {
+    /*
+    public SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, double ubRange, int capacity) {
         return QueryBuilder.update(BOUNDED_RING_ROW)
             .set(
                 Assignment.setColumn(CAPACITY, QueryBuilder.literal(capacity))
             )
             .where(
                 Relation.column(RING_ID).isEqualTo(QueryBuilder.literal(ringId)),
-                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId))
+                Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId)),
+                Relation.column(UPPER_BOUND_RANGE).isEqualTo(QueryBuilder.literal(ubRange))
             )
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
-    }
+    }*/
 
     public SimpleStatement deleteBoundedRingById(UUID ringId, int centreId) {
         return QueryBuilder.deleteFrom(BOUNDED_RING_ROW)
