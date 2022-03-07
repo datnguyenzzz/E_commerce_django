@@ -195,7 +195,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
         }
 
-        while (result.size() < A) {
+        while (result.size() < A && pq.size()>0) {
             ImmutableTriple<Integer,Integer,Boolean> closestRing = pq.poll();
             if (closestRing == null) {
                 break;
@@ -240,6 +240,9 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         for (ImmutablePair<Integer, UUID> ring: potentialBoundedRings) {
             int centreId = ring.getKey(); 
             UUID ringId = ring.getValue();
+            logger.info("********* RecommendForItemContentBased **********: Sent signal to "
+                    + " centreId = " + centreId
+                    + " ringId = " + ringId);
 
             //emit to individual bolt 
             collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventCoord, centreId, ringId, B));

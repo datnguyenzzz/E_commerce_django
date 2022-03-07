@@ -117,21 +117,18 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private List<SimpleStatement> updateBoundedRingRange(UUID ringId, int centreId, double newLBRange, double newUBRange, int newCapacity) {
-
-        List<SimpleStatement> allStatements = new ArrayList<>();
+    private void updateBoundedRingRange(UUID ringId, int centreId, double newLBRange, double newUBRange, int newCapacity) {
 
         //Delete 
         SimpleStatement deleteCurrRowStatement = 
             this.boundedRingRepository.deleteBoundedRingById(ringId, centreId);
-        allStatements.add(deleteCurrRowStatement);
+        this.repositoryFactory.executeStatement(deleteCurrRowStatement, KEYSPACE_FIELD);
 
         //add new 
         SimpleStatement addNewRowStatement = 
             this.boundedRingRepository.addNewBoundedRing(ringId, centreId, newLBRange, newUBRange, newCapacity);
-        allStatements.add(addNewRowStatement);
 
-        return allStatements;
+        this.repositoryFactory.executeStatement(addNewRowStatement, KEYSPACE_FIELD);
     }
 
     private double findMedianFromDataSet(List<Row> getAllDataInRing) {
@@ -226,13 +223,12 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         //update bounded ring
         double lbRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
         double ubRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
-        List<SimpleStatement> updateOldRingRangeStatement = 
-            updateBoundedRingRange(ringId, centreId, lbRange, oldMaxRange, oldCapacity - newRingCapacity);
+
+        updateBoundedRingRange(ringId, centreId, lbRange, oldMaxRange, oldCapacity - newRingCapacity);
 
         SimpleStatement insertNewRingStatement = 
             this.boundedRingRepository.addNewBoundedRing(newRingId, centreId, oldMaxRange, ubRange, newRingCapacity);
             
-        splitBoundedRing.addAll(updateOldRingRangeStatement);
         splitBoundedRing.add(insertNewRingStatement);
             
         //update centre
@@ -284,13 +280,9 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             this.itemStatusRepository.addNewItemStatus(itemId, clientId, ringId, centreId, dist);
             
         //update curr capacity 
-        List<SimpleStatement> increaseCapacityStatement =
-            updateBoundedRingRange(ringId, centreId, currLBRange, currUBRange, currCapacity+1);
+        updateBoundedRingRange(ringId, centreId, currLBRange, currUBRange, currCapacity+1);
             
         addDataToBoundedRing.addStatement(addNewItemStatusStatement);
-        for (SimpleStatement s: increaseCapacityStatement) {
-            addDataToBoundedRing.addStatement(s);
-        }
         
         this.repositoryFactory.executeStatement(addDataToBoundedRing.build(), KEYSPACE_FIELD);
 
@@ -423,9 +415,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         double newUBRange = Math.max(selectedRingUBRange, partnerRingUBRange);
         double oldUBRange = Math.min(selectedRingUBRange, partnerRingUBRange);
 
-        List<SimpleStatement> updateSelectedRingRangeStatment = 
-            updateBoundedRingRange(selectedBoundedRingId, centreId, newLBRange, newUBRange, newCapacity);
-        mergeBoundedRingsList.addAll(updateSelectedRingRangeStatment);
+        updateBoundedRingRange(selectedBoundedRingId, centreId, newLBRange, newUBRange, newCapacity);
 
         // update UBrange list of centre
         ubRangeSet.remove(partnerRingUBRange);
@@ -465,12 +455,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         deleteDataFromBoundedRing.addStatement(deleteItemStatus);
 
         // update capacity 
-        List<SimpleStatement> decreaseRingCapacity = 
-            updateBoundedRingRange(ringId, centreId, currLBRange, currUBRange, currentCapacity-1);
-
-        for (SimpleStatement s: decreaseRingCapacity) {
-            deleteDataFromBoundedRing.addStatement(s);
-        }
+        updateBoundedRingRange(ringId, centreId, currLBRange, currUBRange, currentCapacity-1);
 
         this.repositoryFactory.executeStatement(deleteDataFromBoundedRing.build(), KEYSPACE_FIELD);
 
