@@ -56,9 +56,13 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //table col
+    //-- centre
     private final static String CENTRE_ID = "centre_id";
     private final static String CENTRE_COORD = "centre_coord";
     private final static String CENTRE_UPPER_BOUND_RANGE_LIST = "centre_upper_bound_range_list";
+    //--- bounded ring
+    private final static String RING_ID = "ring_id"; // UUID
+    private final static String UPPER_BOUND_RANGE = "upper_bound_range"; // double
     //
     private OutputCollector collector;
     private int K, A, B;
@@ -97,7 +101,15 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         STUPID AS FUCK !!!!!!
         BUT TOO LAZY TO IMPROVE ALGORITHM ^_^
     */
-    private UUID findCorrectspondBoundedRing(List<Row> allBoundedRingWithin, double ubRange) {
+    private UUID findCorrectspondBoundedRing(List<Row> allBoundedRingWithin, double expectedUBRange) {
+        for (Row r: allBoundedRingWithin) {
+            UUID ringId = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
+            double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+            if (ubRange == expectedUBRange) {
+                return ringId;
+            }
+        }
+
         return null;
     }
 
@@ -144,11 +156,18 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             if (lowerBound.size() == ringUBRangeSet.size()) {
                 // add to result 
                 UUID potentialRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
+                if (potentialRingId == null) {
+                    logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
+                }
                 result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
                 // add to priority queue 
                 lowerBound.remove(lowerBound.last());
                 if (lowerBound.size() > 0) {
                     UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
+                    if (tempRingId == null) {
+                        logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
+                        continue;
+                    }
                     pq.add(new ImmutableTriple<Double,Integer,UUID>(distFromCentreId - lowerBound.last(),
                                                                     centreId, tempRingId));
                 }
@@ -156,11 +175,17 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                 // add to result 
                 SortedSet<Double> upperBound = ringUBRangeSet.tailSet(distFromCentreId);
                 UUID potentialRingId = findCorrectspondBoundedRing(allBoundedRingWithin, upperBound.first());
+                if (potentialRingId == null) {
+                    logger.warn("Cannot found ring with upper range " + upperBound.first() + " in " + centreId);
+                }
                 result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
 
                 // add to priority queue 
                 if (lowerBound.size() > 0) {
                     UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, lowerBound.last());
+                    if (tempRingId == null) {
+                        logger.warn("Cannot found ring with upper range " + lowerBound.last() + " in " + centreId);
+                    }
                     pq.add(new ImmutableTriple<Double,Integer,UUID>(distFromCentreId - lowerBound.last(), 
                                                                     centreId, tempRingId));
                 }
@@ -170,6 +195,9 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                     upperBound.remove(lbRange);
 
                     UUID tempRingId = findCorrectspondBoundedRing(allBoundedRingWithin, upperBound.first());
+                    if (tempRingId == null) {
+                        logger.warn("Cannot found ring with upper range " + upperBound.first() + " in " + centreId);
+                    }
                     pq.add(new ImmutableTriple<Double,Integer,UUID>(lbRange - distFromCentreId, 
                                                                     centreId, tempRingId));
                 }
@@ -199,6 +227,12 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         B = 2;
         A = Math.round(1.5f * limit) / B;
 
+        logger.info("********* RecommendForItemContentBased **********"
+                    + "event coord = " + eventCoord
+                    + " K = " + K
+                    + " B = " + B
+                    + " A = " + A);
+
         List<ImmutablePair<Integer, UUID> > potentialBoundedRings = findPotentialBoundedRings(eventCoord, K, A, B);
         List<Integer> centreList = new ArrayList<Integer>();
         List<UUID> ringList = new ArrayList<UUID>();
@@ -217,7 +251,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
         collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(eventCoord, K, centreList, ringList));
 
-        logger.info("********* RecommendForItemContentBased **********" + incomeEvent);
         collector.ack(input);
     }
     

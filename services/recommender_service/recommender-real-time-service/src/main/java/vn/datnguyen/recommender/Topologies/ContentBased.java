@@ -75,7 +75,7 @@ public class ContentBased {
 
         topologyBuilder.setBolt(RING_AGGREGRATION_BOLT,boltFactory.createRingAggregationBolt() , Integer.parseInt(RING_AGGREGRATION_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))
-            .fieldsGrouping(AGGREGATE_BOUNDED_RINGS_STREAM, RECOMMEND_FOR_ITEM_BOLT, new Fields(EVENT_COORD_FIELD));
+            .fieldsGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_COORD_FIELD));
 
         return topologyBuilder;
 
