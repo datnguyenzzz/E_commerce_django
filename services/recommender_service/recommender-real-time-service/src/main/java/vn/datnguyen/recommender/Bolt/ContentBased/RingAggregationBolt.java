@@ -2,7 +2,6 @@ package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -37,7 +36,7 @@ public class RingAggregationBolt extends BaseRichBolt {
         List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
         int K = (int) input.getValueByField(KNN_FACTOR_FIELD);
         List<Integer> centreIdList = (List<Integer>) input.getValueByField(CENTRE_LIST_FIELD);
-        List<UUID> ringIdList = (List<UUID>) input.getValueByField(RING_LIST_FIELD);
+        List<String> ringIdList = (List<String>) input.getValueByField(RING_LIST_FIELD);
 
         logger.info("********* RingAggregationBolt **********" + eventCoord
                     + " KNN factor = " + K

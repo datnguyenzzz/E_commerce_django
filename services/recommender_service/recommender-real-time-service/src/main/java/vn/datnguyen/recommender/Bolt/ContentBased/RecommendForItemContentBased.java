@@ -170,25 +170,42 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             SortedSet<Double> lowerBound = ringUBRangeSet.headSet(distFromCentreId);
 
             if (lowerBound.size() == ringUBRangeSet.size()) {
+                logger.info("********* RecommendForItemContentBased **********: current point > MAX ub range");
                 boolean isDown = true; 
                 int pos = lowerBound.size() - 1;
+                logger.info("********* RecommendForItemContentBased **********: Add to heap: "
+                            + "centreId = " + centreId
+                            + "pos = " + pos
+                            + "isDown = " +  isDown);
                 pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, pos, isDown));
             } else {
+                logger.info("********* RecommendForItemContentBased **********: current point inside max ubrange");
                 int lbPos = lowerBound.size() - 1;
 
                 //ring contain point
                 UUID potentialRingId = findCorrectspondBoundedRing(centreId, ringUBRangeList.get(lbPos+1));
+                logger.info("********* RecommendForItemContentBased **********: Add to result: "
+                            + "centreId = " + centreId
+                            + "ringId = " + potentialRingId);
                 result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
 
                 //add 2 adjacency ring to pq
                 boolean isDown = true;
                 if (lbPos >= 0) {
+                    logger.info("********* RecommendForItemContentBased **********: Add to heap: "
+                            + "centreId = " + centreId
+                            + "pos = " + lbPos
+                            + "isDown = " +  isDown);
                     pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
 
                 isDown = false; 
                 lbPos += 2; 
                 if (lbPos < ringUBRangeSet.size()) {
+                    logger.info("********* RecommendForItemContentBased **********: Add to heap: "
+                            + "centreId = " + centreId
+                            + "pos = " + lbPos
+                            + "isDown = " +  isDown);
                     pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
             }
@@ -207,10 +224,17 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             double ubRange = UBRangeOfCentre.get(centreId).get(ubRangePos);
             UUID ringId = findCorrectspondBoundedRing(centreId, ubRange);
 
+            logger.info("********* RecommendForItemContentBased **********: Add to result: "
+                            + "centreId = " + centreId
+                            + " ringId = " + ringId);
             result.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
 
             ubRangePos += (isDown) ? -1 : 1;
             if (ubRangePos >=0 && ubRangePos < UBRangeOfCentre.get(centreId).size()) {
+                logger.info("********* RecommendForItemContentBased **********: Add to heap: "
+                            + "centreId = " + centreId
+                            + " pos = " + ubRangePos
+                            + " isDown = " +  isDown);
                 pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, ubRangePos, isDown));
             }
         }
@@ -235,20 +259,21 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
         List<ImmutablePair<Integer, UUID> > potentialBoundedRings = findPotentialBoundedRings(eventCoord, K, A, B);
         List<Integer> centreList = new ArrayList<Integer>();
-        List<UUID> ringList = new ArrayList<UUID>();
+        List<String> ringList = new ArrayList<String>();
 
         for (ImmutablePair<Integer, UUID> ring: potentialBoundedRings) {
             int centreId = ring.getKey(); 
             UUID ringId = ring.getValue();
+
             logger.info("********* RecommendForItemContentBased **********: Sent signal to "
                     + " centreId = " + centreId
                     + " ringId = " + ringId);
 
             //emit to individual bolt 
-            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventCoord, centreId, ringId, B));
+            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventCoord, centreId, ringId.toString(), B));
             //gather to 1 values 
             centreList.add(centreId);
-            ringList.add(ringId);
+            ringList.add(ringId.toString());
 
         }
 
