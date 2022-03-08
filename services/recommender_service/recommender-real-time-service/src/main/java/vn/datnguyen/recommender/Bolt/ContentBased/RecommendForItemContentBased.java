@@ -164,6 +164,11 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(r, CENTRE_COORD);
             List<Double> ringUBRangeList = this.repositoryFactory.getListDoubleFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
             SortedSet<Double> ringUBRangeSet = new TreeSet<>(ringUBRangeList);
+
+            if (ringUBRangeSet.size() == 0) {
+                continue;
+            }
+
             double distFromCentreId = dist(centreCoord, eventCoord);
 
             // find all lower bound 
@@ -186,7 +191,9 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                 UUID potentialRingId = findCorrectspondBoundedRing(centreId, ringUBRangeList.get(lbPos+1));
                 logger.info("********* RecommendForItemContentBased **********: Add to result: "
                             + "centreId = " + centreId
-                            + "ringId = " + potentialRingId);
+                            + " ringId = " + potentialRingId
+                            + " upper range = " + ringUBRangeList.get(lbPos+1)
+                            + " curr dist = " + distFromCentreId);
                 result.add(new ImmutablePair<Integer,UUID>(centreId, potentialRingId));
 
                 //add 2 adjacency ring to pq
@@ -226,7 +233,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
             logger.info("********* RecommendForItemContentBased **********: Add to result: "
                             + "centreId = " + centreId
-                            + " ringId = " + ringId);
+                            + " ringId = " + ringId
+                            + " upper range = " + ubRange);
             result.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
 
             ubRangePos += (isDown) ? -1 : 1;

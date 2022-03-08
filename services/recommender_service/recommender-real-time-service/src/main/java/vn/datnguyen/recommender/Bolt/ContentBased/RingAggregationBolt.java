@@ -2,7 +2,11 @@ package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.UUID;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -23,7 +27,12 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     private final static String RING_LIST_FIELD = customProperties.getProp("RING_LIST_FIELD");
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
+    //
     private OutputCollector collector;
+    //
+    Map<List<Integer>, Set<ImmutablePair<Integer, UUID> > > progress; 
+    Map<List<Integer>, PriorityQueue<Double> > pq;
+
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
