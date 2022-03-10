@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.SortedSet;
 import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -54,7 +52,7 @@ public class KnnBolt extends BaseRichBolt {
     private ItemStatusRepository itemStatusRepository;
     private PriorityQueue<String> pq;
     //fixed per ring
-    private Map<ImmutableTriple<Integer, UUID, String>, List<Integer> > itemPropertiesTable;
+    private Map<String, List<Integer> > itemPropertiesTable;
 
     private void launchCassandraKeyspace() {
         CassandraConnector connector = new CassandraConnector();
@@ -111,12 +109,9 @@ public class KnnBolt extends BaseRichBolt {
             String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
             List<Integer> itemProperties = null;
 
-            ImmutableTriple<Integer, UUID, String> key = 
-                new ImmutableTriple<Integer,UUID,String>(centreId, ringId, itemId);
-
-            if (!(itemPropertiesTable.containsKey(key)) 
-               || itemPropertiesTable.get(key) != itemProperties) {
-                itemPropertiesTable.put(key, itemProperties);
+            if (!(itemPropertiesTable.containsKey(itemId)) 
+               || itemPropertiesTable.get(itemId) != itemProperties) {
+                itemPropertiesTable.put(itemId, itemProperties);
             }
         }
         
