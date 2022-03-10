@@ -78,7 +78,7 @@ public class ContentBased {
         
         topologyBuilder.setBolt(KNN_BOLT, boltFactory.createKnnBolt(), Integer.parseInt(KNN_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(KNN_BOLT_TASKS))
-            .fieldsGrouping(RECOMMEND_FOR_ITEM_BOLT, INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(CENTRE_ID_FIELD, RING_ID_FIELD));
+            .shuffleGrouping(RECOMMEND_FOR_ITEM_BOLT, INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM);
 
         topologyBuilder.setBolt(RING_AGGREGRATION_BOLT,boltFactory.createRingAggregationBolt() , Integer.parseInt(RING_AGGREGRATION_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))

@@ -52,7 +52,6 @@ public class KnnBolt extends BaseRichBolt {
     private RepositoryFactory repositoryFactory;
     private ItemStatusRepository itemStatusRepository;
     private PriorityQueue<String> pq;
-    //fixed per ring
     private Map<String, List<Integer> > itemPropertiesTable;
 
     private void launchCassandraKeyspace() {
@@ -90,7 +89,6 @@ public class KnnBolt extends BaseRichBolt {
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
         this.knnFactor = 0; 
-        this.itemPropertiesTable = new HashMap<>();
 
         launchCassandraKeyspace();
         this.itemStatusRepository = this.repositoryFactory.getItemStatusRepository();
@@ -114,6 +112,7 @@ public class KnnBolt extends BaseRichBolt {
         this.knnFactor = knnFactor;
         this.eventCoord = eventCoord;
         this.pq = new PriorityQueue<>(customeComparator);
+        this.itemPropertiesTable = new HashMap<>();
 
         //find all item inside ring 
         SimpleStatement findAllItemInsideStatement = 
@@ -127,10 +126,7 @@ public class KnnBolt extends BaseRichBolt {
             String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
             List<Integer> itemProperties = this.repositoryFactory.getListIntegerFromRow(r, VECTOR_PROPERTIES);
 
-            if (!(itemPropertiesTable.containsKey(itemId)) 
-               || itemPropertiesTable.get(itemId) != itemProperties) {
-                itemPropertiesTable.put(itemId, itemProperties);
-            }
+            itemPropertiesTable.put(itemId, itemProperties);
         }
         
         // build pq
