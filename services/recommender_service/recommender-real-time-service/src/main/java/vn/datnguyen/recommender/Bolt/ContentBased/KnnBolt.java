@@ -44,6 +44,7 @@ public class KnnBolt extends BaseRichBolt {
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
     //table col
     private final static String ITEM_ID = "item_id"; // string
+    private final static String VECTOR_PROPERTIES = "vector_properties"; //list<int>
     //
     private OutputCollector collector;
     private int knnFactor;
@@ -107,7 +108,7 @@ public class KnnBolt extends BaseRichBolt {
         // build map item properties table
         for (Row r: findAllItemInside) {
             String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
-            List<Integer> itemProperties = null;
+            List<Integer> itemProperties = this.repositoryFactory.getListIntegerFromRow(r, VECTOR_PROPERTIES);
 
             if (!(itemPropertiesTable.containsKey(itemId)) 
                || itemPropertiesTable.get(itemId) != itemProperties) {
