@@ -216,7 +216,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             SimpleStatement changeToNewBoundedRingStatement = 
                 this.itemStatusRepository.addNewItemStatus(itemId, clientId, newRingId, centreId, d);
             SimpleStatement deleteCurrDataFromRingStatement = 
-                this.itemStatusRepository.deleteItemStatus(itemId, clientId, ringId, centreId);
+                this.itemStatusRepository.deleteItemStatus(itemId, ringId, centreId);
             splitBoundedRing.add(deleteCurrDataFromRingStatement);
             splitBoundedRing.add(changeToNewBoundedRingStatement);
         }
@@ -401,7 +401,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             double dist = (double) this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
 
             SimpleStatement removeDataFromBoundedRing = 
-                this.itemStatusRepository.deleteItemStatus(itemId, clientId, partnerRingId, centreId);
+                this.itemStatusRepository.deleteItemStatus(itemId, partnerRingId, centreId);
             SimpleStatement addDataIntoBoundedRing = 
                 this.itemStatusRepository.addNewItemStatus(itemId, clientId, selectedBoundedRingId, centreId, dist);
 
@@ -451,7 +451,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         // delete item from bouneded ring
         SimpleStatement deleteItemStatus = 
-            this.itemStatusRepository.deleteItemStatus(itemId, clientId, ringId, centreId);
+            this.itemStatusRepository.deleteItemStatus(itemId, ringId, centreId);
         deleteDataFromBoundedRing.addStatement(deleteItemStatus);
 
         // update capacity 

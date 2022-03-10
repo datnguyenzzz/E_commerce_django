@@ -1,7 +1,9 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.UUID;
 
 import org.apache.storm.task.OutputCollector;
@@ -26,10 +28,20 @@ public class KnnBolt extends BaseRichBolt {
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     //
     private OutputCollector collector;
-    
+    private int knnFactor;
+    private List<Integer> eventCoord;
+    //priority queue <itemId>
+    private PriorityQueue<String> pq;
+
+    private Comparator<String > customeComparator = (t1, t2) -> {
+        return 0;
+    };
+
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
+        this.knnFactor = 0; 
+        this.pq = new PriorityQueue<>(customeComparator);
     }
     
     @Override
@@ -45,6 +57,11 @@ public class KnnBolt extends BaseRichBolt {
                     + " centreId = " + centreId
                     + " ringId = " + ringId
                     + " knn factor = " + knnFactor);
+
+        this.knnFactor = knnFactor;
+        this.eventCoord = eventCoord;
+
+
         collector.ack(input);
     }
     

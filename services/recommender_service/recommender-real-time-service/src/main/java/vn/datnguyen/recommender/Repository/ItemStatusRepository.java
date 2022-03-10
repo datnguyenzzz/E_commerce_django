@@ -17,7 +17,7 @@ public class ItemStatusRepository implements ItemStatusInterface {
             .withPartitionKey(BOUNDED_RING_ID, DataTypes.UUID)
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withClusteringColumn(ITEM_ID, DataTypes.TEXT)
-            .withClusteringColumn(ADD_BY_CLIENT_ID, DataTypes.TEXT)
+            .withColumn(ADD_BY_CLIENT_ID, DataTypes.TEXT)
             .withColumn(DISTANCE_TO_CENTRE, DataTypes.DOUBLE)
             .build();
     }
@@ -41,13 +41,12 @@ public class ItemStatusRepository implements ItemStatusInterface {
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
 
-    public SimpleStatement deleteItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId) {
+    public SimpleStatement deleteItemStatus(String itemId, UUID boundedRingId, int centreId) {
         return QueryBuilder.deleteFrom(ITEM_STATUS_ROW)
             .where(
                 Relation.column(BOUNDED_RING_ID).isEqualTo(QueryBuilder.literal(boundedRingId)),
                 Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId)),
-                Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId)),
-                Relation.column(ADD_BY_CLIENT_ID).isEqualTo(QueryBuilder.literal(clientId))
+                Relation.column(ITEM_ID).isEqualTo(QueryBuilder.literal(itemId))
             )
             .build();
     }

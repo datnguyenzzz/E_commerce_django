@@ -16,5 +16,5 @@ public interface ItemStatusInterface {
     SimpleStatement createRowIfNotExists();
     SimpleStatement addNewItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId, double dist);
     SimpleStatement findAllByRingId(UUID boundedRingId, int centreId);
-    SimpleStatement deleteItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId);
+    SimpleStatement deleteItemStatus(String itemId, UUID boundedRingId, int centreId);
 }
