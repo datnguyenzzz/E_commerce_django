@@ -65,8 +65,25 @@ public class KnnBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
     }
 
+    private double distance(List<Integer> a, List<Integer> b) {
+        double s = 0; 
+        for (int i = 0; i<a.size(); i++) {
+            s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
+        }
+
+        return Math.sqrt(s);
+    } 
+
     private Comparator<String > customeComparator = (t1, t2) -> {
-        return 0;
+        List<Integer> item1Properties = itemPropertiesTable.get(t1);
+        List<Integer> item2Properties = itemPropertiesTable.get(t2);
+
+        double dist1 = distance(item1Properties, this.eventCoord);
+        double dist2 = distance(item2Properties, this.eventCoord);
+
+        int cmp = (dist1 > dist2) ? 1
+                    : -1; 
+        return cmp;
     };
 
     @Override
@@ -113,6 +130,16 @@ public class KnnBolt extends BaseRichBolt {
             if (!(itemPropertiesTable.containsKey(itemId)) 
                || itemPropertiesTable.get(itemId) != itemProperties) {
                 itemPropertiesTable.put(itemId, itemProperties);
+            }
+        }
+        
+        // build pq
+        for (Row r: findAllItemInside) {
+            String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
+            pq.add(itemId);
+
+            if (pq.size() > this.knnFactor) {
+                pq.remove();
             }
         }
         
