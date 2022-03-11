@@ -20,6 +20,7 @@ import org.apache.storm.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.Models.KnnResult;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class RingAggregationBolt extends BaseRichBolt {
@@ -185,6 +186,30 @@ public class RingAggregationBolt extends BaseRichBolt {
         }
     }
 
+    private void purgeAllCached(String eventId) {
+        knnFactor.remove(eventId);
+        potentialRingsForDelayedEvent.remove(eventId);
+        potentialRingsForEvent.remove(eventId);
+        bnnResultForDelayEvent.remove(eventId);
+        mapKNNPQ.remove(eventId);
+    }
+
+    private void getKNNResult(String eventId, List<Integer> eventCoord) {
+        KnnResult knnResult = new KnnResult(eventId, eventCoord);
+
+        PriorityQueue<ImmutablePair<Double, String> > currPQ = 
+            mapKNNPQ.get(eventId);
+        
+        while (currPQ.size() > 0) {
+            knnResult.addToRecommendationList(currPQ.poll());
+        }
+
+        logger.info("********* RingAggregationBolt **********: RESULT = "
+                    + knnResult.toString());
+
+        purgeAllCached(eventId);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void execute(Tuple input) {
@@ -212,6 +237,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             // some how all needed value came first ^_^ 
             if (potentialRingsForEvent.get(eventId).size() == 0) {
                 //do something
+                getKNNResult(eventId, eventCoord);
             }
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
@@ -232,6 +258,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             processResultFromRingHandler(eventId, centreId, ringId, itemIdList, distList);
 
             if (potentialRingsForEvent.get(eventId).size() == 0) {
+                getKNNResult(eventId, eventCoord);
             }
         }   
         collector.ack(input);

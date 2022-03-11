@@ -52,4 +52,12 @@ public class KnnResult {
     public List<Integer> getEventCoord() {
         return this.eventCoord;
     }
+
+    @Override
+    public String toString() {
+        return "Recommendation by KNN method for is"
+                + " eventId = " + eventId
+                + " eventProperties = " + eventCoord
+                + " recommended items = " + recommendedItemList;
+    }
 }
