@@ -280,7 +280,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                     + " ringId = " + ringId);
 
             //emit to individual bolt 
-            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventCoord, centreId, ringId.toString(), B));
+            collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Values(eventId, eventCoord, centreId, ringId.toString(), B));
             //gather to 1 values 
             centreList.add(centreId);
             ringList.add(ringId.toString());
@@ -295,6 +295,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
-        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
+        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
     }
 }

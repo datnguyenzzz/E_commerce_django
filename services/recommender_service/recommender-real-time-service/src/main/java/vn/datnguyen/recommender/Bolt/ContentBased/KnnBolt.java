@@ -39,6 +39,7 @@ public class KnnBolt extends BaseRichBolt {
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     private final static String ITEM_ID_LIST_FIELD = customProperties.getProp("ITEM_ID_LIST_FIELD");
     private final static String DIST_LIST_FIELD = customProperties.getProp("DIST_LIST_FIELD");
+    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
     //stream 
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //WEIGHT VALUEs
@@ -93,6 +94,7 @@ public class KnnBolt extends BaseRichBolt {
     public void execute(Tuple input) {
 
         List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
+        String eventId = (String) input.getValueByField(EVENT_ID_FIELD);
         int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
         UUID ringId = UUID.fromString((String) input.getValueByField(RING_ID_FIELD));
         int knnFactor = (int) input.getValueByField(KNN_FACTOR_FIELD);
@@ -158,7 +160,7 @@ public class KnnBolt extends BaseRichBolt {
             distList.add(dist);
         }
 
-        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventCoord, centreId, ringId.toString(), itemIdList, distList));
+        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventId, eventCoord, centreId, ringId.toString(), itemIdList, distList));
         collector.ack(input);
     }
     

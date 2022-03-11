@@ -1,9 +1,13 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -34,12 +38,29 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //
     private OutputCollector collector;
+    private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForEvent;
     //
 
     
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
+        potentialRingsForEvent = new HashMap<>();
+    }
+
+    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList) {
+        if (potentialRingsForEvent.containsKey(eventId)) {
+            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
+            potentialRingsForEvent.remove(eventId);
+        }
+
+        Set<ImmutablePair<Integer, UUID> > ringIdentity = new HashSet<>();
+        for (int i=0; i<centreIdList.size(); i++) {
+            int centreId = centreIdList.get(i); 
+            UUID ringId = UUID.fromString(ringIdList.get(i));
+            ringIdentity.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
+        }
+        potentialRingsForEvent.put(eventId, ringIdentity);
     }
     
     @SuppressWarnings("unchecked")
@@ -62,17 +83,22 @@ public class RingAggregationBolt extends BaseRichBolt {
                         + " KNN factor = " + K
                         + " centre list = " + centreIdList
                         + " ring list = " + ringIdList);
-        
+            
+            // init values 
+            initCachedMap(eventId, centreIdList, ringIdList);
+
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
+            String eventId = (String) input.getValueByField(EVENT_ID_FIELD);
             int centreId = (int) input.getValueByField(CENTRE_ID_FIELD);
             UUID ringId = UUID.fromString((String) input.getValueByField(RING_ID_FIELD));
             List<String> itemIdList = (List<String>) input.getValueByField(ITEM_ID_LIST_FIELD);
             List<Double> distList = (List<Double>) input.getValueByField(DIST_LIST_FIELD);
 
             logger.info("********* RingAggregationBolt **********: FROM INDIVIDUAL_KNN_ALGORITHM_STREAM" 
-                        + eventCoord
+                        + " eventId = " + eventId
+                        + " eventCoord = " + eventCoord
                         + " centreId = " + centreId
                         + " ringId = " + ringId 
                         + " itemIdList = " + itemIdList
