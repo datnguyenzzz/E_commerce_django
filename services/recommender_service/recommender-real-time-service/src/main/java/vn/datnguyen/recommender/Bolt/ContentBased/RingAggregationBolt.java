@@ -38,6 +38,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //
     private OutputCollector collector;
+    private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForDelayedEvent;
     private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForEvent;
     //
 
@@ -46,6 +47,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
         potentialRingsForEvent = new HashMap<>();
+        potentialRingsForDelayedEvent = new HashMap<>();
     }
 
     private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList) {
@@ -54,12 +56,22 @@ public class RingAggregationBolt extends BaseRichBolt {
             potentialRingsForEvent.remove(eventId);
         }
 
+        // init set of potential rings
         Set<ImmutablePair<Integer, UUID> > ringIdentity = new HashSet<>();
         for (int i=0; i<centreIdList.size(); i++) {
             int centreId = centreIdList.get(i); 
             UUID ringId = UUID.fromString(ringIdList.get(i));
             ringIdentity.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
         }
+
+        // if have any ring BEFORE event come
+        if (potentialRingsForDelayedEvent.containsKey(eventId)) {
+            Set<ImmutablePair<Integer, UUID> > ringSet = potentialRingsForDelayedEvent.get(eventId);
+            ringIdentity.removeAll(ringSet);
+
+            potentialRingsForDelayedEvent.remove(eventId);
+        }
+
         potentialRingsForEvent.put(eventId, ringIdentity);
     }
     
