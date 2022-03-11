@@ -41,6 +41,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //
     private OutputCollector collector;
+    private Map<String, Integer> knnFactor;
     private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForDelayedEvent;
     private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForEvent;
     // store all "came-before-actual-event" result <dist,itemId>
@@ -70,7 +71,7 @@ public class RingAggregationBolt extends BaseRichBolt {
         return ringIdentity;
     }
 
-    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList, int knnFactor) {
+    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList, int K) {
         if (potentialRingsForEvent.containsKey(eventId)) {
             logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
             potentialRingsForEvent.remove(eventId);
@@ -80,6 +81,8 @@ public class RingAggregationBolt extends BaseRichBolt {
             logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
             mapKNNPQ.remove(eventId);
         }
+        //init knn factor
+        knnFactor.put(eventId, K);
 
         Comparator<ImmutablePair<Double, String> > customCompartor = (p1, p2) -> {
             double dist1 = p1.getLeft();
@@ -109,7 +112,7 @@ public class RingAggregationBolt extends BaseRichBolt {
 
                 knnPQ.add(result); 
 
-                if (knnPQ.size() > knnFactor) {
+                if (knnPQ.size() > K) {
                     knnPQ.poll();
                 }
             }
@@ -119,6 +122,67 @@ public class RingAggregationBolt extends BaseRichBolt {
 
         potentialRingsForEvent.put(eventId, ringIdentitySet);
         mapKNNPQ.put(eventId, knnPQ);
+    }
+
+    private void processResultFromRingHandler(String eventId, int centreId, UUID ringId, List<String> itemIdList, List<Double> distList) {
+        // ring identity 
+        ImmutablePair<Integer, UUID> ringIdentity = new ImmutablePair<Integer,UUID>(centreId, ringId);
+        //list of result 
+        List<ImmutablePair<Double, String> > resultList = new ArrayList<>();
+        for (int i=0; i<itemIdList.size(); i++) {
+            ImmutablePair<Double, String> result = 
+                new ImmutablePair<Double,String>(distList.get(i), itemIdList.get(i));
+            
+            resultList.add(result);
+        }
+
+        // if event haven't came yet 
+        if (!(potentialRingsForEvent.containsKey(eventId))) {
+            
+            if (!(potentialRingsForDelayedEvent.containsKey(eventId))) {
+                Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
+                ringSet.add(ringIdentity);
+                potentialRingsForDelayedEvent.put(eventId, ringSet);
+
+                bnnResultForDelayEvent.put(eventId, resultList);
+            } else {
+                Set<ImmutablePair<Integer, UUID> > ringSet = 
+                    potentialRingsForDelayedEvent.get(eventId); 
+                ringSet.add(ringIdentity);
+                potentialRingsForDelayedEvent.replace(eventId, ringSet);
+
+                List<ImmutablePair<Double, String> > currDelayResultList = 
+                    bnnResultForDelayEvent.get(eventId);
+                currDelayResultList.addAll(resultList);
+                bnnResultForDelayEvent.replace(eventId, currDelayResultList);
+            }
+        }
+        else {
+            Set<ImmutablePair<Integer, UUID> > currRingSetForEventId = 
+                potentialRingsForEvent.get(eventId);
+
+            if (currRingSetForEventId.size() == 0) {
+                logger.warn("********* RingAggregationBolt **********: currRingSetForEventId size must be > 0 ");
+            }
+
+            //remove form curr ring set 
+            currRingSetForEventId.remove(ringIdentity);
+            potentialRingsForEvent.replace(eventId, currRingSetForEventId);
+            //maintain pq
+            int K = knnFactor.get(eventId);
+            PriorityQueue<ImmutablePair<Double, String> > currPQ = 
+                mapKNNPQ.get(eventId);
+            
+            for (ImmutablePair<Double, String> result : resultList) {
+                currPQ.add(result); 
+
+                if (currPQ.size() > K) {
+                    currPQ.poll();
+                }
+            }
+            mapKNNPQ.replace(eventId, currPQ);
+
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -165,51 +229,11 @@ public class RingAggregationBolt extends BaseRichBolt {
                         + " ringId = " + ringId 
                         + " itemIdList = " + itemIdList
                         + " distList = " + distList);
+            processResultFromRingHandler(eventId, centreId, ringId, itemIdList, distList);
 
-            // ring identity 
-            ImmutablePair<Integer, UUID> ringIdentity = new ImmutablePair<Integer,UUID>(centreId, ringId);
-            //list of result 
-            List<ImmutablePair<Double, String> > resultList = new ArrayList<>();
-            for (int i=0; i<itemIdList.size(); i++) {
-                ImmutablePair<Double, String> result = 
-                    new ImmutablePair<Double,String>(distList.get(i), itemIdList.get(i));
-                
-                resultList.add(result);
+            if (potentialRingsForEvent.get(eventId).size() == 0) {
             }
-
-            // if event haven't came yet 
-            if (!(potentialRingsForEvent.containsKey(eventId))) {
-                
-                if (!(potentialRingsForDelayedEvent.containsKey(eventId))) {
-                    Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
-                    ringSet.add(ringIdentity);
-                    potentialRingsForDelayedEvent.put(eventId, ringSet);
-
-                    bnnResultForDelayEvent.put(eventId, resultList);
-                } else {
-                    Set<ImmutablePair<Integer, UUID> > ringSet = 
-                        potentialRingsForDelayedEvent.get(eventId); 
-                    ringSet.add(ringIdentity);
-                    potentialRingsForDelayedEvent.replace(eventId, ringSet);
-
-                    List<ImmutablePair<Double, String> > currDelayResultList = 
-                        bnnResultForDelayEvent.get(eventId);
-                    currDelayResultList.addAll(resultList);
-                    bnnResultForDelayEvent.replace(eventId, currDelayResultList);
-                }
-            }
-            else {
-                Set<ImmutablePair<Integer, UUID> > currRingSetForEventId = 
-                    potentialRingsForEvent.get(eventId);
-
-                if (currRingSetForEventId.size() == 0) {
-                    logger.warn("********* RingAggregationBolt **********: currRingSetForEventId size must be > 0 ");
-                }
-
-                //remove form curr ring set 
-                currRingSetForEventId.remove(ringIdentity);
-            }
-        }
+        }   
         collector.ack(input);
     }
     
