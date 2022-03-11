@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -167,12 +168,35 @@ public class RingAggregationBolt extends BaseRichBolt {
 
             // ring identity 
             ImmutablePair<Integer, UUID> ringIdentity = new ImmutablePair<Integer,UUID>(centreId, ringId);
+            //list of result 
+            List<ImmutablePair<Double, String> > resultList = new ArrayList<>();
+            for (int i=0; i<itemIdList.size(); i++) {
+                ImmutablePair<Double, String> result = 
+                    new ImmutablePair<Double,String>(distList.get(i), itemIdList.get(i));
+                
+                resultList.add(result);
+            }
 
             // if event haven't came yet 
             if (!(potentialRingsForEvent.containsKey(eventId))) {
-                Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
-                ringSet.add(ringIdentity);
-                potentialRingsForDelayedEvent.put(eventId, ringSet);
+                
+                if (!(potentialRingsForDelayedEvent.containsKey(eventId))) {
+                    Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
+                    ringSet.add(ringIdentity);
+                    potentialRingsForDelayedEvent.put(eventId, ringSet);
+
+                    bnnResultForDelayEvent.put(eventId, resultList);
+                } else {
+                    Set<ImmutablePair<Integer, UUID> > ringSet = 
+                        potentialRingsForDelayedEvent.get(eventId); 
+                    ringSet.add(ringIdentity);
+                    potentialRingsForDelayedEvent.replace(eventId, ringSet);
+
+                    List<ImmutablePair<Double, String> > currDelayResultList = 
+                        bnnResultForDelayEvent.get(eventId);
+                    currDelayResultList.addAll(resultList);
+                    bnnResultForDelayEvent.replace(eventId, currDelayResultList);
+                }
             }
             else {
                 Set<ImmutablePair<Integer, UUID> > currRingSetForEventId = 
