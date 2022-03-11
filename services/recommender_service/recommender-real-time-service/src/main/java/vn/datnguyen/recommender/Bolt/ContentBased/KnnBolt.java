@@ -39,7 +39,8 @@ public class KnnBolt extends BaseRichBolt {
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     private final static String ITEM_ID_LIST_FIELD = customProperties.getProp("ITEM_ID_LIST_FIELD");
     private final static String DIST_LIST_FIELD = customProperties.getProp("DIST_LIST_FIELD");
-    
+    //stream 
+    private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -156,12 +157,12 @@ public class KnnBolt extends BaseRichBolt {
             distList.add(dist);
         }
 
-        collector.emit(new Values(eventCoord, centreId, ringId, itemIdList, distList));
+        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventCoord, centreId, ringId, itemIdList, distList));
         collector.ack(input);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, ITEM_ID_LIST_FIELD, DIST_LIST_FIELD));
+        declarer.declareStream(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, ITEM_ID_LIST_FIELD, DIST_LIST_FIELD));
     }
 }
