@@ -16,6 +16,7 @@ public class ContentBased {
     //private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
     private final static String INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM = customProperties.getProp("INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM");
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
+    private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
     //IDs
     //--
@@ -82,7 +83,8 @@ public class ContentBased {
 
         topologyBuilder.setBolt(RING_AGGREGRATION_BOLT,boltFactory.createRingAggregationBolt() , Integer.parseInt(RING_AGGREGRATION_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))
-            .shuffleGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM);
+            .shuffleGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM)
+            .shuffleGrouping(KNN_BOLT, INDIVIDUAL_KNN_ALGORITHM_STREAM);
 
         return topologyBuilder;
 
