@@ -1,5 +1,6 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,9 @@ public class KnnBolt extends BaseRichBolt {
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
+    private final static String ITEM_ID_LIST_FIELD = customProperties.getProp("ITEM_ID_LIST_FIELD");
+    private final static String DIST_LIST_FIELD = customProperties.getProp("DIST_LIST_FIELD");
+    
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -139,11 +144,24 @@ public class KnnBolt extends BaseRichBolt {
             }
         }
         
+        //emit tuple
+
+        List<String> itemIdList = new ArrayList<>();
+        List<Double> distList = new ArrayList<>();
+
+        while (pq.size() > 0) {
+            String itemId = pq.poll();
+            double dist = distance(eventCoord, itemPropertiesTable.get(itemId));
+            itemIdList.add(itemId);
+            distList.add(dist);
+        }
+
+        collector.emit(new Values(eventCoord, centreId, ringId, itemIdList, distList));
         collector.ack(input);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sink-bolt"));
+        declarer.declare(new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, ITEM_ID_LIST_FIELD, DIST_LIST_FIELD));
     }
 }
