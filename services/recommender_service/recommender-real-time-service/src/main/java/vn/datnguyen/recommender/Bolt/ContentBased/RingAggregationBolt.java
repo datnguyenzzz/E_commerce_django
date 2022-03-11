@@ -1,9 +1,11 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,6 +42,10 @@ public class RingAggregationBolt extends BaseRichBolt {
     private OutputCollector collector;
     private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForDelayedEvent;
     private Map<String, Set<ImmutablePair<Integer, UUID> > > potentialRingsForEvent;
+    // store all "came-before-actual-event" result <dist,itemId>
+    private Map<String, List<ImmutablePair<Double, String> > > bnnResultForDelayEvent;
+    // PQ store K closest <dist, itemId>
+    private Map<String, PriorityQueue<ImmutablePair<Double, String> > > mapKNNPQ;
     //
 
     
@@ -48,15 +54,11 @@ public class RingAggregationBolt extends BaseRichBolt {
         this.collector = collector;
         potentialRingsForEvent = new HashMap<>();
         potentialRingsForDelayedEvent = new HashMap<>();
+        mapKNNPQ = new HashMap<>();
+        bnnResultForDelayEvent = new HashMap<>();
     }
 
-    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList) {
-        if (potentialRingsForEvent.containsKey(eventId)) {
-            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
-            potentialRingsForEvent.remove(eventId);
-        }
-
-        // init set of potential rings
+    private Set<ImmutablePair<Integer, UUID> > makeRingSet(List<Integer> centreIdList, List<String> ringIdList) {
         Set<ImmutablePair<Integer, UUID> > ringIdentity = new HashSet<>();
         for (int i=0; i<centreIdList.size(); i++) {
             int centreId = centreIdList.get(i); 
@@ -64,17 +66,60 @@ public class RingAggregationBolt extends BaseRichBolt {
             ringIdentity.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
         }
 
+        return ringIdentity;
+    }
+
+    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList, int knnFactor) {
+        if (potentialRingsForEvent.containsKey(eventId)) {
+            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
+            potentialRingsForEvent.remove(eventId);
+        }
+        
+        if (mapKNNPQ.containsKey(eventId)) {
+            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
+            mapKNNPQ.remove(eventId);
+        }
+
+        Comparator<ImmutablePair<Double, String> > customCompartor = (p1, p2) -> {
+            double dist1 = p1.getLeft();
+            double dist2 = p2.getLeft();
+
+            int cmp = (dist1 > dist2) ? 1
+                        : -1;
+            return cmp;
+        };
+
+        // init pq
+        PriorityQueue<ImmutablePair<Double, String> > knnPQ = new PriorityQueue<>(customCompartor);
+
+        // init set of potential rings
+        Set<ImmutablePair<Integer, UUID> > ringIdentitySet = makeRingSet(centreIdList, ringIdList);
+
         // if have any ring BEFORE event come
         if (potentialRingsForDelayedEvent.containsKey(eventId)) {
             Set<ImmutablePair<Integer, UUID> > ringSet = potentialRingsForDelayedEvent.get(eventId);
-            ringIdentity.removeAll(ringSet);
-
+            ringIdentitySet.removeAll(ringSet);
+            //erase all results have came
             potentialRingsForDelayedEvent.remove(eventId);
+
+            //maintain pq
+            List<ImmutablePair<Double, String> > resultList = bnnResultForDelayEvent.get(eventId);
+            for (ImmutablePair<Double, String> result : resultList) {
+
+                knnPQ.add(result); 
+
+                if (knnPQ.size() > knnFactor) {
+                    knnPQ.poll();
+                }
+            }
+
+            bnnResultForDelayEvent.remove(eventId);
         }
 
-        potentialRingsForEvent.put(eventId, ringIdentity);
+        potentialRingsForEvent.put(eventId, ringIdentitySet);
+        mapKNNPQ.put(eventId, knnPQ);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public void execute(Tuple input) {
@@ -97,8 +142,12 @@ public class RingAggregationBolt extends BaseRichBolt {
                         + " ring list = " + ringIdList);
             
             // init values 
-            initCachedMap(eventId, centreIdList, ringIdList);
+            initCachedMap(eventId, centreIdList, ringIdList, K);
 
+            // some how all needed value came first ^_^ 
+            if (potentialRingsForEvent.get(eventId).size() == 0) {
+                //do something
+            }
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
@@ -115,6 +164,27 @@ public class RingAggregationBolt extends BaseRichBolt {
                         + " ringId = " + ringId 
                         + " itemIdList = " + itemIdList
                         + " distList = " + distList);
+
+            // ring identity 
+            ImmutablePair<Integer, UUID> ringIdentity = new ImmutablePair<Integer,UUID>(centreId, ringId);
+
+            // if event haven't came yet 
+            if (!(potentialRingsForEvent.containsKey(eventId))) {
+                Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
+                ringSet.add(ringIdentity);
+                potentialRingsForDelayedEvent.put(eventId, ringSet);
+            }
+            else {
+                Set<ImmutablePair<Integer, UUID> > currRingSetForEventId = 
+                    potentialRingsForEvent.get(eventId);
+
+                if (currRingSetForEventId.size() == 0) {
+                    logger.warn("********* RingAggregationBolt **********: currRingSetForEventId size must be > 0 ");
+                }
+
+                //remove form curr ring set 
+                currRingSetForEventId.remove(ringIdentity);
+            }
         }
         collector.ack(input);
     }
