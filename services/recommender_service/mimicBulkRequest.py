@@ -37,7 +37,7 @@ def main():
         t.daemon = True
         t.start()
     try:
-        MAX_REQ = 1000
+        MAX_REQ = 100
         old_data = ""
         for i in range(MAX_REQ):
             q.put(genData())

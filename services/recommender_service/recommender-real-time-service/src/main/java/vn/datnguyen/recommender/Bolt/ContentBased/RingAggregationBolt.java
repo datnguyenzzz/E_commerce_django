@@ -2,11 +2,8 @@ package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -31,14 +28,13 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String DIST_LIST_FIELD = customProperties.getProp("DIST_LIST_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
+    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
     //stream 
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
     //
     private OutputCollector collector;
     //
-    Map<List<Integer>, Set<ImmutablePair<Integer, UUID> > > progress; 
-    Map<List<Integer>, PriorityQueue<Double> > pq;
 
     
     @Override
@@ -55,12 +51,14 @@ public class RingAggregationBolt extends BaseRichBolt {
         if (tupleSource.equals(AGGREGATE_BOUNDED_RINGS_STREAM)) {
 
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
+            String eventId = (String) input.getValueByField(EVENT_ID_FIELD);
             int K = (int) input.getValueByField(KNN_FACTOR_FIELD);
             List<Integer> centreIdList = (List<Integer>) input.getValueByField(CENTRE_LIST_FIELD);
             List<String> ringIdList = (List<String>) input.getValueByField(RING_LIST_FIELD);
 
             logger.info("********* RingAggregationBolt **********: FROM AGGREGATE_BOUNDED_RINGS_STREAM" 
-                        + eventCoord
+                        + " eventId = " + eventId
+                        + " eventCoord = " + eventCoord
                         + " KNN factor = " + K
                         + " centre list = " + centreIdList
                         + " ring list = " + ringIdList);

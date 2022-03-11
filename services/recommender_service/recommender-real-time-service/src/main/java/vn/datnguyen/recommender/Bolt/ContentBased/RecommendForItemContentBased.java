@@ -50,6 +50,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String KNN_FACTOR_FIELD = customProperties.getProp("KNN_FACTOR_FIELD");
     private final static String RING_LIST_FIELD = customProperties.getProp("RING_LIST_FIELD");
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
+    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -253,6 +254,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
+        String eventId = incomeEvent.getEventId();
         int limit = incomeEvent.getLimit();
         List<Integer> eventCoord = incomeEvent.getCoord();
         K = limit; 
@@ -285,14 +287,14 @@ public class RecommendForItemContentBased extends BaseRichBolt {
 
         }
 
-        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(eventCoord, K, centreList, ringList));
+        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, new Values(eventId, eventCoord, K, centreList, ringList));
 
         collector.ack(input);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
+        declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
         declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
     }
 }

@@ -79,18 +79,6 @@ public class KnnBolt extends BaseRichBolt {
         return Math.sqrt(s);
     } 
 
-    private Comparator<String > customeComparator = (t1, t2) -> {
-        List<Integer> item1Properties = itemPropertiesTable.get(t1);
-        List<Integer> item2Properties = itemPropertiesTable.get(t2);
-
-        double dist1 = distance(item1Properties, this.eventCoord);
-        double dist2 = distance(item2Properties, this.eventCoord);
-
-        int cmp = (dist1 > dist2) ? 1
-                    : -1; 
-        return cmp;
-    };
-
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
@@ -117,7 +105,20 @@ public class KnnBolt extends BaseRichBolt {
         // init individual value
         this.knnFactor = knnFactor;
         this.eventCoord = eventCoord;
-        this.pq = new PriorityQueue<>(customeComparator);
+
+        Comparator<String> customComparator = (t1, t2) -> {
+            List<Integer> item1Properties = itemPropertiesTable.get(t1);
+            List<Integer> item2Properties = itemPropertiesTable.get(t2);
+    
+            double dist1 = distance(item1Properties, this.eventCoord);
+            double dist2 = distance(item2Properties, this.eventCoord);
+    
+            int cmp = (dist1 > dist2) ? 1
+                        : -1; 
+            return cmp;
+        };
+
+        this.pq = new PriorityQueue<>(customComparator);
         this.itemPropertiesTable = new HashMap<>();
 
         //find all item inside ring 
