@@ -157,7 +157,7 @@ public class KnnBolt extends BaseRichBolt {
             distList.add(dist);
         }
 
-        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventCoord, centreId, ringId, itemIdList, distList));
+        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventCoord, centreId, ringId.toString(), itemIdList, distList));
         collector.ack(input);
     }
     
