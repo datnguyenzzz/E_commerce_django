@@ -22,5 +22,6 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build real-time recommender service with Maven
+      working-directory: ./services/recommender_service
       run: mvn -B package --file pom.xml
