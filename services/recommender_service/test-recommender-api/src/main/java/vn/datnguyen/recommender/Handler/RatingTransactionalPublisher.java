@@ -18,6 +18,12 @@ public class RatingTransactionalPublisher implements Publisher {
     @Value("${transactionKafka.topic}")
     private String topicName;
 
+    @Value("${transactionKafka.requestForRecommendationsTopic}")
+    private String requestForRecommendationsTopic;
+
+    @Value("${incomingEvent.avroRecommendForItemEvent}")
+    private String avroRecommendForItemEvent;
+
     private KafkaTemplate<String, AvroEvent> kafkaTemplate;
 
     @Autowired
@@ -31,11 +37,20 @@ public class RatingTransactionalPublisher implements Publisher {
     public void execute(AvroEvent event) {
         logger.info("Attempt publishing raw event: " + event.toString() + " to topic" + topicName + "-" + Integer.toString(event.getPartitionId()));
 
-        kafkaTemplate.executeInTransaction(op -> {
-            op.send(topicName, Integer.toString(event.getPartitionId()), event)
-                .addCallback(this::onSuccess, this::onFailure);
-            return true;
-        });
+        String eventType = event.getEventType();
+        if (eventType.equals(avroRecommendForItemEvent)) {
+            kafkaTemplate.executeInTransaction(op -> {
+                op.send(requestForRecommendationsTopic, event).addCallback(this::onSuccess, this::onFailure);
+                return true;
+            });
+        }
+        else {
+            kafkaTemplate.executeInTransaction(op -> {
+                op.send(topicName, Integer.toString(event.getPartitionId()), event)
+                    .addCallback(this::onSuccess, this::onFailure);
+                return true;
+            });
+        }
     }
 
     private void onSuccess(final SendResult<String, AvroEvent> res) {

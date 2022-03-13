@@ -131,6 +131,39 @@
                             "name": "itemId", "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "AvroRecommendForUser",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "clientId", "type": "string"
+                        },
+                        {
+                            "name": "limit", "type": "int"
+                        }
+                    ]
+                },
+                {
+                    "name": "AvroRecommendForItem",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "itemId", "type": "string"
+                        },
+                        {
+                            "name": "limit", "type": "int"
+                        },
+                        {
+                            "name": "properties_1", "type": "int"
+                        },
+                        {
+                            "name": "properties_2", "type": "int"
+                        },
+                        {
+                            "name": "properties_3", "type": "int"
+                        }
+                    ]
                 }
             ]
         }

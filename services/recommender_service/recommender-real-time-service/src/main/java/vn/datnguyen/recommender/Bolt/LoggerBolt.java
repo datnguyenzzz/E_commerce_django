@@ -19,7 +19,6 @@ public class LoggerBolt extends BaseRichBolt {
     private final Logger logger = LoggerFactory.getLogger(LoggerBolt.class);
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //VALUE FIELDS
-    private final static String DELTA_RATING = customProperties.getProp("DELTA_RATING");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private OutputCollector collector;
     
@@ -31,9 +30,8 @@ public class LoggerBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         Event incomeEvent = (Event) input.getValueByField(EVENT_FIELD);
-        int deltaRating = (int) input.getValueByField(DELTA_RATING);
 
-        logger.info("********* LoggerBolt **********" + incomeEvent + " with delta = " + deltaRating);
+        logger.info("********* LoggerBolt **********" + incomeEvent);
         collector.ack(input);
     }
     

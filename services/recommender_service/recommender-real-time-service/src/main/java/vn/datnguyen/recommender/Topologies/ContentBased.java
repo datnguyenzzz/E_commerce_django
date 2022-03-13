@@ -9,39 +9,46 @@ import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class ContentBased {
     private static final CustomProperties customProperties = CustomProperties.getInstance();
-    //---
-    private static final String DISPATCHER_BOLT_THREADS = customProperties.getProp("DISPATCHER_BOLT_THREADS");
-    private static final String UPDATE_RING_BOLT_THREADS = customProperties.getProp("UPDATE_RING_BOLT_THREADS");
-    //private static final String LOGGER_BOLT_THREADS = customProperties.getProp("LOGGER_BOLT_THREADS");
-    //private static final String DUPLICATE_FILTER_BOLT_THREADS = customProperties.getProp("DUPLICATE_FILTER_BOLT_THREADS");
     //STREAM
+    private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     private final static String UPDATE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("UPDATE_DATA_FROM_CENTRE_STREAM");
+    //private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
+    private final static String INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM = customProperties.getProp("INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM");
+    private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
+    private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
+    private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
     //IDs
     //--
     private static final String DISPATCHER_BOLT = customProperties.getProp("DISPATCHER_BOLT");
     private static final String UPDATE_RING_BOLT = customProperties.getProp("UPDATE_RING_BOLT");
     private final static String EVENT_FILTERING_BOLT = customProperties.getProp("EVENT_FILTERING_BOLT");
+    private static final String RECOMMEND_FOR_ITEM_BOLT = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT");
+    private static final String RING_AGGREGRATION_BOLT = customProperties.getProp("RING_AGGREGRATION_BOLT");
+    private static final String KNN_BOLT = customProperties.getProp("KNN_BOLT");
     //
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
-    //--
+    private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
+    //TASKS
+    private final static String KAFKA_SPOUT_CB_TASKS = customProperties.getProp("SPOUT_TASKS");
+    private final static String EVENT_FILTERING_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_BOLT_TASKS");
     private static final String DISPATCHER_BOLT_TASKS = customProperties.getProp("DISPATCHER_BOLT_TASKS");
     private static final String UPDATE_RING_BOLT_TASKS = customProperties.getProp("UPDATE_RING_BOLT_TASKS");
-    //PARALLISM
+    private static final String RECOMMEND_FOR_ITEM_BOLT_TASKS = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT_TASKS");
+    private static final String RING_AGGREGRATION_BOLT_TASKS = customProperties.getProp("RING_AGGREGRATION_BOLT_TASKS");
+    private static final String KNN_BOLT_TASKS = customProperties.getProp("KNN_BOLT_TASKS");
+    //PARALLISM EXECUTORS
     private static final String KAFKA_SPOUT_CB_THREADS = customProperties.getProp("KAFKA_SPOUT_CB_THREADS");
     private static final String EVENT_FILTERING_BOLT_THREADS = customProperties.getProp("EVENT_FILTERING_BOLT_THREADS");
-    //STREAM
-    private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
+    private static final String DISPATCHER_BOLT_THREADS = customProperties.getProp("DISPATCHER_BOLT_THREADS");
+    private static final String UPDATE_RING_BOLT_THREADS = customProperties.getProp("UPDATE_RING_BOLT_THREADS");
+    private static final String RECOMMEND_FOR_ITEM_BOLT_THREADS = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT_THREADS");
+    private static final String RING_AGGREGRATION_BOLT_THREADS = customProperties.getProp("RING_AGGREGRATION_BOLT_THREADS");
+    private static final String KNN_BOLT_THREADS = customProperties.getProp("KNN_BOLT_THREADS");
     //IDs
     private final static String KAFKA_SPOUT_CB = customProperties.getProp("KAFKA_SPOUT_CB");
     //--
-    //Tasks size 
-    private final static String KAFKA_SPOUT_CB_TASKS = customProperties.getProp("SPOUT_TASKS");
-    private final static String EVENT_FILTERING_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_BOLT_TASKS");
-    //--
-    //private final static String LOGGER_BOLT = customProperties.getProp("LOGGER_BOLT");
-    //private final static String DUPLICATE_FILTER_BOLT = customProperties.getProp("DUPLICATE_FILTER_BOLT");
     private static CBSpoutCreator spoutCreator = new CBSpoutCreator();
     private static BoltFactory boltFactory = new BoltFactory();
 
@@ -65,6 +72,19 @@ public class ContentBased {
         topologyBuilder.setBolt(UPDATE_RING_BOLT, boltFactory.createUpdateBoundedRingBolt(), Integer.parseInt(UPDATE_RING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(UPDATE_RING_BOLT_TASKS))
             .fieldsGrouping(DISPATCHER_BOLT, UPDATE_DATA_FROM_CENTRE_STREAM, new Fields(CENTRE_ID_FIELD, RING_ID_FIELD));
+
+        topologyBuilder.setBolt(RECOMMEND_FOR_ITEM_BOLT, boltFactory.createRecommendForItemContentBased(), Integer.parseInt(RECOMMEND_FOR_ITEM_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(RECOMMEND_FOR_ITEM_BOLT_TASKS))
+            .shuffleGrouping(EVENT_FILTERING_BOLT, CONTENT_BASED_RECOMMEND_FOR_ITEM);
+        
+        topologyBuilder.setBolt(KNN_BOLT, boltFactory.createKnnBolt(), Integer.parseInt(KNN_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(KNN_BOLT_TASKS))
+            .shuffleGrouping(RECOMMEND_FOR_ITEM_BOLT, INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM);
+
+        topologyBuilder.setBolt(RING_AGGREGRATION_BOLT,boltFactory.createRingAggregationBolt() , Integer.parseInt(RING_AGGREGRATION_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))
+            .fieldsGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD))
+            .fieldsGrouping(KNN_BOLT, INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_ID_FIELD));
 
         return topologyBuilder;
 

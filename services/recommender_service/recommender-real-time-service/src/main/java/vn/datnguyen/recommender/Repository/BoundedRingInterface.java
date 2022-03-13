@@ -13,10 +13,10 @@ public interface BoundedRingInterface {
     public final static String CAPACITY = "capacity"; // int
 
     SimpleStatement createRowIfNotExists();
-    SimpleStatement addNewBoundedRing(UUID ringId, int centreId, double lbRange, double ubRange);
+    SimpleStatement addNewBoundedRing(UUID ringId, int centreId, double lbRange, double ubRange, int capacity);
     SimpleStatement findBoundedRingById(UUID ringId, int centreId);
+    SimpleStatement findBoundedRingByIdAndRange(int centreId, double ubRange);
     SimpleStatement findAllBoundedRingInCentre(int centreId);
-    SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, int capacity);
-    SimpleStatement updateBoundedRingRange(UUID ringId, int centreId, double lbRange, double ubRange);
+    //SimpleStatement updateBoundedRingCapacityById(UUID ringId, int centreId, double ubRange, int capacity);
     SimpleStatement deleteBoundedRingById(UUID ringId, int centreId);
 }

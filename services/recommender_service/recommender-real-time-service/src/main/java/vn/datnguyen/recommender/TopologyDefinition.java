@@ -14,7 +14,8 @@ public class TopologyDefinition {
 
     private static final CustomProperties customProperties = CustomProperties.getInstance();
     //PARALLISM
-    private static final String TOPOLOGY_WORKERS = customProperties.getProp("TOPOLOGY_WORKERS");
+    private static final String CF_TOPOLOGY_WORKERS = customProperties.getProp("CF_TOPOLOGY_WORKERS");
+    private static final String CB_TOPOLOGY_WORKERS = customProperties.getProp("CB_TOPOLOGY_WORKERS");
     private final static String TOPO_CF = customProperties.getProp("TOPO_CF");
     private final static String TOPO_CB = customProperties.getProp("TOPO_CB");
 
@@ -25,7 +26,7 @@ public class TopologyDefinition {
         Config config = new Config();
         config.setDebug(true);
         config.setMessageTimeoutSecs(30);
-        config.setNumWorkers(Integer.parseInt(TOPOLOGY_WORKERS));
+        config.setNumWorkers(Integer.parseInt(CF_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);
         return config;
@@ -35,7 +36,7 @@ public class TopologyDefinition {
         Config config = new Config();
         config.setDebug(true);
         config.setMessageTimeoutSecs(30);
-        config.setNumWorkers(Integer.parseInt(TOPOLOGY_WORKERS));
+        config.setNumWorkers(Integer.parseInt(CB_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);
         return config;
@@ -46,7 +47,7 @@ public class TopologyDefinition {
         TopologyBuilder contentBasedTopologyBuilder = contentBased.initTopology();
 
         Config tpCFConfig = getCFConfig();
-        StormSubmitter.submitTopology(TOPO_CF, tpCFConfig, colaborativeFilertingTopologyBuilder.createTopology());
+        //StormSubmitter.submitTopology(TOPO_CF, tpCFConfig, colaborativeFilertingTopologyBuilder.createTopology());
 
         Config tpCBConfig = getCBConfig();
         StormSubmitter.submitTopology(TOPO_CB, tpCBConfig, contentBasedTopologyBuilder.createTopology());

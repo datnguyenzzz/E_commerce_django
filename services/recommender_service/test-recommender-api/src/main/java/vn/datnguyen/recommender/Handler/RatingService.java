@@ -17,6 +17,7 @@ import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroDeleteRating;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
+import vn.datnguyen.recommender.AvroClasses.AvroRecommendForItem;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
 import vn.datnguyen.recommender.Domain.AddItemCommand;
 import vn.datnguyen.recommender.Domain.AddToCartBehaviorCommand;
@@ -26,6 +27,7 @@ import vn.datnguyen.recommender.Domain.DeleteItemCommand;
 import vn.datnguyen.recommender.Domain.DeleteRatingCommand;
 import vn.datnguyen.recommender.Domain.ErrorRatingCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
+import vn.datnguyen.recommender.Domain.RecommendationForItemCommand;
 import vn.datnguyen.recommender.Domain.UpdateRatingCommand;
 
 @Service
@@ -68,6 +70,9 @@ public class RatingService implements CommandHandler, EventHandler {
 
     @Value("${incomingEvent.avroDeleteItemEvent}")
     private String avroDeleteItemEvent;
+
+    @Value("${incomingEvent.avroRecommendForItemEvent}")
+    private String avroRecommendForItemEvent;
 
     private Logger logger = LoggerFactory.getLogger(RatingService.class);
 
@@ -115,6 +120,9 @@ public class RatingService implements CommandHandler, EventHandler {
         else if (command instanceof DeleteItemCommand) {
             return validate((DeleteItemCommand) command);
         }
+        else if (command instanceof RecommendationForItemCommand) {
+            return validate((RecommendationForItemCommand) command);
+        }
         return new ErrorRatingCommand("Undefined error RATING-COMMAND-SERVICE");
     }
 
@@ -139,6 +147,9 @@ public class RatingService implements CommandHandler, EventHandler {
         }
         else if (command instanceof DeleteItemCommand) {
             return toAvroEvent((DeleteItemCommand) command);
+        }
+        else if (command instanceof RecommendationForItemCommand) {
+            return toAvroEvent((RecommendationForItemCommand) command);
         }
 
         return null;
@@ -214,6 +225,16 @@ public class RatingService implements CommandHandler, EventHandler {
         return new ErrorRatingCommand(command.getClientId(), command.getItemId(), "Unacceptable delete item");
     }
 
+    private Command validate(RecommendationForItemCommand command) {
+        boolean acceptable = true;
+        
+        if (acceptable) {
+            return command;
+        }
+        
+        return new ErrorRatingCommand(null, command.getItemId(), "Unacceptable recommend for item");
+    }
+
     private AvroEvent toAvroEvent(PublishRatingCommand command) {
         AvroPublishRating eventPayload = AvroPublishRating.newBuilder()
             .setClientId(command.getClientId())
@@ -280,6 +301,18 @@ public class RatingService implements CommandHandler, EventHandler {
             .build();
         
         return wrap(eventPayload, avroDeleteItemEvent);
+    }
+
+    private AvroEvent toAvroEvent(RecommendationForItemCommand command) {
+        AvroRecommendForItem eventPayload = AvroRecommendForItem.newBuilder()
+            .setItemId(command.getItemId())
+            .setLimit(command.getLimit())
+            .setProperties1(command.getProperty1())
+            .setProperties2(command.getProperty2())
+            .setProperties3(command.getProperty3())
+            .build();
+        
+        return wrap(eventPayload, avroRecommendForItemEvent);
     }
 
     private AvroEvent wrap(Object payload, String payloadType) {

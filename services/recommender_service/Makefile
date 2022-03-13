@@ -12,8 +12,11 @@ testRecommender:
 	mvn -pl recommender-real-time-service -am install
 #	mvn clean 
 #	mvn install
-	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=2
+	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
 	docker-compose -f docker-compose-test-recommender.yml ps
+
+testCassandra:
+	docker exec -it cassandra1 bash -c "nodetool status"
 
 testProducer:
 	docker exec -it kafka kafka-console-producer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation
