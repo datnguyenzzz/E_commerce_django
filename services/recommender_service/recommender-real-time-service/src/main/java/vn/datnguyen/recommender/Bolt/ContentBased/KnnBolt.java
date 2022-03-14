@@ -166,6 +166,6 @@ public class KnnBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declareStream(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, ITEM_ID_LIST_FIELD, DIST_LIST_FIELD));
+        declarer.declareStream(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, ITEM_ID_LIST_FIELD, DIST_LIST_FIELD));
     }
 }
