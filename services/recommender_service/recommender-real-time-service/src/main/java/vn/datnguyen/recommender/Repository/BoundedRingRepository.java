@@ -16,13 +16,13 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .ifNotExists()
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withPartitionKey(RING_ID, DataTypes.UUID)
-            .withClusteringColumn(UPPER_BOUND_RANGE, DataTypes.DOUBLE)
-            .withColumn(LOWER_BOUND_RANGE, DataTypes.DOUBLE)
+            .withClusteringColumn(UPPER_BOUND_RANGE, DataTypes.BIGINT)
+            .withColumn(LOWER_BOUND_RANGE, DataTypes.BIGINT)
             .withColumn(CAPACITY, DataTypes.INT)
             .build();
     }
 
-    public SimpleStatement addNewBoundedRing(UUID ringId, int centreId, double lbRange, double ubRange, int capacity) {
+    public SimpleStatement addNewBoundedRing(UUID ringId, int centreId, long lbRange, long ubRange, int capacity) {
         return QueryBuilder.insertInto(BOUNDED_RING_ROW)
             .value(RING_ID, QueryBuilder.literal(ringId))
             .value(CENTRE_ID, QueryBuilder.literal(centreId))
@@ -50,7 +50,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
     
-    public SimpleStatement findBoundedRingByIdAndRange(int centreId, double ubRange) {
+    public SimpleStatement findBoundedRingByIdAndRange(int centreId, long ubRange) {
         return QueryBuilder.selectFrom(BOUNDED_RING_ROW).all()
         .where(
             Relation.column(CENTRE_ID).isEqualTo(QueryBuilder.literal(centreId)),

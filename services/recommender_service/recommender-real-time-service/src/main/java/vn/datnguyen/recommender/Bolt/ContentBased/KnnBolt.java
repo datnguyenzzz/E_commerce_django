@@ -71,13 +71,13 @@ public class KnnBolt extends BaseRichBolt {
         keyspaceRepository.createAndUseKeyspace(KEYSPACE_FIELD, Integer.parseInt(NUM_NODE_REPLICAS_FIELD));
     }
 
-    private double distance(List<Integer> a, List<Integer> b) {
-        double s = 0; 
+    private long distance(List<Integer> a, List<Integer> b) {
+        long s = 0; 
         for (int i = 0; i<a.size(); i++) {
             s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
         }
 
-        return Math.sqrt(s);
+        return s;
     } 
 
     @Override
@@ -112,8 +112,8 @@ public class KnnBolt extends BaseRichBolt {
             List<Integer> item1Properties = itemPropertiesTable.get(t1);
             List<Integer> item2Properties = itemPropertiesTable.get(t2);
     
-            double dist1 = distance(item1Properties, this.eventCoord);
-            double dist2 = distance(item2Properties, this.eventCoord);
+            long dist1 = distance(item1Properties, this.eventCoord);
+            long dist2 = distance(item2Properties, this.eventCoord);
     
             int cmp = (dist1 > dist2) ? 1
                         : -1; 
@@ -151,11 +151,11 @@ public class KnnBolt extends BaseRichBolt {
         //emit tuple
 
         List<String> itemIdList = new ArrayList<>();
-        List<Double> distList = new ArrayList<>();
+        List<Long> distList = new ArrayList<>();
 
         while (pq.size() > 0) {
             String itemId = pq.poll();
-            double dist = distance(eventCoord, itemPropertiesTable.get(itemId));
+            long dist = distance(eventCoord, itemPropertiesTable.get(itemId));
             itemIdList.add(itemId);
             distList.add(dist);
         }

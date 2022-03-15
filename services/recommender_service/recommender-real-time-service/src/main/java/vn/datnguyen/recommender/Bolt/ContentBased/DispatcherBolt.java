@@ -93,7 +93,7 @@ public class DispatcherBolt extends BaseRichBolt {
         Row selectedCentre = this.repositoryFactory.executeStatement(selectedCentreStatment, KEYSPACE_FIELD).one();
 
         List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(selectedCentre, CENTRE_COORD);
-        List<Double> centreUBRangeList = this.repositoryFactory.getListDoubleFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        List<Long> centreUBRangeList = this.repositoryFactory.getListLongFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
         List<Integer> eventCoord = incomeEvent.getCoord();
 
         logger.info("********* DispatcherBolt **********" + incomeEvent + " with centre ID = " + centreId 
@@ -114,24 +114,24 @@ public class DispatcherBolt extends BaseRichBolt {
         }
     }
 
-    private double distance(List<Integer> a, List<Integer> b) {
-        double s = 0; 
+    private long distance(List<Integer> a, List<Integer> b) {
+        long s = 0; 
         for (int i = 0; i<a.size(); i++) {
             s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
         }
 
-        return Math.sqrt(s);
+        return s;
     }
 
-    private UUID findBoundedRing(int centreId, List<Integer> centreCoord, List<Double> centreUBRangeList, List<Integer> eventCoord) {
+    private UUID findBoundedRing(int centreId, List<Integer> centreCoord, List<Long> centreUBRangeList, List<Integer> eventCoord) {
         //
-        SortedSet<Double> sortedRangeList = new TreeSet<>();
-        for (double ubRange: centreUBRangeList) {
+        SortedSet<Long> sortedRangeList = new TreeSet<>();
+        for (long ubRange: centreUBRangeList) {
             sortedRangeList.add(ubRange);
         }
 
-        double dist = distance(eventCoord, centreCoord);
-        SortedSet<Double> distGreaterList = sortedRangeList.tailSet(dist);
+        long dist = distance(eventCoord, centreCoord);
+        SortedSet<Long> distGreaterList = sortedRangeList.tailSet(dist);
 
         UUID selectedRingId;
         if (distGreaterList.size() == 0) {
@@ -139,10 +139,10 @@ public class DispatcherBolt extends BaseRichBolt {
             logger.info("********* DispatcherBolt **********: create new bounding ring");
             // add new bounded ring
             UUID ringId = Uuids.random();
-            double lbRange = sortedRangeList.size() == 0 
-                            ? 0.0
+            long lbRange = sortedRangeList.size() == 0 
+                            ? 0
                             : sortedRangeList.last();
-            double ubRange = dist;
+            long ubRange = dist;
             
             // add new bounded ring
             SimpleStatement addNewBoundedRingStatement = 
@@ -150,7 +150,7 @@ public class DispatcherBolt extends BaseRichBolt {
             
             addDataToCentre.addStatement(addNewBoundedRingStatement);
             //update centreUBList
-            List<Double> tmp = new ArrayList<Double>(centreUBRangeList);
+            List<Long> tmp = new ArrayList<Long>(centreUBRangeList);
             tmp.add(ubRange);
             SimpleStatement updateUBListStatement = 
                 this.indexesCoordRepository.updateUBRangeListById(centreId, tmp);
@@ -164,7 +164,7 @@ public class DispatcherBolt extends BaseRichBolt {
             selectedRingId = null;
 
             logger.info("********* DispatcherBolt **********: find existed bounding ring");
-            double selectedRingUBRange = distGreaterList.first();
+            long selectedRingUBRange = distGreaterList.first();
 
             // find all bounded ring within centre 
             SimpleStatement findAllBoundedRingInCentreStatement = 

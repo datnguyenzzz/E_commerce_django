@@ -19,12 +19,12 @@ public class ItemStatusRepository implements ItemStatusInterface {
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withClusteringColumn(ITEM_ID, DataTypes.TEXT)
             .withColumn(ADD_BY_CLIENT_ID, DataTypes.TEXT)
-            .withColumn(DISTANCE_TO_CENTRE, DataTypes.DOUBLE)
+            .withColumn(DISTANCE_TO_CENTRE, DataTypes.BIGINT)
             .withColumn(VECTOR_PROPERTIES, DataTypes.listOf(DataTypes.INT))
             .build();
     }
 
-    public SimpleStatement addNewItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId, double dist, List<Integer> properties) {
+    public SimpleStatement addNewItemStatus(String itemId, String clientId, UUID boundedRingId, int centreId, long dist, List<Integer> properties) {
         return QueryBuilder.insertInto(ITEM_STATUS_ROW)
             .value(ITEM_ID, QueryBuilder.literal(itemId))
             .value(ADD_BY_CLIENT_ID, QueryBuilder.literal(clientId))

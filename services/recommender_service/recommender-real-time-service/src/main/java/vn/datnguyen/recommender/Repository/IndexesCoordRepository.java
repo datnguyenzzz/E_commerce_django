@@ -18,13 +18,13 @@ public class IndexesCoordRepository implements IndexesCoordInterface {
             .ifNotExists()
             .withPartitionKey(CENTRE_ID, DataTypes.INT)
             .withColumn(CENTRE_COORD, DataTypes.listOf(DataTypes.INT))
-            .withColumn(CENTRE_UPPER_BOUND_RANGE_LIST, DataTypes.listOf(DataTypes.DOUBLE))
+            .withColumn(CENTRE_UPPER_BOUND_RANGE_LIST, DataTypes.listOf(DataTypes.BIGINT))
             .build();
     }
 
     public SimpleStatement insertNewIndex(int id, List<Integer> coord) {
 
-        List<Double> initial = new ArrayList<>();
+        List<Long> initial = new ArrayList<>();
 
         return QueryBuilder.insertInto(INDEXES_COORD_ROW)
             .value(CENTRE_ID, QueryBuilder.literal(id))
@@ -46,7 +46,7 @@ public class IndexesCoordRepository implements IndexesCoordInterface {
             .build();
     }
 
-    public SimpleStatement updateUBRangeListById(int id, List<Double> ubRangeList) {
+    public SimpleStatement updateUBRangeListById(int id, List<Long> ubRangeList) {
         return QueryBuilder.update(INDEXES_COORD_ROW)
             .set(
                 Assignment.setColumn(CENTRE_UPPER_BOUND_RANGE_LIST, QueryBuilder.literal(ubRangeList))

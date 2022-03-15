@@ -178,20 +178,20 @@ public class EventFilteringBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
     }
 
-    private double distance(List<Integer> a, List<Integer> b) {
-        double s = 0; 
+    private long distance(List<Integer> a, List<Integer> b) {
+        long s = 0; 
         for (int i = 0; i<a.size(); i++) {
             s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
         }
 
-        return Math.sqrt(s);
+        return s;
     }
 
     private int findCentreId(List<Integer> itemProp) {
         SimpleStatement findAllCentreStatement = this.indexesCoordRepository.selectAllCentre();
         List<Row> findAllCentre = this.repositoryFactory.executeStatement(findAllCentreStatement, KEYSPACE_FIELD).all();
 
-        double minDist = Double.MAX_VALUE;
+        long minDist = Long.MAX_VALUE;
         int centreId=0;
 
         for (Row r: findAllCentre) {

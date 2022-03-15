@@ -132,8 +132,8 @@ public class RepositoryFactory {
         return row.getList(col, Integer.class);
     }
 
-    public List<Double> getListDoubleFromRow(Row row, String col) {
-        return row.getList(col, Double.class);
+    public List<Long> getListLongFromRow(Row row, String col) {
+        return row.getList(col, Long.class);
     }
 
 }

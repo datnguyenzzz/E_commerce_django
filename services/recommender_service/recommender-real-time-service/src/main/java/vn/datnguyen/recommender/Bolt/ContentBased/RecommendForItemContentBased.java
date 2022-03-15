@@ -93,15 +93,15 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         this.boundedRingRepository = this.repositoryFactory.getBoundedRingRepository();
     }
 
-    private double dist(List<Integer> a, List<Integer> b) {
-        double s = 0;
+    private long dist(List<Integer> a, List<Integer> b) {
+        long s = 0;
         for (int i=0; i<a.size(); i++) {
             s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
         }
-        return Math.sqrt(s);
+        return s;
     }
 
-    private UUID findCorrectspondBoundedRing(int centreId, double expectedUBRange) {
+    private UUID findCorrectspondBoundedRing(int centreId, long expectedUBRange) {
         SimpleStatement findRingByIdAndRangeStatement = 
             this.boundedRingRepository.findBoundedRingByIdAndRange(centreId, expectedUBRange);
         
@@ -122,22 +122,22 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private List<ImmutablePair<Integer, UUID> > findPotentialBoundedRings(List<Integer> eventCoord, int K, int A, int B) {
         
         List<ImmutablePair<Integer, UUID> > result = new ArrayList<>();
-        Map<Integer, List<Double> > UBRangeOfCentre = new HashMap<>();
+        Map<Integer, List<Long> > UBRangeOfCentre = new HashMap<>();
         Map<Integer, List<Integer> > CoordOfCentre = new HashMap<>();
 
         Comparator<ImmutableTriple<Integer, Integer, Boolean> > customCompare = (tuple1, tuple2) -> {
             int centreId1 = tuple1.getLeft();
             int ubRangePos1 = tuple1.getMiddle();
-            double ubRange1 = UBRangeOfCentre.get(centreId1).get(ubRangePos1);
-            double dist1 = dist(eventCoord, CoordOfCentre.get(centreId1));
+            long ubRange1 = UBRangeOfCentre.get(centreId1).get(ubRangePos1);
+            long dist1 = dist(eventCoord, CoordOfCentre.get(centreId1));
 
             int centreId2 = tuple2.getLeft();
             int ubRangePos2 = tuple2.getMiddle();
-            double ubRange2 = UBRangeOfCentre.get(centreId2).get(ubRangePos2);
-            double dist2 = dist(eventCoord, CoordOfCentre.get(centreId2));
+            long ubRange2 = UBRangeOfCentre.get(centreId2).get(ubRangePos2);
+            long dist2 = dist(eventCoord, CoordOfCentre.get(centreId2));
 
-            double diff1 = Math.abs(ubRange1 - dist1);
-            double diff2 = Math.abs(ubRange2 - dist2);
+            long diff1 = Math.abs(ubRange1 - dist1);
+            long diff2 = Math.abs(ubRange2 - dist2);
 
             int cmp = (diff1 < diff2) ? 1 : -1;
             return cmp;
@@ -155,7 +155,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         for (Row r: allCentre) {
             int centreId = (int) this.repositoryFactory.getFromRow(r, CENTRE_ID);
             List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(r, CENTRE_COORD);
-            List<Double> ringUBRangeList = this.repositoryFactory.getListDoubleFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
+            List<Long> ringUBRangeList = this.repositoryFactory.getListLongFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
 
             UBRangeOfCentre.put(centreId, ringUBRangeList);
             CoordOfCentre.put(centreId, centreCoord);
@@ -165,17 +165,17 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             //centre 
             int centreId = (int) this.repositoryFactory.getFromRow(r, CENTRE_ID); 
             List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(r, CENTRE_COORD);
-            List<Double> ringUBRangeList = this.repositoryFactory.getListDoubleFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
-            SortedSet<Double> ringUBRangeSet = new TreeSet<>(ringUBRangeList);
+            List<Long> ringUBRangeList = this.repositoryFactory.getListLongFromRow(r, CENTRE_UPPER_BOUND_RANGE_LIST);
+            SortedSet<Long> ringUBRangeSet = new TreeSet<>(ringUBRangeList);
 
             if (ringUBRangeSet.size() == 0) {
                 continue;
             }
 
-            double distFromCentreId = dist(centreCoord, eventCoord);
+            long distFromCentreId = dist(centreCoord, eventCoord);
 
             // find all lower bound 
-            SortedSet<Double> lowerBound = ringUBRangeSet.headSet(distFromCentreId);
+            SortedSet<Long> lowerBound = ringUBRangeSet.headSet(distFromCentreId);
 
             if (lowerBound.size() == ringUBRangeSet.size()) {
                 logger.info("********* RecommendForItemContentBased **********: current point > MAX ub range");
@@ -231,7 +231,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             int centreId = closestRing.getLeft();
             int ubRangePos = closestRing.getMiddle();
             boolean isDown = closestRing.getRight();
-            double ubRange = UBRangeOfCentre.get(centreId).get(ubRangePos);
+            long ubRange = UBRangeOfCentre.get(centreId).get(ubRangePos);
             UUID ringId = findCorrectspondBoundedRing(centreId, ubRange);
 
             logger.info("********* RecommendForItemContentBased **********: Add to result: "

@@ -118,7 +118,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         collector.ack(input);
     }
 
-    private void updateBoundedRingRange(UUID ringId, int centreId, double newLBRange, double newUBRange, int newCapacity) {
+    private void updateBoundedRingRange(UUID ringId, int centreId, long newLBRange, long newUBRange, int newCapacity) {
 
         //Delete 
         SimpleStatement deleteCurrRowStatement = 
@@ -132,27 +132,27 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         this.repositoryFactory.executeStatement(addNewRowStatement, KEYSPACE_FIELD);
     }
 
-    private double findMedianFromDataSet(List<Row> getAllDataInRing) {
-        SortedSet<Double> dist = new TreeSet<Double>();
+    private long findMedianFromDataSet(List<Row> getAllDataInRing) {
+        SortedSet<Long> dist = new TreeSet<Long>();
 
         for (Row r: getAllDataInRing) {
-            double d = (Double)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+            long d = (Long)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
             dist.add(d);
         }
 
-        Double[] distArray = new Double[dist.size()];
+        Long[] distArray = new Long[dist.size()];
         distArray = dist.toArray(distArray);
 
         return distArray[dist.size()/2];
     }
 
-    private double distance(List<Integer> a, List<Integer> b) {
-        double s = 0; 
+    private long distance(List<Integer> a, List<Integer> b) {
+        long s = 0; 
         for (int i = 0; i<a.size(); i++) {
             s += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));
         }
 
-        return Math.sqrt(s);
+        return s;
     }
 
     private List<SimpleStatement> splitBoundedRing(int centreId, UUID ringId) {
@@ -187,25 +187,25 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             this.repositoryFactory.executeStatement(getAllDataInRingStatement, KEYSPACE_FIELD).all();
 
         //get UBRANGE list 
-        List<Double> centreUBRangeList = 
-            this.repositoryFactory.getListDoubleFromRow(getCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        List<Long> centreUBRangeList = 
+            this.repositoryFactory.getListLongFromRow(getCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
 
-        SortedSet<Double> centreUBRangeSet = new TreeSet<>();
-        for (double ubRange: centreUBRangeList) {
+        SortedSet<Long> centreUBRangeSet = new TreeSet<>();
+        for (long ubRange: centreUBRangeList) {
             centreUBRangeSet.add(ubRange);
         }
 
         //logic
-        double medianRangeInBoundedRing = findMedianFromDataSet(getAllDataInRing);
+        long medianRangeInBoundedRing = findMedianFromDataSet(getAllDataInRing);
         logger.info("********* UpdateBoundedRingBolt **********: Distance threshold for splitting = " + medianRangeInBoundedRing);
 
-        double oldMaxRange = Double.MIN_VALUE;
+        long oldMaxRange = Long.MIN_VALUE;
         int newRingCapacity = 0;
         int oldCapacity = getAllDataInRing.size();
         UUID newRingId = Uuids.random();
         //update item status 
         for (Row r: getAllDataInRing) {
-            double d = (Double)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+            long d = (long)this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
             List<Integer> itemProperties = this.repositoryFactory.getListIntegerFromRow(r, VECTOR_PROPERTIES);
             if (d <= medianRangeInBoundedRing) {
                 oldMaxRange = Math.max(oldMaxRange, d);
@@ -223,8 +223,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             splitBoundedRing.add(changeToNewBoundedRingStatement);
         }
         //update bounded ring
-        double lbRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
-        double ubRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
+        long lbRange = (long) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
+        long ubRange = (long) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
 
         updateBoundedRingRange(ringId, centreId, lbRange, oldMaxRange, oldCapacity - newRingCapacity);
 
@@ -235,7 +235,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             
         //update centre
         centreUBRangeSet.add(oldMaxRange);
-        List<Double> centreUBRangeArrayList = new ArrayList<Double>(centreUBRangeSet);
+        List<Long> centreUBRangeArrayList = new ArrayList<Long>(centreUBRangeSet);
         SimpleStatement updateUBListStatement = 
             this.indexesCoordRepository.updateUBRangeListById(centreId, centreUBRangeArrayList);
             
@@ -256,8 +256,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         Row findBoundedRing = findBoundedRingResult.one();
         int currCapacity = (int)this.repositoryFactory.getFromRow(findBoundedRing, CAPACITY);
-        double currLBRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
-        double currUBRange = (double) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
+        long currLBRange = (long) this.repositoryFactory.getFromRow(findBoundedRing, LOWER_BOUND_RANGE);
+        long currUBRange = (long) this.repositoryFactory.getFromRow(findBoundedRing, UPPER_BOUND_RANGE);
         // center 
         SimpleStatement getCentreStatement = 
                 this.indexesCoordRepository.selectCentreById(centreId);
@@ -275,7 +275,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         List<Integer> centreCoord = 
             this.repositoryFactory.getListIntegerFromRow(getCentre, CENTRE_COORD);
             
-        double dist = distance(eventCoord, centreCoord);
+        long dist = distance(eventCoord, centreCoord);
 
         //add new item status 
         SimpleStatement addNewItemStatusStatement = 
@@ -312,15 +312,15 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             logger.warn("********* UpdateBoundedRingBolt **********: Find centre by id result must equal to 1, not " + selectedCentreResult.getAvailableWithoutFetching());
         }
         Row selectedCentre = selectedCentreResult.one();
-        List<Double> ubRangeList = 
-            this.repositoryFactory.getListDoubleFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
+        List<Long> ubRangeList = 
+            this.repositoryFactory.getListLongFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
         
         if (ubRangeList.size() == 1) {
             return mergeBoundedRingsList;
         }
 
-        SortedSet<Double> ubRangeSet = new TreeSet<>();
-        for (double ubRange: ubRangeList) {
+        SortedSet<Long> ubRangeSet = new TreeSet<>();
+        for (long ubRange: ubRangeList) {
             ubRangeSet.add(ubRange);
         }
 
@@ -334,22 +334,22 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         }
         Row selectedBoundedRing = selectedBoundedRingResult.one();
         UUID selectedBoundedRingId = ringId;
-        double selectedRingLBRange = 
-            (double) this.repositoryFactory.getFromRow(selectedBoundedRing, LOWER_BOUND_RANGE);
-        double selectedRingUBRange = 
-            (double) this.repositoryFactory.getFromRow(selectedBoundedRing, UPPER_BOUND_RANGE);
+        long selectedRingLBRange = 
+            (long) this.repositoryFactory.getFromRow(selectedBoundedRing, LOWER_BOUND_RANGE);
+        long selectedRingUBRange = 
+            (long) this.repositoryFactory.getFromRow(selectedBoundedRing, UPPER_BOUND_RANGE);
         int selectedRingCapacity = 
             (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
 
         // find partner ring
         
-        double partnerRingWithUBRange=-1;
+        long partnerRingWithUBRange=-1;
         if (selectedRingLBRange == 0.0) {
             // 0 -- 1
             partnerRingWithUBRange = ubRangeList.get(1);
         } else {
             // i -- i-1
-            for (double ubRange: ubRangeList) {
+            for (long ubRange: ubRangeList) {
                 if (ubRange == selectedRingLBRange) {
                     partnerRingWithUBRange = ubRange;
                     break;
@@ -367,17 +367,17 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
                 .all();
         
         UUID partnerRingId = null;
-        double partnerRingLBRange=-1;
-        double partnerRingUBRange=-1;
+        long partnerRingLBRange=-1;
+        long partnerRingUBRange=-1;
         int partnerRingCapacity=0;
         for (Row r: allRingInCentre) {
-            double ubRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+            long ubRange = (long) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
             UUID id = (UUID) this.repositoryFactory.getFromRow(r, RING_ID);
             if (ubRange == partnerRingWithUBRange) {
                 partnerRingId = id;
                 partnerRingCapacity = (int) this.repositoryFactory.getFromRow(r, CAPACITY);
-                partnerRingLBRange = (double) this.repositoryFactory.getFromRow(r, LOWER_BOUND_RANGE);
-                partnerRingUBRange = (double) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
+                partnerRingLBRange = (long) this.repositoryFactory.getFromRow(r, LOWER_BOUND_RANGE);
+                partnerRingUBRange = (long) this.repositoryFactory.getFromRow(r, UPPER_BOUND_RANGE);
                 break;
             }
         }
@@ -400,7 +400,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         for (Row r: allDataInPartnerRing) {
             String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
             String clientId = (String) this.repositoryFactory.getFromRow(r, ADD_BY_CLIENT_ID);
-            double dist = (double) this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
+            long dist = (long) this.repositoryFactory.getFromRow(r, DISTANCE_TO_CENTRE);
             List<Integer> itemProperties = this.repositoryFactory.getListIntegerFromRow(r, VECTOR_PROPERTIES);
 
             SimpleStatement removeDataFromBoundedRing = 
@@ -414,9 +414,9 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
         //update props of selected ring
         int newCapacity = selectedRingCapacity + partnerRingCapacity;
 
-        double newLBRange = Math.min(selectedRingLBRange, partnerRingLBRange);
-        double newUBRange = Math.max(selectedRingUBRange, partnerRingUBRange);
-        double oldUBRange = Math.min(selectedRingUBRange, partnerRingUBRange);
+        long newLBRange = Math.min(selectedRingLBRange, partnerRingLBRange);
+        long newUBRange = Math.max(selectedRingUBRange, partnerRingUBRange);
+        long oldUBRange = Math.min(selectedRingUBRange, partnerRingUBRange);
 
         updateBoundedRingRange(selectedBoundedRingId, centreId, newLBRange, newUBRange, newCapacity);
 
@@ -426,7 +426,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             ubRangeSet.remove(oldUBRange);
         }
         ubRangeSet.add(newUBRange);
-        List<Double> tempUBRangeList = new ArrayList<>(ubRangeSet);
+        List<Long> tempUBRangeList = new ArrayList<>(ubRangeSet);
         SimpleStatement updateUBRangeList = 
             this.indexesCoordRepository.updateUBRangeListById(centreId, tempUBRangeList);
         mergeBoundedRingsList.add(updateUBRangeList);
@@ -449,8 +449,8 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
 
         Row selectedBoundedRing = selectedBoundedRingResult.one();
         int currentCapacity = (int) this.repositoryFactory.getFromRow(selectedBoundedRing, CAPACITY);
-        double currLBRange = (double) this.repositoryFactory.getFromRow(selectedBoundedRing, LOWER_BOUND_RANGE);
-        double currUBRange = (double) this.repositoryFactory.getFromRow(selectedBoundedRing, UPPER_BOUND_RANGE);
+        long currLBRange = (long) this.repositoryFactory.getFromRow(selectedBoundedRing, LOWER_BOUND_RANGE);
+        long currUBRange = (long) this.repositoryFactory.getFromRow(selectedBoundedRing, UPPER_BOUND_RANGE);
 
         // delete item from bouneded ring
         SimpleStatement deleteItemStatus = 

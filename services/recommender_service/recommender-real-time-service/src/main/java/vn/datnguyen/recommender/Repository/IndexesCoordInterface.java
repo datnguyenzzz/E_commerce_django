@@ -15,5 +15,5 @@ public interface IndexesCoordInterface {
     SimpleStatement selectAllCentre();
     SimpleStatement selectCentreById(int id);
     //
-    SimpleStatement updateUBRangeListById(int id, List<Double> ubRangeList);
+    SimpleStatement updateUBRangeListById(int id, List<Long> ubRangeList);
 }
