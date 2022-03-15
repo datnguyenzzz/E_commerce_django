@@ -49,7 +49,7 @@ public class BoundedRingRepository implements BoundedRingInterface {
             .allowFiltering()
             .build().setConsistencyLevel(ConsistencyLevel.QUORUM);
     }
-
+    
     public SimpleStatement findBoundedRingByIdAndRange(int centreId, double ubRange) {
         return QueryBuilder.selectFrom(BOUNDED_RING_ROW).all()
         .where(

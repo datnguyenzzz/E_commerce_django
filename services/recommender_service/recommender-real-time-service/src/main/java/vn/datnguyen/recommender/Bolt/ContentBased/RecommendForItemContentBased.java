@@ -58,6 +58,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String CASS_NODE = customProperties.getProp("CASS_NODE");
     private final static String CASS_PORT = customProperties.getProp("CASS_PORT");
     private final static String CASS_DATA_CENTER = customProperties.getProp("CASS_DATA_CENTER");
+    //knn factor 
+    private final static String MIN_FACTOR_EXPECTED_EACH_RING = customProperties.getProp("MIN_FACTOR_EXPECTED_EACH_RING");
     //table col
     //-- centre
     private final static String CENTRE_ID = "centre_id";
@@ -259,7 +261,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         int limit = incomeEvent.getLimit();
         List<Integer> eventCoord = incomeEvent.getCoord();
         K = limit; 
-        B = 2;
+        B = Integer.parseInt(MIN_FACTOR_EXPECTED_EACH_RING);
         A = Math.round(1.5f * limit) / B;
 
         logger.info("********* RecommendForItemContentBased **********"

@@ -179,8 +179,8 @@ public class DispatcherBolt extends BaseRichBolt {
                 return null;
             }
 
-            if (findAllBoundedRingInCentreResult.getAvailableWithoutFetching() > 0) {
-                logger.warn("********* DispatcherBolt **********: find more than 1  bounding ring within range " + selectedRingUBRange
+            if (findAllBoundedRingInCentreResult.getAvailableWithoutFetching() > 1) {
+                logger.warn("********* DispatcherBolt **********: find more than 1 bounding ring within range " + selectedRingUBRange
                             + " in centre " + centreId );
 
                 return null;

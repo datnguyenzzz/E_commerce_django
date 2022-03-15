@@ -12,6 +12,7 @@ url = "http://localhost:3456/api/v/1.0.0/testing/item"
 headers = {
     'content-type': 'application/json'}
 concurrent = 5
+ALL_SENT = 0
 q = Queue(concurrent)
 
 def genData():
@@ -24,11 +25,13 @@ def genData():
     return postData
 
 def doWork():
+    global ALL_SENT
     while True:
         data = q.get()
         
         x = requests.post(url, json = data, headers = headers)
-        print(f"Post request with data = {data} with result = {x.text}")
+        ALL_SENT += 1
+        print(f"REQUEST SENT - {ALL_SENT} : Post request with data = {data} with result = {x.text}")
         q.task_done()
 
 def main():
