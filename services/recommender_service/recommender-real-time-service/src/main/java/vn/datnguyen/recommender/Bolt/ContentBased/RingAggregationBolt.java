@@ -59,6 +59,7 @@ public class RingAggregationBolt extends BaseRichBolt {
         potentialRingsForDelayedEvent = new HashMap<>();
         mapKNNPQ = new HashMap<>();
         bnnResultForDelayEvent = new HashMap<>();
+        knnFactor = new HashMap<>();
     }
 
     private Set<ImmutablePair<Integer, UUID> > makeRingSet(List<Integer> centreIdList, List<String> ringIdList) {
@@ -102,6 +103,7 @@ public class RingAggregationBolt extends BaseRichBolt {
 
         // if have any ring BEFORE event come
         if (potentialRingsForDelayedEvent.containsKey(eventId)) {
+            logger.info("********* RingAggregationBolt **********: Have some ring came before event");
             Set<ImmutablePair<Integer, UUID> > ringSet = potentialRingsForDelayedEvent.get(eventId);
             ringIdentitySet.removeAll(ringSet);
             //erase all results have came
@@ -121,6 +123,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             bnnResultForDelayEvent.remove(eventId);
         }
 
+        logger.info("********* RingAggregationBolt **********: Init waited ring and priority queue");
         potentialRingsForEvent.put(eventId, ringIdentitySet);
         mapKNNPQ.put(eventId, knnPQ);
     }
@@ -139,7 +142,7 @@ public class RingAggregationBolt extends BaseRichBolt {
 
         // if event haven't came yet 
         if (!(potentialRingsForEvent.containsKey(eventId))) {
-            
+            logger.info("********* RingAggregationBolt **********: No event has came");
             if (!(potentialRingsForDelayedEvent.containsKey(eventId))) {
                 Set<ImmutablePair<Integer, UUID> > ringSet = new HashSet<>();
                 ringSet.add(ringIdentity);
@@ -159,6 +162,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             }
         }
         else {
+            logger.info("********* RingAggregationBolt **********: Event has came - " + eventId);
             Set<ImmutablePair<Integer, UUID> > currRingSetForEventId = 
                 potentialRingsForEvent.get(eventId);
 

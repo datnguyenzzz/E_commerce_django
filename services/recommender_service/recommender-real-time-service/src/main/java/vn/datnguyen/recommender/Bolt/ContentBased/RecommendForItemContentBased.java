@@ -137,7 +137,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             double diff1 = Math.abs(ubRange1 - dist1);
             double diff2 = Math.abs(ubRange2 - dist2);
 
-            int cmp = (diff2 > diff1) ? 1 : -1;
+            int cmp = (diff1 < diff2) ? 1 : -1;
             return cmp;
         };
 
@@ -202,8 +202,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                 if (lbPos >= 0) {
                     logger.info("********* RecommendForItemContentBased **********: Add to heap: "
                             + "centreId = " + centreId
-                            + "pos = " + lbPos
-                            + "isDown = " +  isDown);
+                            + " pos = " + lbPos
+                            + " isDown = " +  isDown);
                     pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
 
@@ -212,8 +212,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                 if (lbPos < ringUBRangeSet.size()) {
                     logger.info("********* RecommendForItemContentBased **********: Add to heap: "
                             + "centreId = " + centreId
-                            + "pos = " + lbPos
-                            + "isDown = " +  isDown);
+                            + " pos = " + lbPos
+                            + " isDown = " +  isDown);
                     pq.add(new ImmutableTriple<Integer,Integer,Boolean>(centreId, lbPos, isDown));
                 }
             }
@@ -235,7 +235,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             logger.info("********* RecommendForItemContentBased **********: Add to result: "
                             + "centreId = " + centreId
                             + " ringId = " + ringId
-                            + " upper range = " + ubRange);
+                            + " upper range = " + ubRange
+                            + " distance diff = " + Math.abs(ubRange - dist(CoordOfCentre.get(centreId), eventCoord)));
             result.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
 
             ubRangePos += (isDown) ? -1 : 1;
