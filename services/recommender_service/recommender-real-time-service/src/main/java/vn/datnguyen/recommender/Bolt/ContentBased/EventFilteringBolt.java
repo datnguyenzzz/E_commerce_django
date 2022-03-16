@@ -47,7 +47,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     private final static CustomProperties customProperties = CustomProperties.getInstance();
     //STREAM 
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
-    private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
+    //private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
     private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
@@ -244,6 +244,6 @@ public class EventFilteringBolt extends BaseRichBolt {
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
         declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD));
-        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Fields(EVENT_FIELD));
+        //declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Fields(EVENT_FIELD));
     }
 }

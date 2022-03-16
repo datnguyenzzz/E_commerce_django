@@ -115,7 +115,7 @@ public class KnnBolt extends BaseRichBolt {
             long dist1 = distance(item1Properties, this.eventCoord);
             long dist2 = distance(item2Properties, this.eventCoord);
     
-            int cmp = (dist1 > dist2) 
+            int cmp = (dist1 < dist2) 
                         ? 1
                         : -1; 
             return cmp;

@@ -2,8 +2,10 @@ package vn.datnguyen.recommender.Bolt.ContentBased;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -88,7 +90,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             double dist1 = p1.getLeft();
             double dist2 = p2.getLeft();
 
-            int cmp = (dist1 > dist2) ? 1
+            int cmp = (dist1 < dist2) ? 1
                         : -1;
             return cmp;
         };
@@ -202,8 +204,13 @@ public class RingAggregationBolt extends BaseRichBolt {
         PriorityQueue<ImmutablePair<Double, String> > currPQ = 
             mapKNNPQ.get(eventId);
         
+        Deque<ImmutablePair<Double, String> > queue = new LinkedList<>();
         while (currPQ.size() > 0) {
-            knnResult.addToRecommendationList(currPQ.poll());
+            queue.addFirst(currPQ.poll());
+        }
+
+        while (queue.size() > 0) {
+            knnResult.addToRecommendationList(queue.poll());
         }
 
         logger.info("********* RingAggregationBolt **********: RESULT = "
@@ -237,11 +244,11 @@ public class RingAggregationBolt extends BaseRichBolt {
             initCachedMap(eventId, centreIdList, ringIdList, K);
 
             // some how all needed value came first ^_^ 
-            if (potentialRingsForEvent.get(eventId).size() == 0) {
+            if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 //do something
                 getKNNResult(eventId, eventCoord);
             }
-
+            collector.ack(input);
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
@@ -260,13 +267,11 @@ public class RingAggregationBolt extends BaseRichBolt {
                         + " distList = " + distList);
             processResultFromRingHandler(eventId, centreId, ringId, itemIdList, distList);
 
-            if (potentialRingsForEvent.get(eventId).size() == 0) {
+            if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 getKNNResult(eventId, eventCoord);
             }
-
+            collector.ack(input);
         }
-
-        collector.ack(input);
     }
     
     @Override

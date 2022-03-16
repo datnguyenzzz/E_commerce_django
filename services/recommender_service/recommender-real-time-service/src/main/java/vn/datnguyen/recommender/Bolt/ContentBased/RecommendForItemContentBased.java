@@ -140,7 +140,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             double diff1 = Math.abs(Math.sqrt(ubRange1) - Math.sqrt(dist1));
             double diff2 = Math.abs(Math.sqrt(ubRange2) - Math.sqrt(dist2));
 
-            int cmp = (diff1 < diff2) ? 1 : -1;
+            int cmp = (diff1 > diff2) ? 1 : -1;
             return cmp;
         };
 
