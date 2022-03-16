@@ -151,13 +151,13 @@ public class KnnBolt extends BaseRichBolt {
         //emit tuple
 
         List<String> itemIdList = new ArrayList<>();
-        List<Long> distList = new ArrayList<>();
+        List<Double> distList = new ArrayList<>();
 
         while (pq.size() > 0) {
             String itemId = pq.poll();
             long dist = distance(eventCoord, itemPropertiesTable.get(itemId));
             itemIdList.add(itemId);
-            distList.add(dist);
+            distList.add(Math.sqrt(dist));
         }
 
         collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, new Values(eventId, eventCoord, centreId, ringId.toString(), itemIdList, distList));

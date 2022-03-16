@@ -136,8 +136,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             long ubRange2 = UBRangeOfCentre.get(centreId2).get(ubRangePos2);
             long dist2 = dist(eventCoord, CoordOfCentre.get(centreId2));
 
-            long diff1 = Math.abs(ubRange1 - dist1);
-            long diff2 = Math.abs(ubRange2 - dist2);
+            double diff1 = Math.abs(Math.sqrt(ubRange1) - Math.sqrt(dist1));
+            double diff2 = Math.abs(Math.sqrt(ubRange2) - Math.sqrt(dist2));
 
             int cmp = (diff1 < diff2) ? 1 : -1;
             return cmp;
