@@ -115,7 +115,8 @@ public class KnnBolt extends BaseRichBolt {
             long dist1 = distance(item1Properties, this.eventCoord);
             long dist2 = distance(item2Properties, this.eventCoord);
     
-            int cmp = (dist1 > dist2) ? 1
+            int cmp = (dist1 > dist2) 
+                        ? 1
                         : -1; 
             return cmp;
         };
@@ -143,9 +144,11 @@ public class KnnBolt extends BaseRichBolt {
             String itemId = (String) this.repositoryFactory.getFromRow(r, ITEM_ID);
             pq.add(itemId);
 
+            logger.info("********* KnnBolt ********** PQ before erase - " + pq);
             if (pq.size() > this.knnFactor) {
-                pq.remove();
+                pq.poll();
             }
+            logger.info("********* KnnBolt ********** PQ after erase - " + pq);
         }
         
         //emit tuple

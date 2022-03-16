@@ -243,6 +243,8 @@ public class RingAggregationBolt extends BaseRichBolt {
                 //do something
                 getKNNResult(eventId, eventCoord);
             }
+
+            collector.ack(input);
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
@@ -264,8 +266,9 @@ public class RingAggregationBolt extends BaseRichBolt {
             if (potentialRingsForEvent.get(eventId).size() == 0) {
                 getKNNResult(eventId, eventCoord);
             }
+
+            collector.ack(input);
         }   
-        collector.ack(input);
     }
     
     @Override
