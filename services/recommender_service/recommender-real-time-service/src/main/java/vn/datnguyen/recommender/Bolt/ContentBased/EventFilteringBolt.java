@@ -222,12 +222,15 @@ public class EventFilteringBolt extends BaseRichBolt {
                 int centreId = findCentreId(this.coord);
                 Values values = new Values(ouputEvent,centreId);
                 collector.emit(CONTENT_BASED_STREAM, values);
+                collector.ack(tuple);
             } 
             else if (this.eventType.equals(avroRecommendForItemEvent)) {
                 collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Values(ouputEvent));
+                collector.ack(tuple);
             }
             else if (this.eventType.equals(avroRecommendForUserEvent)) {
-                collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
+                //collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
+                //collector.ack(tuple);
             }
             else {
                 //Values values = new Values(ouputEvent, this.itemId);
@@ -235,8 +238,6 @@ public class EventFilteringBolt extends BaseRichBolt {
                 //do nothing
             }
         }
-
-        collector.ack(tuple);
     }
     
     @Override

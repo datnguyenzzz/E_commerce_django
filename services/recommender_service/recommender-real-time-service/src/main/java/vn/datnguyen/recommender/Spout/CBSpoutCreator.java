@@ -31,7 +31,7 @@ public class CBSpoutCreator {
     public CBSpoutCreator() {}
 
     public KafkaSpout<?,?> kafkaAvroEventSpout() {
-        return new KafkaSpout<>(kafkaAvroEventSpoutConfig());
+        return new CustomKafkaSpout<>(kafkaAvroEventSpoutConfig());
     }
     
     private KafkaSpoutConfig<String, String> kafkaAvroEventSpoutConfig() {

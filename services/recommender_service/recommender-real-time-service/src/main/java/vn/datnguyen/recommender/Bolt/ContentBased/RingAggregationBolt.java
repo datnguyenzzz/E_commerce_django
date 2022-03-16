@@ -49,9 +49,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private Map<String, List<ImmutablePair<Double, String> > > bnnResultForDelayEvent;
     // PQ store K closest <dist, itemId>
     private Map<String, PriorityQueue<ImmutablePair<Double, String> > > mapKNNPQ;
-    //
 
-    
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
         this.collector = collector;
@@ -244,7 +242,6 @@ public class RingAggregationBolt extends BaseRichBolt {
                 getKNNResult(eventId, eventCoord);
             }
 
-            collector.ack(input);
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
@@ -267,8 +264,9 @@ public class RingAggregationBolt extends BaseRichBolt {
                 getKNNResult(eventId, eventCoord);
             }
 
-            collector.ack(input);
-        }   
+        }
+
+        collector.ack(input);
     }
     
     @Override

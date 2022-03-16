@@ -51,6 +51,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String RING_LIST_FIELD = customProperties.getProp("RING_LIST_FIELD");
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
     private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
+    private final static String NUM_RING_EXPERIMENTS_CONF = customProperties.getProp("NUM_RING_EXPERIMENTS_CONF");
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -262,7 +263,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         List<Integer> eventCoord = incomeEvent.getCoord();
         K = limit; 
         B = Integer.parseInt(MIN_FACTOR_EXPECTED_EACH_RING);
-        A = Math.round(1.5f * limit) / B;
+        int A_CONF = Integer.parseInt(NUM_RING_EXPERIMENTS_CONF);
+        A = A_CONF * limit / B;
 
         logger.info("********* RecommendForItemContentBased **********"
                     + "event coord = " + eventCoord
