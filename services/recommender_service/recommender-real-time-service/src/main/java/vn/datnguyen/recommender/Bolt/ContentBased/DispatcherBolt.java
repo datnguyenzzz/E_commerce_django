@@ -109,7 +109,8 @@ public class DispatcherBolt extends BaseRichBolt {
         else {
             Values values = new Values(incomeEvent, centreId, selectedRing.toString());
 
-            collector.emit(UPDATE_DATA_FROM_CENTRE_STREAM, values);
+            Tuple anchor = input;
+            collector.emit(UPDATE_DATA_FROM_CENTRE_STREAM, anchor, values);
             collector.ack(input);
         }
     }

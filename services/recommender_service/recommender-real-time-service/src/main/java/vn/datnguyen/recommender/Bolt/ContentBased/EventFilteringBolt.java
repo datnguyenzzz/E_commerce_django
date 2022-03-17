@@ -213,6 +213,8 @@ public class EventFilteringBolt extends BaseRichBolt {
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* APPLY WEIGHT BOLT **********" + event);
 
+        Tuple anchor = tuple;
+
         if (event.getEventId() != null && event.getEventId() != "") {
             applyWeight(event);
 
@@ -220,12 +222,11 @@ public class EventFilteringBolt extends BaseRichBolt {
 
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
                 int centreId = findCentreId(this.coord);
-                Values values = new Values(ouputEvent,centreId);
-                collector.emit(CONTENT_BASED_STREAM, values);
+                collector.emit(CONTENT_BASED_STREAM, anchor, new Values(ouputEvent,centreId));
                 collector.ack(tuple);
             } 
             else if (this.eventType.equals(avroRecommendForItemEvent)) {
-                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Values(ouputEvent));
+                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent));
                 collector.ack(tuple);
             }
             else if (this.eventType.equals(avroRecommendForUserEvent)) {

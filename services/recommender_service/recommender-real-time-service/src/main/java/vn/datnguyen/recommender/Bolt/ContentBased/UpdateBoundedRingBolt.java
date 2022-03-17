@@ -114,7 +114,7 @@ public class UpdateBoundedRingBolt extends BaseRichBolt {
             logger.info("********* UpdateBoundedRingBolt **********: Attemp delete data from ringId = " + ringId + " centreId = " + centreId);
             deleteDataFromBoundedRing(itemId, clientId, incomeEvent.getCoord(), centreId, ringId);
         }
-
+        
         collector.ack(input);
     }
 
