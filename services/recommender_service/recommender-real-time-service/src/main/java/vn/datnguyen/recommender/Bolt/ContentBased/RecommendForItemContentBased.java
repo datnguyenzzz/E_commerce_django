@@ -273,8 +273,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
                     + " A = " + A);
 
         List<ImmutablePair<Integer, UUID> > potentialBoundedRings = findPotentialBoundedRings(eventCoord, K, A, B);
-        List<Integer> centreList = new ArrayList<Integer>();
-        List<String> ringList = new ArrayList<String>();
+        //List<Integer> centreList = new ArrayList<Integer>();
+        //List<String> ringList = new ArrayList<String>();
 
         Tuple anchor = input;
 
@@ -289,12 +289,13 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             //emit to individual bolt 
             collector.emit(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, anchor, new Values(eventId, eventCoord, centreId, ringId.toString(), B));
             //gather to 1 values 
-            centreList.add(centreId);
-            ringList.add(ringId.toString());
-
+            //centreList.add(centreId);
+            //ringList.add(ringId.toString());
+            //emit to aggregate bolt
+            collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreId, ringId.toString()));
         }
 
-        collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreList, ringList));
+        //collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreList, ringList));
 
         collector.ack(input);
     }

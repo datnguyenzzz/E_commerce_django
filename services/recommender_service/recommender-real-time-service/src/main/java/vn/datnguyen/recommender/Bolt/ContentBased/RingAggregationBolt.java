@@ -62,29 +62,12 @@ public class RingAggregationBolt extends BaseRichBolt {
         knnFactor = new HashMap<>();
     }
 
-    private Set<ImmutablePair<Integer, UUID> > makeRingSet(List<Integer> centreIdList, List<String> ringIdList) {
-        Set<ImmutablePair<Integer, UUID> > ringIdentity = new HashSet<>();
-        for (int i=0; i<centreIdList.size(); i++) {
-            int centreId = centreIdList.get(i); 
-            UUID ringId = UUID.fromString(ringIdList.get(i));
-            ringIdentity.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
-        }
+    private void initCachedMap(String eventId, int centreId, UUID ringId, int K) {
 
-        return ringIdentity;
-    }
-
-    private void initCachedMap(String eventId, List<Integer> centreIdList, List<String> ringIdList, int K) {
-        if (potentialRingsForEvent.containsKey(eventId)) {
-            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
-            potentialRingsForEvent.remove(eventId);
-        }
-        
-        if (mapKNNPQ.containsKey(eventId)) {
-            logger.warn("********* RingAggregationBolt **********: EventID might collapsed - " + eventId);
-            mapKNNPQ.remove(eventId);
-        }
         //init knn factor
-        knnFactor.put(eventId, K);
+        if (!knnFactor.containsKey(eventId)) {
+            knnFactor.put(eventId, K);
+        }
 
         Comparator<ImmutablePair<Double, String> > customCompartor = (p1, p2) -> {
             double dist1 = p1.getLeft();
@@ -96,10 +79,22 @@ public class RingAggregationBolt extends BaseRichBolt {
         };
 
         // init pq
-        PriorityQueue<ImmutablePair<Double, String> > knnPQ = new PriorityQueue<>(customCompartor);
+        PriorityQueue<ImmutablePair<Double, String> > knnPQ;
+        if (mapKNNPQ.containsKey(eventId)) {
+            knnPQ = mapKNNPQ.get(eventId);
+        } else {
+            knnPQ = new PriorityQueue<>(customCompartor);
+        }
 
-        // init set of potential rings
-        Set<ImmutablePair<Integer, UUID> > ringIdentitySet = makeRingSet(centreIdList, ringIdList);
+        // add set to potential rings
+        Set<ImmutablePair<Integer, UUID> > ringIdentitySet;
+
+        if (potentialRingsForEvent.containsKey(eventId)) {
+            ringIdentitySet = potentialRingsForEvent.get(eventId);
+        } else {
+            ringIdentitySet = new HashSet<>();
+        }
+        ringIdentitySet.add(new ImmutablePair<Integer,UUID>(centreId, ringId));
 
         // if have any ring BEFORE event come
         if (potentialRingsForDelayedEvent.containsKey(eventId)) {
@@ -230,18 +225,18 @@ public class RingAggregationBolt extends BaseRichBolt {
             List<Integer> eventCoord = (List<Integer>) input.getValueByField(EVENT_COORD_FIELD);
             String eventId = (String) input.getValueByField(EVENT_ID_FIELD);
             int K = (int) input.getValueByField(KNN_FACTOR_FIELD);
-            List<Integer> centreIdList = (List<Integer>) input.getValueByField(CENTRE_LIST_FIELD);
-            List<String> ringIdList = (List<String>) input.getValueByField(RING_LIST_FIELD);
+            int centreId = (int) input.getValueByField(CENTRE_LIST_FIELD);
+            UUID ringId = UUID.fromString( (String) input.getValueByField(RING_LIST_FIELD) );
 
             logger.info("********* RingAggregationBolt **********: FROM AGGREGATE_BOUNDED_RINGS_STREAM" 
                         + " eventId = " + eventId
                         + " eventCoord = " + eventCoord
                         + " KNN factor = " + K
-                        + " centre list = " + centreIdList
-                        + " ring list = " + ringIdList);
+                        + " centre id = " + centreId
+                        + " ring id = " + ringId);
             
             // init values 
-            initCachedMap(eventId, centreIdList, ringIdList, K);
+            initCachedMap(eventId, centreId, ringId, K);
 
             // some how all needed value came first ^_^ 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
