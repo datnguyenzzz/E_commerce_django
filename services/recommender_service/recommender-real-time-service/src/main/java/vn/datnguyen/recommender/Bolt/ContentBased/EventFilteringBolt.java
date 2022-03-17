@@ -223,11 +223,9 @@ public class EventFilteringBolt extends BaseRichBolt {
             if (this.eventType.equals(avroAddItemEvent) || this.eventType.equals(avroDeleteItemEvent)) {
                 int centreId = findCentreId(this.coord);
                 collector.emit(CONTENT_BASED_STREAM, anchor, new Values(ouputEvent,centreId));
-                collector.ack(tuple);
             } 
             else if (this.eventType.equals(avroRecommendForItemEvent)) {
                 collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent));
-                collector.ack(tuple);
             }
             else if (this.eventType.equals(avroRecommendForUserEvent)) {
                 //collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
@@ -238,6 +236,9 @@ public class EventFilteringBolt extends BaseRichBolt {
                 //collector.emit(ITEM_BASED_STREAM, values);
                 //do nothing
             }
+            collector.ack(tuple);
+        } else {
+            collector.fail(tuple);
         }
     }
     
