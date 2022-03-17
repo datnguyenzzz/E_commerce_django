@@ -1,6 +1,5 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -153,19 +152,21 @@ public class KnnBolt extends BaseRichBolt {
         
         //emit tuple
 
-        List<String> itemIdList = new ArrayList<>();
-        List<Double> distList = new ArrayList<>();
+        //List<String> itemIdList = new ArrayList<>();
+        //List<Double> distList = new ArrayList<>();
+
+        Tuple anchor = input;
 
         while (pq.size() > 0) {
             String itemId = pq.poll();
             long dist = distance(eventCoord, itemPropertiesTable.get(itemId));
-            itemIdList.add(itemId);
-            distList.add(Math.sqrt(dist));
+            //itemIdList.add(itemId);
+            //distList.add(Math.sqrt(dist));
+            collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, anchor, new Values(eventId, eventCoord, centreId, ringId.toString(), 
+                                                                                itemId, Math.sqrt(dist)));
         }
 
-        Tuple anchor = input;
-
-        collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, anchor, new Values(eventId, eventCoord, centreId, ringId.toString(), itemIdList, distList));
+        //collector.emit(INDIVIDUAL_KNN_ALGORITHM_STREAM, anchor, new Values(eventId, eventCoord, centreId, ringId.toString(), itemIdList, distList));
         collector.ack(input);
     }
     
