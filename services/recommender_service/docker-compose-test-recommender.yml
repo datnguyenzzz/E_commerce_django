@@ -122,3 +122,14 @@ services:
     volumes:
       - ./test-recommender-api/target/test-recommender-api-1.0-SNAPSHOT.jar:/recommender/test-recommender-api.jar
     command: "java -Xmx256m -jar /recommender/test-recommender-api.jar"
+
+  recommendationquery:
+    build: 
+      context: ./recommendation-queries-service
+    depends_on:
+      - kafka
+    ports:
+      - "3457:3457"
+    volumes:
+      - ./recommendation-queries-service/target/recommendation-queries-service-1.0-SNAPSHOT.jar:/recommender/recommendation-queries-service.jar
+    command: "java -Xmx256m -jar /recommender/recommendation-queries-service.jar"

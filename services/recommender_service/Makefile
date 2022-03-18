@@ -8,8 +8,10 @@ init:
 testRecommender:
 	mvn -pl test-recommender-api -am clean
 	mvn -pl recommender-real-time-service -am clean
+	mvn -pl recommendation-queries-service -am clean
 	mvn -pl test-recommender-api -am install
 	mvn -pl recommender-real-time-service -am install
+	mvn -pl recommendation-queries-service -am install
 #	mvn clean 
 #	mvn install
 	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
