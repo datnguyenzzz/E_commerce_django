@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.datnguyen.recommender.Domain.AddItemCommand;
 import vn.datnguyen.recommender.Domain.DeleteItemCommand;
 import vn.datnguyen.recommender.Domain.PublishRatingCommand;
-import vn.datnguyen.recommender.Domain.RecommendationForItemCommand;
 import vn.datnguyen.recommender.Handler.RatingService;
 
 @RestController
@@ -39,7 +38,7 @@ public class ApiController {
         return ratingService.process(command)
                             .thenApply(result -> {
                                 String bodyRes = "Published sucessfully " + command.toString();
-                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                                return ResponseEntity.status(HttpStatus.CREATED).body(bodyRes);
                             })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
@@ -55,7 +54,7 @@ public class ApiController {
         return ratingService.process(command)
                             .thenApply(result -> {
                                 String bodyRes = "Add new item sucessfully " + command.toString();
-                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                                return ResponseEntity.status(HttpStatus.CREATED).body(bodyRes);
                             })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
@@ -71,7 +70,7 @@ public class ApiController {
         return ratingService.process(command)
                             .thenApply(result -> {
                                 String bodyRes = "Delete item sucessfully " + command.toString();
-                                return ResponseEntity.status(HttpStatus.ACCEPTED).body(bodyRes);
+                                return ResponseEntity.status(HttpStatus.CREATED).body(bodyRes);
                             })
                             .exceptionally(e -> {
                                 logger.warn("COMMAND-RATING-SERVICE: "+ "error when publish event on publish command"+ e);
@@ -80,7 +79,8 @@ public class ApiController {
                             });
     }
 
-    @PostMapping("/testing/learn")
+    /*
+    @GetMapping("/testing/learn")
     public CompletableFuture<ResponseEntity<String>> RecommendForItem(@Validated @RequestBody RecommendationForItemCommand command) {
         logger.info("TESTING-RATING-SERVICE: " + "recommend for item command = " + command.toString());
 
@@ -94,6 +94,6 @@ public class ApiController {
                                 String bodyRes = "recommend for item sucessfully " + command.toString();
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bodyRes);
                             });
-    }
+    }*/
 
 }
