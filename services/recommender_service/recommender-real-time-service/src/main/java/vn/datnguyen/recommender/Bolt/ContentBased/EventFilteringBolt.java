@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
+    private final static String CENTRE_COORD_STRING_LIST = customProperties.getProp("CENTRE_COORD_STRING_LIST");
     //INCOME EVENT
     private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
@@ -88,8 +90,9 @@ public class EventFilteringBolt extends BaseRichBolt {
 
         //initial Centre coord 
         //they're suppose to be K-cluster of training dataset
-        testedCentreCoord();
+        //testedCentreCoord();
         //
+        prepareCentreList();
     }
 
     private static ByteBuffer str_to_bb(String msg){
@@ -158,11 +161,10 @@ public class EventFilteringBolt extends BaseRichBolt {
         SimpleStatement createIndexesCoordStatement = indexesCoordRepository.createRowIfNotExists();
         this.repositoryFactory.executeStatement(createIndexesCoordStatement, KEYSPACE_FIELD);
     }
-   
+    
+    /*
     private void testedCentreCoord() {
-        /**
-         * Tested Centre coord
-         */
+
         List<Integer> centreCoord = new ArrayList<Integer>();
         centreCoord.add(0); centreCoord.add(0); centreCoord.add(0);
         int rowId = 0;
@@ -176,6 +178,36 @@ public class EventFilteringBolt extends BaseRichBolt {
         centreCoord.set(0, -5); 
         initCoord = this.indexesCoordRepository.insertNewIndex(rowId++, centreCoord);
         this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
+    }*/
+
+    private List<List<Integer> > extractData(String dataString) {
+        String data = dataString.replace("[", "").replace("]","");
+        List<List<Integer> > result = new ArrayList<>();
+
+        List<String> splitedCoord = Arrays.asList(data.split(","));
+
+        for (String coord: splitedCoord) {
+            List<String> tmp = Arrays.asList(coord.split(" ")); 
+            List<Integer> itmp = new ArrayList<>();
+            for (String x: tmp) {
+                itmp.add(Integer.parseInt(x));
+            }
+            result.add(itmp);
+        }
+
+        return result;
+    }
+
+    private void prepareCentreList() {
+        List<List<Integer> > centreList = extractData(CENTRE_COORD_STRING_LIST);
+
+        SimpleStatement initCoord;
+        for (int i=0; i<centreList.size(); i++) {
+            int row = i;
+            initCoord = this.indexesCoordRepository.insertNewIndex(row, centreList.get(row));
+            this.repositoryFactory.executeStatement(initCoord, KEYSPACE_FIELD);
+        }
+
     }
 
     private long distance(List<Integer> a, List<Integer> b) {

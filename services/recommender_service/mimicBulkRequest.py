@@ -19,9 +19,9 @@ def genData():
     postData = {}
     postData['clientId'] = str(uuid.uuid4())
     postData['itemId'] = str(uuid.uuid4())
-    postData['property1'] = random.randint(0,20) - 10
-    postData['property2'] = random.randint(0,20) - 10
-    postData['property3'] = random.randint(0,20) - 10
+    postData['property1'] = random.randint(0,20)
+    postData['property2'] = random.randint(0,20)
+    postData['property3'] = random.randint(0,20)
     return postData
 
 def doWork():
