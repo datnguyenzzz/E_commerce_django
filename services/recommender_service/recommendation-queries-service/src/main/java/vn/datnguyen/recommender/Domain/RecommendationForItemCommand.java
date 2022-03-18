@@ -52,4 +52,12 @@ public class RecommendationForItemCommand implements Command {
         this.property3 = property3;
     }
 
+    @Override
+    public String toString() {
+        return "Command: \n\t\titemId = " + this.itemId
+            + " \n\t\tproperty1 = " + this.property1
+            + " \n\t\tproperty2 = " + this.property2
+            + " \n\t\tproperty3 = " + this.property3;
+    }
+
 }
