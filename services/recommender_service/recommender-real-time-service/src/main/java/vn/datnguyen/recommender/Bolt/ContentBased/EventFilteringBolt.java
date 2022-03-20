@@ -244,6 +244,7 @@ public class EventFilteringBolt extends BaseRichBolt {
         return centreId;
     }
 
+    
     private Map<String, String> readMessageHeader(Tuple input) {
         Map<String, String> headerMap = new HashMap<>();
 
@@ -263,10 +264,10 @@ public class EventFilteringBolt extends BaseRichBolt {
     public void execute(Tuple tuple) {
         String avroEventStr = (String) tuple.getValueByField(EVENT_FIELD);
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
-        logger.info("********* APPLY WEIGHT BOLT **********" + event);
+        logger.info("********* EventFilteringBolt **********" + event);
 
         Map<String, String> messageHeader = readMessageHeader(tuple);
-        logger.info("********* APPLY WEIGHT BOLT **********: Message header = " + messageHeader);
+        logger.info("********* EventFilteringBolt **********: Message header = " + messageHeader);
 
         Tuple anchor = tuple;
 

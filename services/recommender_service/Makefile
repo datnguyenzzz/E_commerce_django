@@ -14,6 +14,7 @@ testRecommender:
 	mvn -pl recommendation-queries-service -am install
 #	mvn clean 
 #	mvn install
+
 	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
 	docker-compose -f docker-compose-test-recommender.yml ps
 

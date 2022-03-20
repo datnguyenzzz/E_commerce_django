@@ -1,5 +1,7 @@
 package vn.datnguyen.recommender;
 
+import org.apache.kafka.common.header.internals.RecordHeader;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
@@ -10,6 +12,14 @@ import vn.datnguyen.recommender.Topologies.CollaborativeFiltering;
 import vn.datnguyen.recommender.Topologies.ContentBased;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
+import java.nio.charset.StandardCharsets;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
+
+@SuppressWarnings("unused")
 public class TopologyDefinition {
 
     private static final CustomProperties customProperties = CustomProperties.getInstance();
@@ -23,6 +33,30 @@ public class TopologyDefinition {
 
     private static CollaborativeFiltering collaborativeFiltering = new CollaborativeFiltering();
     private static ContentBased contentBased = new ContentBased();
+
+    public static class RecordHeaderSerializer extends FieldSerializer<RecordHeader> {
+        public RecordHeaderSerializer(Kryo kryo) {
+            super(kryo, RecordHeader.class);
+        }
+
+        @Override
+        public void write(Kryo kryo, Output output, RecordHeader object) {
+            output.writeString(object.key());
+            String value = new String(object.value(), StandardCharsets.UTF_8);
+            output.writeString(value);
+        }
+
+        @Override
+        public RecordHeader read(Kryo kryo, Input input, Class<RecordHeader> type) {
+            try {
+                String K = input.readString(); 
+                byte[] V = input.readString().getBytes();
+                return new RecordHeader(K,V);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 
     private static Config getCFConfig() {
         Config config = new Config();
@@ -43,6 +77,8 @@ public class TopologyDefinition {
         config.setNumWorkers(Integer.parseInt(CB_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);
+        config.registerSerialization(RecordHeader.class, RecordHeaderSerializer.class);
+        config.registerSerialization(RecordHeaders.class);
         return config;
     }
 
