@@ -22,6 +22,9 @@ transactionKafka:
   transactionIdPrefix: ratingCommand
   topic: ratingCommandForRecommendation
   requestForRecommendationsTopic: requestForRecommendations
+  defaultReplyTimeout: 10
+  fromRecommendationServiceTopic: fromRecommendationServiceTopic
+  groupConsumer: recommendationsToClient
 
 spring:
   application:
