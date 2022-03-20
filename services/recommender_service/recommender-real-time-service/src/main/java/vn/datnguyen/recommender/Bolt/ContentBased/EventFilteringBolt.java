@@ -7,6 +7,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,8 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.FailedException;
@@ -54,6 +58,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String CENTRE_COORD_STRING_LIST = customProperties.getProp("CENTRE_COORD_STRING_LIST");
+    private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
     //INCOME EVENT
     private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
@@ -238,12 +243,30 @@ public class EventFilteringBolt extends BaseRichBolt {
         }
         return centreId;
     }
+
+    private Map<String, String> readMessageHeader(Tuple input) {
+        Map<String, String> headerMap = new HashMap<>();
+
+        RecordHeaders messageHeaders = (RecordHeaders) input.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
+        Iterator<Header> headerIterater = messageHeaders.iterator();
+        while (headerIterater.hasNext()) {
+            Header header = (Header) headerIterater.next();
+            String headerKey = header.key();
+            byte[] headerBytes = header.value();
+            String headerValue = new String(headerBytes);
+            headerMap.put(headerKey, headerValue);
+        }
+        return headerMap;
+    }
     
     @Override
     public void execute(Tuple tuple) {
         String avroEventStr = (String) tuple.getValueByField(EVENT_FIELD);
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* APPLY WEIGHT BOLT **********" + event);
+
+        Map<String, String> messageHeader = readMessageHeader(tuple);
+        logger.info("********* APPLY WEIGHT BOLT **********: Message header = " + messageHeader);
 
         Tuple anchor = tuple;
 
