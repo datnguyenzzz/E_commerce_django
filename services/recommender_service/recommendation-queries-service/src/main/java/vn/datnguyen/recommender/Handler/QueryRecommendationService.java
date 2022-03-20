@@ -30,7 +30,15 @@ public class QueryRecommendationService implements CommandHandler {
         return CompletableFuture.supplyAsync(
             () -> {
                 AvroEvent event = toAvroEvent(command);
-                return this.kafkaService.requestThenReply(event);
+                Object result; 
+                try {
+                    result = this.kafkaService.requestThenReply(event);
+                }
+                catch (Exception ex) {
+                    result = ex.getMessage();
+                }
+
+                return result;
             }
         );
     }
