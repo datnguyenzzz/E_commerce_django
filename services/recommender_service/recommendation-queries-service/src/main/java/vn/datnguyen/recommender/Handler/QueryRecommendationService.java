@@ -3,6 +3,7 @@ package vn.datnguyen.recommender.Handler;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,20 @@ public class QueryRecommendationService implements CommandHandler {
 
     @Value("${incomingEvent.avroRecommendForItemEvent}")
     private String avroRecommendForItemEvent;
+
+    private ReplyingKafkaService kafkaService;
     
-    public QueryRecommendationService() {}
+    @Autowired
+    public QueryRecommendationService(ReplyingKafkaService kafkaService) {
+        this.kafkaService = kafkaService;
+    }
 
     @Override
     public CompletableFuture<Object> process(Command command) {
         return CompletableFuture.supplyAsync(
             () -> {
                 AvroEvent event = toAvroEvent(command);
-                return event.toString();
+                return this.kafkaService.requestThenReply(event);
             }
         );
     }
