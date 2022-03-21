@@ -1,6 +1,8 @@
 package vn.datnguyen.recommender.Bolt;
 
 
+import java.util.Properties;
+
 import org.apache.storm.redis.common.config.JedisPoolConfig;
 
 import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.ClientRatingBolt;
@@ -13,6 +15,7 @@ import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.SimilaritiesBolt;
 import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.WeightApplierBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.DispatcherBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.EventFilteringBolt;
+import vn.datnguyen.recommender.Bolt.ContentBased.KafkaProducerBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.KnnBolt;
 import vn.datnguyen.recommender.Bolt.ContentBased.RecommendForItemContentBased;
 import vn.datnguyen.recommender.Bolt.ContentBased.RingAggregationBolt;
@@ -26,7 +29,8 @@ public class BoltFactory {
     //Redis configs
     private final static String REDIS_HOST = customProperties.getProp("REDIS_HOST");
     private final static String REDIS_PORT = customProperties.getProp("REDIS_PORT");
-    //pair count
+    //
+    private final static String BOOTSTRAP_SERVER = customProperties.getProp("BOOTSTRAP_SERVER");
 
     public BoltFactory() {}
 
@@ -92,5 +96,18 @@ public class BoltFactory {
 
     public KnnBolt createKnnBolt() {
         return new KnnBolt();
+    }
+
+    public KafkaProducerBolt<Object,Object> createKafkaProducerBolt() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", BOOTSTRAP_SERVER);
+        props.put("acks", "1");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        KafkaProducerBolt<Object,Object> bolt = new KafkaProducerBolt<>()
+            .withProducerProperties(props);
+        
+        return bolt;
     }
 }

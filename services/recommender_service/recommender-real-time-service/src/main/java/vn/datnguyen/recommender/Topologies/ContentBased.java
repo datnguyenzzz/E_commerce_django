@@ -26,6 +26,7 @@ public class ContentBased {
     private static final String RECOMMEND_FOR_ITEM_BOLT = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT");
     private static final String RING_AGGREGRATION_BOLT = customProperties.getProp("RING_AGGREGRATION_BOLT");
     private static final String KNN_BOLT = customProperties.getProp("KNN_BOLT");
+    private static final String KAFKA_PRODUCER_BOLT = customProperties.getProp("KAFKA_PRODUCER_BOLT");
     //
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
@@ -38,6 +39,7 @@ public class ContentBased {
     private static final String RECOMMEND_FOR_ITEM_BOLT_TASKS = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT_TASKS");
     private static final String RING_AGGREGRATION_BOLT_TASKS = customProperties.getProp("RING_AGGREGRATION_BOLT_TASKS");
     private static final String KNN_BOLT_TASKS = customProperties.getProp("KNN_BOLT_TASKS");
+    private static final String KAFKA_PRODUCER_BOLT_TASKS = customProperties.getProp("KAFKA_PRODUCER_BOLT_TASKS");
     //PARALLISM EXECUTORS
     private static final String KAFKA_SPOUT_CB_THREADS = customProperties.getProp("KAFKA_SPOUT_CB_THREADS");
     private static final String EVENT_FILTERING_BOLT_THREADS = customProperties.getProp("EVENT_FILTERING_BOLT_THREADS");
@@ -46,6 +48,7 @@ public class ContentBased {
     private static final String RECOMMEND_FOR_ITEM_BOLT_THREADS = customProperties.getProp("RECOMMEND_FOR_ITEM_BOLT_THREADS");
     private static final String RING_AGGREGRATION_BOLT_THREADS = customProperties.getProp("RING_AGGREGRATION_BOLT_THREADS");
     private static final String KNN_BOLT_THREADS = customProperties.getProp("KNN_BOLT_THREADS");
+    private static final String KAFKA_PRODUCER_BOLT_THREADS = customProperties.getProp("KAFKA_PRODUCER_BOLT_THREADS");
     //IDs
     private final static String KAFKA_SPOUT_CB = customProperties.getProp("KAFKA_SPOUT_CB");
     //--
@@ -85,6 +88,10 @@ public class ContentBased {
             .setNumTasks(Integer.parseInt(RING_AGGREGRATION_BOLT_TASKS))
             .fieldsGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD))
             .fieldsGrouping(KNN_BOLT, INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_ID_FIELD));
+        
+        topologyBuilder.setBolt(KAFKA_PRODUCER_BOLT, boltFactory.createKafkaProducerBolt(), Integer.parseInt(KAFKA_PRODUCER_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(KAFKA_PRODUCER_BOLT_TASKS))
+            .shuffleGrouping(RING_AGGREGRATION_BOLT);
 
         return topologyBuilder;
 

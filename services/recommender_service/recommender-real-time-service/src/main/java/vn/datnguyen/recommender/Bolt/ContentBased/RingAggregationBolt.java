@@ -20,6 +20,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
     private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
+    private final static String KAFKA_VALUE_FIELD = customProperties.getProp("KAFKA_VALUE_FIELD");
     //stream 
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
@@ -237,6 +239,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     public void execute(Tuple input) {
 
         String tupleSource = input.getSourceStreamId();
+        RecordHeaders headers = null;
         KnnResult result = null;
 
         if (tupleSource.equals(AGGREGATE_BOUNDED_RINGS_STREAM)) {
@@ -262,6 +265,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             // some how all needed value came first ^_^ 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 //do something
+                headers = mapHeaders.get(eventId);
                 result = getKNNResult(eventId, eventCoord);
             }
         } 
@@ -283,12 +287,13 @@ public class RingAggregationBolt extends BaseRichBolt {
             processResultFromRingHandler(eventId, centreId, ringId, itemId, itemDist);
 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
+                headers = mapHeaders.get(eventId);
                 result = getKNNResult(eventId, eventCoord);
             }
         }
 
         if (result != null) {
-            collector.emit
+            collector.emit(input, new Values(headers, result.toString()));
         }
 
         collector.ack(input);
@@ -296,6 +301,6 @@ public class RingAggregationBolt extends BaseRichBolt {
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sink-bolt"));
+        declarer.declare(new Fields(KAFKA_MESSAGE_HEADER_FIELD, KAFKA_VALUE_FIELD));
     }
 }

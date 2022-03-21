@@ -38,6 +38,11 @@ public class KafkaProducerBolt<K,V> extends KafkaBolt<K,V> {
         super();
     }
 
+    public KafkaProducerBolt<K, V> withProducerProperties(Properties producerProperties) {
+        this.boltSpecifiedProperties = producerProperties;
+        return this;
+    }
+
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
         logger.info("Preparing bolt with configuration {}", this);
