@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -39,6 +40,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
     private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
+    private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
     //stream 
     private final static String AGGREGATE_BOUNDED_RINGS_STREAM = customProperties.getProp("AGGREGATE_BOUNDED_RINGS_STREAM");
     private final static String INDIVIDUAL_KNN_ALGORITHM_STREAM = customProperties.getProp("INDIVIDUAL_KNN_ALGORITHM_STREAM");
@@ -51,6 +53,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     private Map<String, List<ImmutablePair<Double, String> > > bnnResultForDelayEvent;
     // PQ store K closest <dist, itemId>
     private Map<String, PriorityQueue<ImmutablePair<Double, String> > > mapKNNPQ;
+    private Map<String, RecordHeaders> mapHeaders;
 
     @Override
     public void prepare(Map<String, Object> map, TopologyContext TopologyContext, OutputCollector collector) {
@@ -60,10 +63,19 @@ public class RingAggregationBolt extends BaseRichBolt {
         mapKNNPQ = new HashMap<>();
         bnnResultForDelayEvent = new HashMap<>();
         knnFactor = new HashMap<>();
+        mapHeaders = new HashMap<>();
     }
 
-    private void initCachedMap(String eventId, int centreId, UUID ringId, int K) {
+    private void initCachedMap(String eventId, int centreId, UUID ringId, int K, RecordHeaders messageHeaders) {
 
+        //init message header for event
+        if (mapHeaders.containsKey(eventId)
+            && !mapHeaders.get(eventId).equals(messageHeaders)) {
+            logger.warn("********* RingAggregationBolt **********: Same event collided message header");
+        }
+        if (!mapHeaders.containsKey(eventId)) {
+            mapHeaders.put(eventId, messageHeaders);
+        }
         //init knn factor
         if (!knnFactor.containsKey(eventId)) {
             knnFactor.put(eventId, K);
@@ -194,9 +206,10 @@ public class RingAggregationBolt extends BaseRichBolt {
         potentialRingsForEvent.remove(eventId);
         bnnResultForDelayEvent.remove(eventId);
         mapKNNPQ.remove(eventId);
+        mapHeaders.remove(eventId);
     }
 
-    private void getKNNResult(String eventId, List<Integer> eventCoord) {
+    private KnnResult getKNNResult(String eventId, List<Integer> eventCoord) {
         KnnResult knnResult = new KnnResult(eventId, eventCoord);
 
         PriorityQueue<ImmutablePair<Double, String> > currPQ = 
@@ -215,6 +228,8 @@ public class RingAggregationBolt extends BaseRichBolt {
                     + knnResult.toString());
 
         purgeAllCached(eventId);
+
+        return knnResult;
     }
 
     @SuppressWarnings("unchecked")
@@ -222,6 +237,7 @@ public class RingAggregationBolt extends BaseRichBolt {
     public void execute(Tuple input) {
 
         String tupleSource = input.getSourceStreamId();
+        KnnResult result = null;
 
         if (tupleSource.equals(AGGREGATE_BOUNDED_RINGS_STREAM)) {
 
@@ -230,21 +246,23 @@ public class RingAggregationBolt extends BaseRichBolt {
             int K = (int) input.getValueByField(KNN_FACTOR_FIELD);
             int centreId = (int) input.getValueByField(CENTRE_LIST_FIELD);
             UUID ringId = UUID.fromString( (String) input.getValueByField(RING_LIST_FIELD) );
+            RecordHeaders messageHeaders = (RecordHeaders) input.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
 
             logger.info("********* RingAggregationBolt **********: FROM AGGREGATE_BOUNDED_RINGS_STREAM" 
                         + " eventId = " + eventId
                         + " eventCoord = " + eventCoord
                         + " KNN factor = " + K
                         + " centre id = " + centreId
-                        + " ring id = " + ringId);
+                        + " ring id = " + ringId
+                        + " kafka message header = " + messageHeaders);
             
             // init values 
-            initCachedMap(eventId, centreId, ringId, K);
+            initCachedMap(eventId, centreId, ringId, K, messageHeaders);
 
             // some how all needed value came first ^_^ 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 //do something
-                getKNNResult(eventId, eventCoord);
+                result = getKNNResult(eventId, eventCoord);
             }
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
@@ -265,8 +283,12 @@ public class RingAggregationBolt extends BaseRichBolt {
             processResultFromRingHandler(eventId, centreId, ringId, itemId, itemDist);
 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
-                getKNNResult(eventId, eventCoord);
+                result = getKNNResult(eventId, eventCoord);
             }
+        }
+
+        if (result != null) {
+            collector.emit
         }
 
         collector.ack(input);

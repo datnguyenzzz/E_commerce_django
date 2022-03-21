@@ -17,6 +17,7 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -52,6 +53,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     private final static String CENTRE_LIST_FIELD = customProperties.getProp("CENTRE_LIST_FIELD");
     private final static String EVENT_ID_FIELD = customProperties.getProp("EVENT_ID_FIELD");
     private final static String NUM_RING_EXPERIMENTS_CONF = customProperties.getProp("NUM_RING_EXPERIMENTS_CONF");
+    private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
     //WEIGHT VALUEs
     private final static String KEYSPACE_FIELD = customProperties.getProp("KEYSPACE_FIELD");
     private final static String NUM_NODE_REPLICAS_FIELD = customProperties.getProp("NUM_NODE_REPLICAS_FIELD");
@@ -261,6 +263,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         String eventId = incomeEvent.getEventId();
         int limit = incomeEvent.getLimit();
         List<Integer> eventCoord = incomeEvent.getCoord();
+        RecordHeaders messageHeaders = (RecordHeaders) input.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
+
         K = limit; 
         B = Integer.parseInt(MIN_FACTOR_EXPECTED_EACH_RING);
         int A_CONF = Integer.parseInt(NUM_RING_EXPERIMENTS_CONF);
@@ -292,7 +296,7 @@ public class RecommendForItemContentBased extends BaseRichBolt {
             //centreList.add(centreId);
             //ringList.add(ringId.toString());
             //emit to aggregate bolt
-            collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreId, ringId.toString()));
+            collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreId, ringId.toString(), messageHeaders));
         }
 
         //collector.emit(AGGREGATE_BOUNDED_RINGS_STREAM, anchor, new Values(eventId, eventCoord, K, centreList, ringList));
@@ -303,6 +307,6 @@ public class RecommendForItemContentBased extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, CENTRE_ID_FIELD, RING_ID_FIELD, KNN_FACTOR_FIELD));
-        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD));
+        declarer.declareStream(AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD, EVENT_COORD_FIELD, KNN_FACTOR_FIELD, CENTRE_LIST_FIELD, RING_LIST_FIELD, KAFKA_MESSAGE_HEADER_FIELD));
     }
 }

@@ -92,6 +92,7 @@ public class DispatcherBolt extends BaseRichBolt {
         SimpleStatement selectedCentreStatment = this.indexesCoordRepository.selectCentreById(centreId);
         Row selectedCentre = this.repositoryFactory.executeStatement(selectedCentreStatment, KEYSPACE_FIELD).one();
 
+
         List<Integer> centreCoord = this.repositoryFactory.getListIntegerFromRow(selectedCentre, CENTRE_COORD);
         List<Long> centreUBRangeList = this.repositoryFactory.getListLongFromRow(selectedCentre, CENTRE_UPPER_BOUND_RANGE_LIST);
         List<Integer> eventCoord = incomeEvent.getCoord();

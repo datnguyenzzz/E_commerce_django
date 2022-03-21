@@ -282,7 +282,7 @@ public class EventFilteringBolt extends BaseRichBolt {
                 collector.emit(CONTENT_BASED_STREAM, anchor, new Values(ouputEvent,centreId));
             } 
             else if (this.eventType.equals(avroRecommendForItemEvent)) {
-                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent));
+                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent, messageHeaders));
             }
             else if (this.eventType.equals(avroRecommendForUserEvent)) {
                 //collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
@@ -302,7 +302,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
-        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD));
+        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD, KAFKA_MESSAGE_HEADER_FIELD));
         //declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Fields(EVENT_FIELD));
     }
 }
