@@ -7,8 +7,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +14,6 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 
-import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -245,7 +242,7 @@ public class EventFilteringBolt extends BaseRichBolt {
         return centreId;
     }
 
-    
+    /*
     private Map<String, byte[]> readMessageHeader(Tuple input) {
         Map<String, byte[]> headerMap = new HashMap<>();
 
@@ -258,7 +255,7 @@ public class EventFilteringBolt extends BaseRichBolt {
             headerMap.put(headerKey, headerBytes);
         }
         return headerMap;
-    }
+    }*/
     
     @Override
     public void execute(Tuple tuple) {
@@ -269,8 +266,9 @@ public class EventFilteringBolt extends BaseRichBolt {
         String kafkaKeyMsg = (String) tuple.getValueByField(KAFKA_KEY_FIELD);
         logger.info("********* EventFilteringBolt **********: Message key = " + kafkaKeyMsg);
 
-        Map<String, byte[]> messageHeader = readMessageHeader(tuple);
-        logger.info("********* EventFilteringBolt **********: Message header = " + messageHeader);
+        //Map<String, byte[]> messageHeaderView = readMessageHeader(tuple);
+        RecordHeaders messageHeaders = (RecordHeaders) tuple.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
+        logger.info("********* EventFilteringBolt **********: Message header = " + messageHeaders);
 
         Tuple anchor = tuple;
 
