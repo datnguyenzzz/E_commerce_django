@@ -1,7 +1,8 @@
 package vn.datnguyen.recommender.Bolt.ContentBased;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -62,22 +63,28 @@ public class KafkaProducerBolt<K,V> extends KafkaBolt<K,V> {
             String topic = null;
 
             Iterator<Header> headerIterater = headers.iterator();
+            List<Header> nonSenseHeader = new ArrayList<>();
             while (headerIterater.hasNext()) {
                 Header header = (Header) headerIterater.next();
+                nonSenseHeader.add(header);
                 String headerKey = header.key();
                 byte[] headerBytes = header.value();
 
                 if (headerKey.equals(KAFKA_TOPIC_FIELD)) {
-                    topic = Arrays.toString(headerBytes);
-                    break;
+                    topic = new String(headerBytes);
                 }
             }
 
             if (topic == null) {
                 logger.warn("**************** KAFKA PRODUCER****************: Topic is missing in header");
             } else {
+                logger.info("**************** KAFKA PRODUCER****************: Attemp publish message to "
+                            + " topic = " + topic
+                            + " value = " + value
+                            + " headers = " + nonSenseHeader.toString());
+
                 Future<RecordMetadata> result = this.producer.send(
-                    new ProducerRecord<K,V>(topic, null, null, value, headers),
+                    new ProducerRecord<K,V>(topic, null, null, value, nonSenseHeader),
                     null
                 );
 

@@ -24,7 +24,7 @@ transactionKafka:
   requestForRecommendationsTopic: requestForRecommendations
   defaultReplyTimeout: 10
   fromRecommendationServiceTopic: fromRecommendationServiceTopic
-  groupConsumer: recommendationsToClient
+  groupConsumer: content-based-method
 
 spring:
   application:

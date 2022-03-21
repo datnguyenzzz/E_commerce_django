@@ -22,11 +22,11 @@ testCassandra:
 	docker exec -it cassandra1 bash -c "nodetool status"
 
 testProducer:
-	docker exec -it kafka kafka-console-producer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation
+	docker exec -it kafka kafka-console-producer.sh --bootstrap-server localhost:9093 --topic fromRecommendationServiceTopic
 
 testConsumer:
 	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9093
-	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic ratingCommandForRecommendation --from-beginning
+	docker exec -it kafka kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic fromRecommendationServiceTopic --from-beginning --property print.key=true --property print.headers=true --property print.timestamp=true
 
 start:
 	mvn clean

@@ -268,7 +268,7 @@ public class EventFilteringBolt extends BaseRichBolt {
 
         //Map<String, byte[]> messageHeaderView = readMessageHeader(tuple);
         RecordHeaders messageHeaders = (RecordHeaders) tuple.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
-        logger.info("********* EventFilteringBolt **********: Message header = " + messageHeaders);
+        logger.info("********* EventFilteringBolt **********: Message header = " + messageHeaders.toString());
 
         Tuple anchor = tuple;
 

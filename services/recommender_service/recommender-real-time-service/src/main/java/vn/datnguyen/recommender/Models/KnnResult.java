@@ -26,7 +26,7 @@ public class KnnResult {
 
         @Override
         public String toString() {
-            return "[ ItemId = " + this.itemId + ", diff = " + this.distance + " ]";
+            return "\n\t\t[ ItemId = " + this.itemId + ", diff = " + this.distance + " ]\n";
         }
     }
 
@@ -56,8 +56,8 @@ public class KnnResult {
     @Override
     public String toString() {
         return "Recommendation by KNN method for is"
-                + " eventId = " + eventId
-                + " eventProperties = " + eventCoord
-                + " recommended items = " + recommendedItemList;
+                + " \n\teventId = " + eventId
+                + " \n\teventProperties = " + eventCoord
+                + " \n\trecommended items = " + recommendedItemList;
     }
 }
