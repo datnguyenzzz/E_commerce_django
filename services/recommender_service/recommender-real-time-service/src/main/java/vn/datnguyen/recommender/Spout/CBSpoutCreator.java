@@ -28,6 +28,7 @@ public class CBSpoutCreator {
     private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
     private final static String TOPIC_FIELD = customProperties.getProp("TOPIC_FIELD");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
+    private final static String KAFKA_KEY_FIELD = customProperties.getProp("KAFKA_KEY_FIELD");
 
     public CBSpoutCreator() {}
 
@@ -37,8 +38,8 @@ public class CBSpoutCreator {
     
     private KafkaSpoutConfig<String, String> kafkaAvroEventSpoutConfig() {
         ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
-            (r) -> new Values(r.headers(), r.topic(), r.value()), 
-            new Fields(KAFKA_MESSAGE_HEADER_FIELD, TOPIC_FIELD, EVENT_FIELD),
+            (r) -> new Values(r.headers(), r.topic(), r.key(), r.value()), 
+            new Fields(KAFKA_MESSAGE_HEADER_FIELD, TOPIC_FIELD, KAFKA_KEY_FIELD, EVENT_FIELD),
             EVENTSOURCE_STREAM);
         
         //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});

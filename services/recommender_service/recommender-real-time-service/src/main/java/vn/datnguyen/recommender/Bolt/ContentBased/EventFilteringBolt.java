@@ -59,6 +59,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String CENTRE_COORD_STRING_LIST = customProperties.getProp("CENTRE_COORD_STRING_LIST");
     private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
+    private final static String KAFKA_KEY_FIELD = customProperties.getProp("KAFKA_KEY_FIELD");
     //INCOME EVENT
     private final static String avroAddItemEvent = customProperties.getProp("avroAddItemEvent");
     private final static String avroDeleteItemEvent = customProperties.getProp("avroDeleteItemEvent");
@@ -245,8 +246,8 @@ public class EventFilteringBolt extends BaseRichBolt {
     }
 
     
-    private Map<String, String> readMessageHeader(Tuple input) {
-        Map<String, String> headerMap = new HashMap<>();
+    private Map<String, byte[]> readMessageHeader(Tuple input) {
+        Map<String, byte[]> headerMap = new HashMap<>();
 
         RecordHeaders messageHeaders = (RecordHeaders) input.getValueByField(KAFKA_MESSAGE_HEADER_FIELD);
         Iterator<Header> headerIterater = messageHeaders.iterator();
@@ -254,8 +255,7 @@ public class EventFilteringBolt extends BaseRichBolt {
             Header header = (Header) headerIterater.next();
             String headerKey = header.key();
             byte[] headerBytes = header.value();
-            String headerValue = new String(headerBytes);
-            headerMap.put(headerKey, headerValue);
+            headerMap.put(headerKey, headerBytes);
         }
         return headerMap;
     }
@@ -265,8 +265,11 @@ public class EventFilteringBolt extends BaseRichBolt {
         String avroEventStr = (String) tuple.getValueByField(EVENT_FIELD);
         AvroEvent event = (AvroEvent) avroEventScheme.deserialize(str_to_bb(avroEventStr)).get(0);
         logger.info("********* EventFilteringBolt **********" + event);
+        
+        String kafkaKeyMsg = (String) tuple.getValueByField(KAFKA_KEY_FIELD);
+        logger.info("********* EventFilteringBolt **********: Message key = " + kafkaKeyMsg);
 
-        Map<String, String> messageHeader = readMessageHeader(tuple);
+        Map<String, byte[]> messageHeader = readMessageHeader(tuple);
         logger.info("********* EventFilteringBolt **********: Message header = " + messageHeader);
 
         Tuple anchor = tuple;

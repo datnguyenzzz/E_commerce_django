@@ -42,15 +42,18 @@ public class TopologyDefinition {
         @Override
         public void write(Kryo kryo, Output output, RecordHeader object) {
             output.writeString(object.key());
-            String value = new String(object.value(), StandardCharsets.UTF_8);
-            output.writeString(value);
+            byte[] V = object.value(); 
+            int sz = V.length;
+            output.writeInt(sz);
+            output.writeBytes(V);
         }
 
         @Override
         public RecordHeader read(Kryo kryo, Input input, Class<RecordHeader> type) {
             try {
                 String K = input.readString(); 
-                byte[] V = input.readString().getBytes();
+                int sz = input.readInt();
+                byte[] V = input.readBytes(sz);
                 return new RecordHeader(K,V);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
