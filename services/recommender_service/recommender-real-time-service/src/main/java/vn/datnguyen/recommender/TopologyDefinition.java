@@ -8,6 +8,7 @@ import org.apache.storm.topology.TopologyBuilder;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Serializer.RecordHeaderSerializer;
 import vn.datnguyen.recommender.Topologies.CollaborativeFiltering;
 import vn.datnguyen.recommender.Topologies.ContentBased;
 import vn.datnguyen.recommender.utils.CustomProperties;
@@ -33,33 +34,6 @@ public class TopologyDefinition {
 
     private static CollaborativeFiltering collaborativeFiltering = new CollaborativeFiltering();
     private static ContentBased contentBased = new ContentBased();
-
-    public static class RecordHeaderSerializer extends FieldSerializer<RecordHeader> {
-        public RecordHeaderSerializer(Kryo kryo) {
-            super(kryo, RecordHeader.class);
-        }
-
-        @Override
-        public void write(Kryo kryo, Output output, RecordHeader object) {
-            output.writeString(object.key());
-            byte[] V = object.value(); 
-            int sz = V.length;
-            output.writeInt(sz);
-            output.writeBytes(V);
-        }
-
-        @Override
-        public RecordHeader read(Kryo kryo, Input input, Class<RecordHeader> type) {
-            try {
-                String K = input.readString(); 
-                int sz = input.readInt();
-                byte[] V = input.readBytes(sz);
-                return new RecordHeader(K,V);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    }
 
     private static Config getCFConfig() {
         Config config = new Config();

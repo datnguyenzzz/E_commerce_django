@@ -1,0 +1,36 @@
+{
+    "namespace": "vn.datnguyen.recommender.AvroClasses",
+    "type": "record",
+    "name": "RecommendItemSimilaritesResult",
+    "fields": [
+        {
+            "name": "id", "type": "string"
+        },
+        {
+            "name": "timestamp","type": "string"
+        },
+        {
+            "name": "itemId", "type": "string"
+        },
+        {
+            "name": "SimilarItems", 
+            "type": {
+                "type": "array",
+                "items": {
+                    "name": "Item",
+                    "type": "record",
+                    "fields" : [
+                        {
+                            "name": "itemId", "type": "string"
+                        },
+                        {
+                            "name": "difference", "type": "double"
+                        }
+
+                    ]
+                }
+            }
+        }
+        
+    ]
+}

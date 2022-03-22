@@ -211,8 +211,8 @@ public class RingAggregationBolt extends BaseRichBolt {
         mapHeaders.remove(eventId);
     }
 
-    private KnnResult getKNNResult(String eventId, List<Integer> eventCoord) {
-        KnnResult knnResult = new KnnResult(eventId, eventCoord);
+    private KnnResult getKNNResult(String eventId) {
+        KnnResult knnResult = new KnnResult(eventId);
 
         PriorityQueue<ImmutablePair<Double, String> > currPQ = 
             mapKNNPQ.get(eventId);
@@ -266,7 +266,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 //do something
                 headers = mapHeaders.get(eventId);
-                result = getKNNResult(eventId, eventCoord);
+                result = getKNNResult(eventId);
             }
         } 
         else if (tupleSource.equals(INDIVIDUAL_KNN_ALGORITHM_STREAM)) {
@@ -288,12 +288,12 @@ public class RingAggregationBolt extends BaseRichBolt {
 
             if (potentialRingsForEvent.containsKey(eventId) && potentialRingsForEvent.get(eventId).size() == 0) {
                 headers = mapHeaders.get(eventId);
-                result = getKNNResult(eventId, eventCoord);
+                result = getKNNResult(eventId);
             }
         }
 
         if (result != null) {
-            collector.emit(input, new Values(headers, result.toString()));
+            collector.emit(input, new Values(headers, result));
         }
 
         collector.ack(input);

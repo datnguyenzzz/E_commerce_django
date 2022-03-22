@@ -31,12 +31,10 @@ public class KnnResult {
     }
 
     private String eventId;
-    private List<Integer> eventCoord;
     private List<RecommendedItem> recommendedItemList;
 
-    public KnnResult(String eventId, List<Integer> eventCoord) {
+    public KnnResult(String eventId) {
         this.eventId = eventId;
-        this.eventCoord = eventCoord;
         this.recommendedItemList = new ArrayList<>();
     }
 
@@ -49,15 +47,10 @@ public class KnnResult {
         return this.eventId;
     }
 
-    public List<Integer> getEventCoord() {
-        return this.eventCoord;
-    }
-
     @Override
     public String toString() {
         return "Recommendation by KNN method for is"
                 + " \n\teventId = " + eventId
-                + " \n\teventProperties = " + eventCoord
                 + " \n\trecommended items = " + recommendedItemList;
     }
 }

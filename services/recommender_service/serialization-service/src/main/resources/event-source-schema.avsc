@@ -15,6 +15,7 @@
         {
             "name": "eventType", "type": "string"
         },
+        // data for event
         {
             "name": "data",
             "type": [
