@@ -1,6 +1,5 @@
 package vn.datnguyen.recommender.Configurations;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +25,6 @@ import vn.datnguyen.recommender.Serialization.AvroEventSerializer;
 
 @Configuration
 public class RequestReplyKafkaConfigurations {
-
-    @Value("${transactionKafka.defaultReplyTimeout}")
-    private String defaultReplyTimeout;
 
     @Value("${transactionKafka.fromRecommendationServiceTopic}")
     private String fromRecommendationServiceTopic;
@@ -61,7 +57,6 @@ public class RequestReplyKafkaConfigurations {
         ReplyingKafkaTemplate<String, AvroEvent, Object> replyTemplate =
             new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
 
-        replyTemplate.setDefaultReplyTimeout(Duration.ofSeconds(Integer.parseInt(defaultReplyTimeout)));
         return replyTemplate;
     }
 

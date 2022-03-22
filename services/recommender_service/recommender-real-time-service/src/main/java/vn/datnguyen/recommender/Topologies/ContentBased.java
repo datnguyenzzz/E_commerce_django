@@ -5,13 +5,15 @@ import org.apache.storm.tuple.Fields;
 
 import vn.datnguyen.recommender.Bolt.BoltFactory;
 import vn.datnguyen.recommender.Spout.CBSpoutCreator;
+import vn.datnguyen.recommender.Spout.QueryRecommendationSpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class ContentBased {
     private static final CustomProperties customProperties = CustomProperties.getInstance();
     //STREAM
-    private final static String EVENTSOURCE_STREAM = customProperties.getProp("EVENTSOURCE_STREAM");
+    private final static String EVENTSOURCE_STREAM_COMMAND = customProperties.getProp("EVENTSOURCE_STREAM_COMMAND");
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
+    private final static String EVENTSOURCE_STREAM_QUERY = customProperties.getProp("EVENTSOURCE_STREAM_QUERY");
     private final static String UPDATE_DATA_FROM_CENTRE_STREAM = customProperties.getProp("UPDATE_DATA_FROM_CENTRE_STREAM");
     //private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
     private final static String INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM = customProperties.getProp("INDIVIDUAL_BOUNDED_RING_HANDLER_STREAM");
@@ -53,6 +55,7 @@ public class ContentBased {
     private final static String KAFKA_SPOUT_CB = customProperties.getProp("KAFKA_SPOUT_CB");
     //--
     private static CBSpoutCreator spoutCreator = new CBSpoutCreator();
+    private static QueryRecommendationSpoutCreator querySpoutCreator = new QueryRecommendationSpoutCreator();
     private static BoltFactory boltFactory = new BoltFactory();
 
     public ContentBased () {}
@@ -63,9 +66,13 @@ public class ContentBased {
         topologyBuilder.setSpout(KAFKA_SPOUT_CB, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
             .setNumTasks(Integer.parseInt(KAFKA_SPOUT_CB_TASKS));
 
+        topologyBuilder.setSpout("query-recommendation-spout", querySpoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
+            .setNumTasks(Integer.parseInt(KAFKA_SPOUT_CB_TASKS));
+
         topologyBuilder.setBolt(EVENT_FILTERING_BOLT, boltFactory.createEventFilteringBolt(), Integer.parseInt(EVENT_FILTERING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(EVENT_FILTERING_BOLT_TASKS))
-            .shuffleGrouping(KAFKA_SPOUT_CB, EVENTSOURCE_STREAM);
+            .shuffleGrouping(KAFKA_SPOUT_CB, EVENTSOURCE_STREAM_COMMAND)
+            .shuffleGrouping("query-recommendation-spout", EVENTSOURCE_STREAM_QUERY);
         
         // content based
         topologyBuilder.setBolt(DISPATCHER_BOLT, boltFactory.createDispatcherBolt(), Integer.parseInt(DISPATCHER_BOLT_THREADS))

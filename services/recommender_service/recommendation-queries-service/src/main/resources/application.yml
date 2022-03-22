@@ -21,7 +21,7 @@ transactionKafka:
   bootstrapServers: kafka:9092
   transactionIdPrefix: ratingCommand
   topic: ratingCommandForRecommendation
-  requestForRecommendationsTopic: requestForRecommendations
+  requestForRecommendationsTopic: queryForRecommendation
   defaultReplyTimeout: 10
   fromRecommendationServiceTopic: fromRecommendationServiceTopic
   groupConsumer: content-based-method

@@ -15,21 +15,21 @@ import org.apache.storm.tuple.Values;
 
 import vn.datnguyen.recommender.utils.CustomProperties;
 
-public class CBSpoutCreator {
+public class QueryRecommendationSpoutCreator {
 
     private final static CustomProperties customProperties = CustomProperties.getInstance();
 
     private final static String BOOTSTRAP_SERVER = customProperties.getProp("BOOTSTRAP_SERVER");
-    private final static String EVENT_FOR_COMPUTING_TOPIC = customProperties.getProp("EVENT_FOR_COMPUTING_TOPIC");
-    private final static String CB_METHOD_CONSUMER_GROUP = customProperties.getProp("CB_METHOD_CONSUMER_GROUP");
-    private final static String EVENTSOURCE_STREAM_COMMAND = customProperties.getProp("EVENTSOURCE_STREAM_COMMAND");
+    private final static String QUERY_FOR_RECOMMENDATION = customProperties.getProp("QUERY_FOR_RECOMMENDATION");
+    private final static String QUERY_FOR_ITEM_RECOMMENDATION = customProperties.getProp("QUERY_FOR_ITEM_RECOMMENDATION");
+    private final static String EVENTSOURCE_STREAM_QUERY = customProperties.getProp("EVENTSOURCE_STREAM_QUERY");
 
     private final static String KAFKA_MESSAGE_HEADER_FIELD = customProperties.getProp("KAFKA_MESSAGE_HEADER_FIELD");
     private final static String TOPIC_FIELD = customProperties.getProp("TOPIC_FIELD");
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String KAFKA_KEY_FIELD = customProperties.getProp("KAFKA_KEY_FIELD");
 
-    public CBSpoutCreator() {}
+    public QueryRecommendationSpoutCreator() {}
 
     public KafkaSpout<?,?> kafkaAvroEventSpout() {
         return new CustomKafkaSpout<>(kafkaAvroEventSpoutConfig());
@@ -39,13 +39,14 @@ public class CBSpoutCreator {
         ByTopicRecordTranslator<String, String> byTopicTranslator = new ByTopicRecordTranslator<>(
             (r) -> new Values(r.headers(), r.topic(), r.key(), r.value()), 
             new Fields(KAFKA_MESSAGE_HEADER_FIELD, TOPIC_FIELD, KAFKA_KEY_FIELD, EVENT_FIELD),
-            EVENTSOURCE_STREAM_COMMAND);
+            EVENTSOURCE_STREAM_QUERY);
         
         //KafkaSpoutConfig.Builder<String, String> kafkaBuilder = new KafkaSpoutConfig.Builder<String, String>(BOOTSTRAP_SERVER, new String[]{LISTEN_FROM_TOPIC});
 
-        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{EVENT_FOR_COMPUTING_TOPIC})
-            .setProp(ConsumerConfig.GROUP_ID_CONFIG, CB_METHOD_CONSUMER_GROUP)
+        return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{QUERY_FOR_RECOMMENDATION})
+            .setProp(ConsumerConfig.GROUP_ID_CONFIG, QUERY_FOR_ITEM_RECOMMENDATION)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+            .setProp(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_EARLIEST)
             .setRetry(kafkaSpoutRetryService())

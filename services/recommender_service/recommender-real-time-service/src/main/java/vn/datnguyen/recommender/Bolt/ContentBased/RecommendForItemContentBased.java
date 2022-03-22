@@ -280,6 +280,8 @@ public class RecommendForItemContentBased extends BaseRichBolt {
         //List<Integer> centreList = new ArrayList<Integer>();
         //List<String> ringList = new ArrayList<String>();
 
+        logger.info("********* RecommendForItemContentBased **********: Attemp querying on : " + potentialBoundedRings);
+
         Tuple anchor = input;
 
         for (ImmutablePair<Integer, UUID> ring: potentialBoundedRings) {

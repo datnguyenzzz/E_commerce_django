@@ -1,7 +1,5 @@
 package vn.datnguyen.recommender.Handler;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
@@ -25,9 +23,6 @@ public class ReplyingKafkaService {
     @Value("${transactionKafka.requestForRecommendationsTopic}")
     private String requestForRecommendationsTopic;
 
-    @Value("${transactionKafka.defaultReplyTimeout}")
-    private String defaultReplyTimeout;
-
     @Value("${transactionKafka.fromRecommendationServiceTopic}")
     private String fromRecommendationServiceTopic;
 
@@ -44,16 +39,14 @@ public class ReplyingKafkaService {
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, fromRecommendationServiceTopic.getBytes()));
         RequestReplyFuture<String, AvroEvent, Object> replyFuture = kafkaTemplate.sendAndReceive(record);
         
-        SendResult<String, AvroEvent> sendResult = replyFuture.getSendFuture().get(
-            Integer.parseInt(defaultReplyTimeout), TimeUnit.SECONDS);
+        SendResult<String, AvroEvent> sendResult = replyFuture.getSendFuture().get();
 
         logger.info("Sent request successfully to " + requestForRecommendationsTopic
                     + " with status " + sendResult.getRecordMetadata()
                     + " with header = " + sendResult.getProducerRecord().headers());
         
         
-        ConsumerRecord<String, Object> consumerRecord = replyFuture.get(
-            Integer.parseInt(defaultReplyTimeout), TimeUnit.SECONDS);
+        ConsumerRecord<String, Object> consumerRecord = replyFuture.get();
 
         logger.info("Receive response successfully " + consumerRecord.value());
         
