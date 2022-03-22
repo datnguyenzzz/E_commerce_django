@@ -14,6 +14,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult;
 
 @Service
 public class ReplyingKafkaService {
@@ -26,18 +27,18 @@ public class ReplyingKafkaService {
     @Value("${transactionKafka.fromRecommendationServiceTopic}")
     private String fromRecommendationServiceTopic;
 
-    private ReplyingKafkaTemplate<String, AvroEvent, Object> kafkaTemplate;
+    private ReplyingKafkaTemplate<String, AvroEvent, RecommendItemSimilaritesResult> kafkaTemplate;
 
     @Autowired
-    public ReplyingKafkaService(ReplyingKafkaTemplate<String, AvroEvent, Object> kafkaTemplate) {
+    public ReplyingKafkaService(ReplyingKafkaTemplate<String, AvroEvent, RecommendItemSimilaritesResult> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Object requestThenReply(AvroEvent event) throws Exception {
+    public RecommendItemSimilaritesResult requestThenReply(AvroEvent event) throws Exception {
         ProducerRecord<String, AvroEvent> record = new ProducerRecord<>(requestForRecommendationsTopic, event);
         //add header 
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, fromRecommendationServiceTopic.getBytes()));
-        RequestReplyFuture<String, AvroEvent, Object> replyFuture = kafkaTemplate.sendAndReceive(record);
+        RequestReplyFuture<String, AvroEvent, RecommendItemSimilaritesResult> replyFuture = kafkaTemplate.sendAndReceive(record);
         
         SendResult<String, AvroEvent> sendResult = replyFuture.getSendFuture().get();
 
@@ -46,7 +47,7 @@ public class ReplyingKafkaService {
                     + " with header = " + sendResult.getProducerRecord().headers());
         
         
-        ConsumerRecord<String, Object> consumerRecord = replyFuture.get();
+        ConsumerRecord<String, RecommendItemSimilaritesResult> consumerRecord = replyFuture.get();
 
         logger.info("Receive response successfully " + consumerRecord.value());
         

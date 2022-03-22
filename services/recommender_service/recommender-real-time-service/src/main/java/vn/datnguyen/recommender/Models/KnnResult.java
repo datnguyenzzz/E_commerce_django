@@ -7,29 +7,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class KnnResult {
 
-    class RecommendedItem {
-        private String itemId;
-        private double distance;
-
-        public RecommendedItem(String itemId, double distance) {
-            this.itemId = itemId; 
-            this.distance = distance;
-        }
-
-        public void setItemId(String itemId) {
-            this.itemId = itemId;
-        }
-
-        public void setDistance(double distance) {
-            this.distance = distance;
-        }
-
-        @Override
-        public String toString() {
-            return "\n\t\t[ ItemId = " + this.itemId + ", diff = " + this.distance + " ]\n";
-        }
-    }
-
     private String eventId;
     private List<RecommendedItem> recommendedItemList;
 
@@ -45,6 +22,10 @@ public class KnnResult {
 
     public String getEventId() {
         return this.eventId;
+    }
+
+    public List<RecommendedItem> getRecommendedItemList() {
+        return this.recommendedItemList;
     }
 
     @Override

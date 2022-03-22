@@ -103,7 +103,7 @@ public class BoltFactory {
         props.put("bootstrap.servers", BOOTSTRAP_SERVER);
         props.put("acks", "1");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "vn.datnguyen.recommender.Serialization.ItemSimilaritesSerializer");
 
         KafkaProducerBolt<Object,Object> bolt = new KafkaProducerBolt<>()
             .withProducerProperties(props);

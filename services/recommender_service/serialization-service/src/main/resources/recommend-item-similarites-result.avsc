@@ -10,9 +10,6 @@
             "name": "timestamp","type": "string"
         },
         {
-            "name": "itemId", "type": "string"
-        },
-        {
             "name": "SimilarItems", 
             "type": {
                 "type": "array",

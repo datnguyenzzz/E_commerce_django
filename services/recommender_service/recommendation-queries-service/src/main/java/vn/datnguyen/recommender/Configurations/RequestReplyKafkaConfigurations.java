@@ -21,7 +21,9 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult;
 import vn.datnguyen.recommender.Serialization.AvroEventSerializer;
+import vn.datnguyen.recommender.Serialization.ItemSimilaritesDeserializer;
 
 @Configuration
 public class RequestReplyKafkaConfigurations {
@@ -50,11 +52,11 @@ public class RequestReplyKafkaConfigurations {
     }
 
     @Bean
-    public ReplyingKafkaTemplate<String, AvroEvent, Object> replyingKafkaTemplate(
+    public ReplyingKafkaTemplate<String, AvroEvent, RecommendItemSimilaritesResult> replyingKafkaTemplate(
         ProducerFactory<String, AvroEvent> producerFactory,
-        ConcurrentMessageListenerContainer<String, Object> repliesContainer
+        ConcurrentMessageListenerContainer<String, RecommendItemSimilaritesResult> repliesContainer
     ) {
-        ReplyingKafkaTemplate<String, AvroEvent, Object> replyTemplate =
+        ReplyingKafkaTemplate<String, AvroEvent, RecommendItemSimilaritesResult> replyTemplate =
             new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
 
         return replyTemplate;
@@ -62,25 +64,26 @@ public class RequestReplyKafkaConfigurations {
 
     //consumer
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    public ConsumerFactory<String, RecommendItemSimilaritesResult> consumerFactory() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupConsumer);
         configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ItemSimilaritesDeserializer.class);
 
         return new DefaultKafkaConsumerFactory<>(configs);
     }
 
     @Bean
-    public ConcurrentMessageListenerContainer<String, Object> replyContainer(ConsumerFactory<String, Object> cf) {
+    public ConcurrentMessageListenerContainer<String, RecommendItemSimilaritesResult> replyContainer(
+            ConsumerFactory<String, RecommendItemSimilaritesResult> consumerFactory) {
         ContainerProperties containerProperties = new ContainerProperties(fromRecommendationServiceTopic);
-        return new ConcurrentMessageListenerContainer<>(cf, containerProperties);
+        return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object> > kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = 
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, RecommendItemSimilaritesResult> > kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, RecommendItemSimilaritesResult> factory = 
             new ConcurrentKafkaListenerContainerFactory<>();
         
         factory.setConsumerFactory(consumerFactory());

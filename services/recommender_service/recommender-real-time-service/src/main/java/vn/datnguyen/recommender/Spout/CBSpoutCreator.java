@@ -46,6 +46,7 @@ public class CBSpoutCreator {
         return KafkaSpoutConfig.builder(BOOTSTRAP_SERVER, new String[]{EVENT_FOR_COMPUTING_TOPIC})
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, CB_METHOD_CONSUMER_GROUP)
             .setProp(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+            .setProp(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100)
             .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE)
             .setFirstPollOffsetStrategy(FirstPollOffsetStrategy.UNCOMMITTED_EARLIEST)
             .setRetry(kafkaSpoutRetryService())

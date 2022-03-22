@@ -24,7 +24,10 @@ import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import vn.datnguyen.recommender.AvroClasses.Item;
+import vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult;
 import vn.datnguyen.recommender.Models.KnnResult;
+import vn.datnguyen.recommender.Models.RecommendedItem;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class RingAggregationBolt extends BaseRichBolt {
@@ -293,7 +296,24 @@ public class RingAggregationBolt extends BaseRichBolt {
         }
 
         if (result != null) {
-            collector.emit(input, new Values(headers, result));
+
+            List<Item> similaritesItem = new ArrayList<>();
+            for (RecommendedItem item : result.getRecommendedItemList()) {
+                Item avroItem = Item.newBuilder()
+                    .setItemId(item.getItemId())
+                    .setDifference(item.getDistance())
+                    .build();
+                
+                similaritesItem.add(avroItem);
+            }
+
+            RecommendItemSimilaritesResult avroResult = RecommendItemSimilaritesResult.newBuilder()
+                .setId(result.getEventId())
+                .setTimestamp(Long.toString(System.currentTimeMillis()))
+                .setSimilarItems(similaritesItem)
+                .build();
+
+            collector.emit(input, new Values(headers, avroResult));
         }
 
         collector.ack(input);
