@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ContentBased;
+package vn.datnguyen.recommender.Processors.ContentBased;
 
 import java.util.Comparator;
 import java.util.HashMap;

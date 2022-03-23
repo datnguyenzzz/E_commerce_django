@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ColaborativeFiltering;
+package vn.datnguyen.recommender.Processors.ColaborativeFiltering;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -29,8 +29,8 @@ import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroPublishRating;
 import vn.datnguyen.recommender.AvroClasses.AvroQueryRating;
 import vn.datnguyen.recommender.AvroClasses.AvroUpdateRating;
-import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Processors.LoggerBolt;
 import vn.datnguyen.recommender.utils.AvroEventScheme;
 import vn.datnguyen.recommender.utils.CustomProperties;
 

@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ColaborativeFiltering;
+package vn.datnguyen.recommender.Processors.ColaborativeFiltering;
 
 import java.util.List;
 import java.util.Map;

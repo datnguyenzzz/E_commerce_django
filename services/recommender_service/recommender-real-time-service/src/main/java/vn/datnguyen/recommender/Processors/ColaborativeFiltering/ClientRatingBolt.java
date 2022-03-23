@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ColaborativeFiltering;
+package vn.datnguyen.recommender.Processors.ColaborativeFiltering;
 
 import java.util.Map;
 import com.datastax.oss.driver.api.core.CqlSession;

@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ContentBased;
+package vn.datnguyen.recommender.Processors.ContentBased;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -32,8 +32,8 @@ import vn.datnguyen.recommender.AvroClasses.AvroDeleteItem;
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
 import vn.datnguyen.recommender.AvroClasses.AvroRecommendForItem;
 import vn.datnguyen.recommender.AvroClasses.AvroRecommendForUser;
-import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Processors.LoggerBolt;
 import vn.datnguyen.recommender.Repository.IndexesCoordRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;
@@ -50,7 +50,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     //STREAM 
     private final static String CONTENT_BASED_STREAM = customProperties.getProp("CONTENT_BASED_STREAM");
     //private final static String CONTENT_BASED_RECOMMEND_FOR_CLIENT = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_CLIENT");
-    private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
+    //private final static String CONTENT_BASED_RECOMMEND_FOR_ITEM = customProperties.getProp("CONTENT_BASED_RECOMMEND_FOR_ITEM");
     //VALUE FIELDS
     private final static String EVENT_FIELD = customProperties.getProp("EVENT_FIELD");
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
@@ -282,7 +282,7 @@ public class EventFilteringBolt extends BaseRichBolt {
                 collector.emit(CONTENT_BASED_STREAM, anchor, new Values(ouputEvent,centreId));
             } 
             else if (this.eventType.equals(avroRecommendForItemEvent)) {
-                collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent, messageHeaders));
+                //collector.emit(CONTENT_BASED_RECOMMEND_FOR_ITEM, anchor, new Values(ouputEvent, messageHeaders));
             }
             else if (this.eventType.equals(avroRecommendForUserEvent)) {
                 //collector.emit(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Values(ouputEvent));
@@ -302,7 +302,7 @@ public class EventFilteringBolt extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(CONTENT_BASED_STREAM, new Fields(EVENT_FIELD, CENTRE_ID_FIELD));
-        declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD, KAFKA_MESSAGE_HEADER_FIELD));
+        //declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_ITEM, new Fields(EVENT_FIELD, KAFKA_MESSAGE_HEADER_FIELD));
         //declarer.declareStream(CONTENT_BASED_RECOMMEND_FOR_CLIENT, new Fields(EVENT_FIELD));
     }
 }

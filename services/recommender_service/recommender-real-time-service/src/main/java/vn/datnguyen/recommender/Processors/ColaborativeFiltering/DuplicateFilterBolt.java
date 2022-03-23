@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ColaborativeFiltering;
+package vn.datnguyen.recommender.Processors.ColaborativeFiltering;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.JedisCommands;
-import vn.datnguyen.recommender.Bolt.LoggerBolt;
+import vn.datnguyen.recommender.Processors.LoggerBolt;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 

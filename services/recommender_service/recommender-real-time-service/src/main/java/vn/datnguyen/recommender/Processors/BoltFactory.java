@@ -1,25 +1,26 @@
-package vn.datnguyen.recommender.Bolt;
+package vn.datnguyen.recommender.Processors;
 
 
 import java.util.Properties;
 
 import org.apache.storm.redis.common.config.JedisPoolConfig;
 
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.ClientRatingBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.CoRatingBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.DuplicateFilterBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.ItemCountBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.NewRecordBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.PairCountBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.SimilaritiesBolt;
-import vn.datnguyen.recommender.Bolt.ColaborativeFiltering.WeightApplierBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.DispatcherBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.EventFilteringBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.KafkaProducerBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.KnnBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.RecommendForItemContentBased;
-import vn.datnguyen.recommender.Bolt.ContentBased.RingAggregationBolt;
-import vn.datnguyen.recommender.Bolt.ContentBased.UpdateBoundedRingBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.ClientRatingBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.CoRatingBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.DuplicateFilterBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.ItemCountBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.NewRecordBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.PairCountBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.SimilaritiesBolt;
+import vn.datnguyen.recommender.Processors.ColaborativeFiltering.WeightApplierBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.DispatcherBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.EventFilteringBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.EventFilteringForQueryBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.KafkaProducerBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.KnnBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.RecommendForItemContentBased;
+import vn.datnguyen.recommender.Processors.ContentBased.RingAggregationBolt;
+import vn.datnguyen.recommender.Processors.ContentBased.UpdateBoundedRingBolt;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class BoltFactory {
@@ -84,6 +85,10 @@ public class BoltFactory {
     
     public EventFilteringBolt createEventFilteringBolt() {
         return new EventFilteringBolt();
+    }
+
+    public EventFilteringForQueryBolt createEventFilteringForQueryBolt() {
+        return new EventFilteringForQueryBolt();
     }
 
     public RecommendForItemContentBased createRecommendForItemContentBased() {

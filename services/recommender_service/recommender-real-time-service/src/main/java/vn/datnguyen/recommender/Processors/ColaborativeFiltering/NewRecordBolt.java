@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Bolt.ColaborativeFiltering;
+package vn.datnguyen.recommender.Processors.ColaborativeFiltering;
 
 import java.util.List;
 import java.util.Map;
@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import vn.datnguyen.recommender.CassandraConnector;
-import vn.datnguyen.recommender.Bolt.LoggerBolt;
 import vn.datnguyen.recommender.Models.Event;
+import vn.datnguyen.recommender.Processors.LoggerBolt;
 import vn.datnguyen.recommender.Repository.ItemCountRepository;
 import vn.datnguyen.recommender.Repository.KeyspaceRepository;
 import vn.datnguyen.recommender.Repository.RepositoryFactory;

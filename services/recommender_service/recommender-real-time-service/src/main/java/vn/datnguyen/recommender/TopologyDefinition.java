@@ -7,6 +7,7 @@ import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
 
 import vn.datnguyen.recommender.AvroClasses.AvroEvent;
+import vn.datnguyen.recommender.AvroClasses.Item;
 import vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult;
 import vn.datnguyen.recommender.Models.Event;
 import vn.datnguyen.recommender.Serializer.RecordHeaderSerializer;
@@ -54,6 +55,7 @@ public class TopologyDefinition {
         config.setMessageTimeoutSecs(36000);
         config.setNumWorkers(Integer.parseInt(CB_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
+        config.registerSerialization(Item.class);
         config.registerSerialization(RecommendItemSimilaritesResult.class);
         config.registerSerialization(Event.class);
         config.registerSerialization(RecordHeader.class, RecordHeaderSerializer.class);

@@ -3,9 +3,8 @@ package vn.datnguyen.recommender.Topologies;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
-import vn.datnguyen.recommender.Bolt.BoltFactory;
-import vn.datnguyen.recommender.Spout.CBSpoutCreator;
-import vn.datnguyen.recommender.Spout.QueryRecommendationSpoutCreator;
+import vn.datnguyen.recommender.Processors.BoltFactory;
+import vn.datnguyen.recommender.Processors.SpoutFactory;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
 public class ContentBased {
@@ -29,6 +28,7 @@ public class ContentBased {
     private static final String RING_AGGREGRATION_BOLT = customProperties.getProp("RING_AGGREGRATION_BOLT");
     private static final String KNN_BOLT = customProperties.getProp("KNN_BOLT");
     private static final String KAFKA_PRODUCER_BOLT = customProperties.getProp("KAFKA_PRODUCER_BOLT");
+    private static final String EVENT_FILTERING_FOR_QUERY_BOLT = customProperties.getProp("EVENT_FILTERING_FOR_QUERY_BOLT");
     //
     private final static String CENTRE_ID_FIELD = customProperties.getProp("CENTRE_ID_FIELD");
     private final static String RING_ID_FIELD = customProperties.getProp("RING_ID_FIELD");
@@ -42,6 +42,7 @@ public class ContentBased {
     private static final String RING_AGGREGRATION_BOLT_TASKS = customProperties.getProp("RING_AGGREGRATION_BOLT_TASKS");
     private static final String KNN_BOLT_TASKS = customProperties.getProp("KNN_BOLT_TASKS");
     private static final String KAFKA_PRODUCER_BOLT_TASKS = customProperties.getProp("KAFKA_PRODUCER_BOLT_TASKS");
+    private static final String EVENT_FILTERING_FOR_QUERY_BOLT_TASKS = customProperties.getProp("EVENT_FILTERING_FOR_QUERY_BOLT_TASKS");
     //PARALLISM EXECUTORS
     private static final String KAFKA_SPOUT_CB_THREADS = customProperties.getProp("KAFKA_SPOUT_CB_THREADS");
     private static final String EVENT_FILTERING_BOLT_THREADS = customProperties.getProp("EVENT_FILTERING_BOLT_THREADS");
@@ -51,11 +52,11 @@ public class ContentBased {
     private static final String RING_AGGREGRATION_BOLT_THREADS = customProperties.getProp("RING_AGGREGRATION_BOLT_THREADS");
     private static final String KNN_BOLT_THREADS = customProperties.getProp("KNN_BOLT_THREADS");
     private static final String KAFKA_PRODUCER_BOLT_THREADS = customProperties.getProp("KAFKA_PRODUCER_BOLT_THREADS");
+    private static final String EVENT_FILTERING_FOR_QUERY_BOLT_THREADS = customProperties.getProp("EVENT_FILTERING_FOR_QUERY_BOLT_THREADS");
     //IDs
     private final static String KAFKA_SPOUT_CB = customProperties.getProp("KAFKA_SPOUT_CB");
     //--
-    private static CBSpoutCreator spoutCreator = new CBSpoutCreator();
-    private static QueryRecommendationSpoutCreator querySpoutCreator = new QueryRecommendationSpoutCreator();
+    private static SpoutFactory spoutFactory = new SpoutFactory();
     private static BoltFactory boltFactory = new BoltFactory();
 
     public ContentBased () {}
@@ -63,18 +64,25 @@ public class ContentBased {
     public TopologyBuilder initTopology() throws Exception {
         TopologyBuilder topologyBuilder = new TopologyBuilder();
 
-        topologyBuilder.setSpout(KAFKA_SPOUT_CB, spoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
+        topologyBuilder.setSpout(KAFKA_SPOUT_CB, spoutFactory.createCBSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
             .setNumTasks(Integer.parseInt(KAFKA_SPOUT_CB_TASKS));
 
-        topologyBuilder.setSpout("query-recommendation-spout", querySpoutCreator.kafkaAvroEventSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
+        topologyBuilder.setSpout("query-recommendation-spout", spoutFactory.createQueryRecommendSpout(), Integer.parseInt(KAFKA_SPOUT_CB_THREADS))
             .setNumTasks(Integer.parseInt(KAFKA_SPOUT_CB_TASKS));
+
+        topologyBuilder.setBolt(KAFKA_PRODUCER_BOLT, boltFactory.createKafkaProducerBolt(), Integer.parseInt(KAFKA_PRODUCER_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(KAFKA_PRODUCER_BOLT_TASKS))
+            .shuffleGrouping(RING_AGGREGRATION_BOLT);
 
         topologyBuilder.setBolt(EVENT_FILTERING_BOLT, boltFactory.createEventFilteringBolt(), Integer.parseInt(EVENT_FILTERING_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(EVENT_FILTERING_BOLT_TASKS))
-            .shuffleGrouping(KAFKA_SPOUT_CB, EVENTSOURCE_STREAM_COMMAND)
+            .shuffleGrouping(KAFKA_SPOUT_CB, EVENTSOURCE_STREAM_COMMAND);
+
+        topologyBuilder.setBolt(EVENT_FILTERING_FOR_QUERY_BOLT, boltFactory.createEventFilteringBolt(), Integer.parseInt(EVENT_FILTERING_FOR_QUERY_BOLT_THREADS))
+            .setNumTasks(Integer.parseInt(EVENT_FILTERING_FOR_QUERY_BOLT_TASKS))
             .shuffleGrouping("query-recommendation-spout", EVENTSOURCE_STREAM_QUERY);
         
-        // content based
+        // content based update state
         topologyBuilder.setBolt(DISPATCHER_BOLT, boltFactory.createDispatcherBolt(), Integer.parseInt(DISPATCHER_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(DISPATCHER_BOLT_TASKS))
             .fieldsGrouping(EVENT_FILTERING_BOLT, CONTENT_BASED_STREAM, new Fields(CENTRE_ID_FIELD));
@@ -83,9 +91,10 @@ public class ContentBased {
             .setNumTasks(Integer.parseInt(UPDATE_RING_BOLT_TASKS))
             .fieldsGrouping(DISPATCHER_BOLT, UPDATE_DATA_FROM_CENTRE_STREAM, new Fields(CENTRE_ID_FIELD, RING_ID_FIELD));
 
+        // query
         topologyBuilder.setBolt(RECOMMEND_FOR_ITEM_BOLT, boltFactory.createRecommendForItemContentBased(), Integer.parseInt(RECOMMEND_FOR_ITEM_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(RECOMMEND_FOR_ITEM_BOLT_TASKS))
-            .shuffleGrouping(EVENT_FILTERING_BOLT, CONTENT_BASED_RECOMMEND_FOR_ITEM);
+            .shuffleGrouping(EVENT_FILTERING_FOR_QUERY_BOLT, CONTENT_BASED_RECOMMEND_FOR_ITEM);
         
         topologyBuilder.setBolt(KNN_BOLT, boltFactory.createKnnBolt(), Integer.parseInt(KNN_BOLT_THREADS))
             .setNumTasks(Integer.parseInt(KNN_BOLT_TASKS))
@@ -96,9 +105,7 @@ public class ContentBased {
             .fieldsGrouping(RECOMMEND_FOR_ITEM_BOLT, AGGREGATE_BOUNDED_RINGS_STREAM, new Fields(EVENT_ID_FIELD))
             .fieldsGrouping(KNN_BOLT, INDIVIDUAL_KNN_ALGORITHM_STREAM, new Fields(EVENT_ID_FIELD));
         
-        topologyBuilder.setBolt(KAFKA_PRODUCER_BOLT, boltFactory.createKafkaProducerBolt(), Integer.parseInt(KAFKA_PRODUCER_BOLT_THREADS))
-            .setNumTasks(Integer.parseInt(KAFKA_PRODUCER_BOLT_TASKS))
-            .shuffleGrouping(RING_AGGREGRATION_BOLT);
+        
 
         return topologyBuilder;
 

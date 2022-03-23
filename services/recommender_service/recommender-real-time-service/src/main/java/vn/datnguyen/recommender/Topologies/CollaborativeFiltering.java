@@ -3,7 +3,7 @@ package vn.datnguyen.recommender.Topologies;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
-import vn.datnguyen.recommender.Bolt.BoltFactory;
+import vn.datnguyen.recommender.Processors.BoltFactory;
 import vn.datnguyen.recommender.Spout.CFSpoutCreator;
 import vn.datnguyen.recommender.utils.CustomProperties;
 
