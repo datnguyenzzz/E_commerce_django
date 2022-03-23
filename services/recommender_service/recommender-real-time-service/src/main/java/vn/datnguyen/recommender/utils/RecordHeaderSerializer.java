@@ -1,4 +1,4 @@
-package vn.datnguyen.recommender.Serializer;
+package vn.datnguyen.recommender.utils;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
