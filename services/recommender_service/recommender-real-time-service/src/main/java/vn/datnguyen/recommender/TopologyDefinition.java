@@ -60,6 +60,8 @@ public class TopologyDefinition {
         config.setNumWorkers(Integer.parseInt(CB_COMMAND_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
         config.registerSerialization(Event.class);
+        config.registerSerialization(Item.class);
+        config.registerSerialization(RecommendItemSimilaritesResult.class);
         config.registerSerialization(RecordHeader.class, RecordHeaderSerializer.class);
         config.registerSerialization(RecordHeaders.class);
         return config;
@@ -72,8 +74,6 @@ public class TopologyDefinition {
         config.setMessageTimeoutSecs(36000);
         config.setNumWorkers(Integer.parseInt(CB_QUERY_TOPOLOGY_WORKERS));
         config.registerSerialization(AvroEvent.class);
-        config.registerSerialization(Item.class);
-        config.registerSerialization(RecommendItemSimilaritesResult.class);
         config.registerSerialization(Event.class);
         config.registerSerialization(RecordHeader.class, RecordHeaderSerializer.class);
         config.registerSerialization(RecordHeaders.class);
@@ -89,8 +89,8 @@ public class TopologyDefinition {
         TopologyBuilder contentBasedCommandTopologyBuilder = contentBasedCommand.initTopology();
         StormSubmitter.submitTopology(TOPO_CB_COMMAND, tpCBCommandConfig, contentBasedCommandTopologyBuilder.createTopology());
 
-        Config tpCBQueryConfig = getCBCommandConfig();
-        TopologyBuilder contentBasedQueryTopologyBuilder = contentBasedCommand.initTopology();
+        Config tpCBQueryConfig = getCBQueryConfig();
+        TopologyBuilder contentBasedQueryTopologyBuilder = contentBasedQuery.initTopology();
         StormSubmitter.submitTopology(TOPO_CB_QUERY, tpCBQueryConfig, contentBasedQueryTopologyBuilder.createTopology());
     }
 

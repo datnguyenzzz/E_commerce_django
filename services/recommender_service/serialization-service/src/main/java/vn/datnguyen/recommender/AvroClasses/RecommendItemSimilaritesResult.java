@@ -10,12 +10,12 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class RecommendItemSimilaritesResult extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 5074652942563432957L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"RecommendItemSimilaritesResult\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"SimilarItems\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Item\",\"fields\":[{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"difference\",\"type\":\"double\"}]}}}]}");
+  private static final long serialVersionUID = 6043347160074052704L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"RecommendItemSimilaritesResult\",\"namespace\":\"vn.datnguyen.recommender.AvroClasses\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"timestamp\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"similarities\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Item\",\"fields\":[{\"name\":\"itemId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"difference\",\"type\":\"double\"}]}}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.String id;
   @Deprecated public java.lang.String timestamp;
-  @Deprecated public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> SimilarItems;
+  @Deprecated public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> similarities;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -28,12 +28,12 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
    * All-args constructor.
    * @param id The new value for id
    * @param timestamp The new value for timestamp
-   * @param SimilarItems The new value for SimilarItems
+   * @param similarities The new value for similarities
    */
-  public RecommendItemSimilaritesResult(java.lang.String id, java.lang.String timestamp, java.util.List<vn.datnguyen.recommender.AvroClasses.Item> SimilarItems) {
+  public RecommendItemSimilaritesResult(java.lang.String id, java.lang.String timestamp, java.util.List<vn.datnguyen.recommender.AvroClasses.Item> similarities) {
     this.id = id;
     this.timestamp = timestamp;
-    this.SimilarItems = SimilarItems;
+    this.similarities = similarities;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
@@ -42,7 +42,7 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
     switch (field$) {
     case 0: return id;
     case 1: return timestamp;
-    case 2: return SimilarItems;
+    case 2: return similarities;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -53,7 +53,7 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
     switch (field$) {
     case 0: id = (java.lang.String)value$; break;
     case 1: timestamp = (java.lang.String)value$; break;
-    case 2: SimilarItems = (java.util.List<vn.datnguyen.recommender.AvroClasses.Item>)value$; break;
+    case 2: similarities = (java.util.List<vn.datnguyen.recommender.AvroClasses.Item>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -91,19 +91,19 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
   }
 
   /**
-   * Gets the value of the 'SimilarItems' field.
-   * @return The value of the 'SimilarItems' field.
+   * Gets the value of the 'similarities' field.
+   * @return The value of the 'similarities' field.
    */
-  public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> getSimilarItems() {
-    return SimilarItems;
+  public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> getSimilarities() {
+    return similarities;
   }
 
   /**
-   * Sets the value of the 'SimilarItems' field.
+   * Sets the value of the 'similarities' field.
    * @param value the value to set.
    */
-  public void setSimilarItems(java.util.List<vn.datnguyen.recommender.AvroClasses.Item> value) {
-    this.SimilarItems = value;
+  public void setSimilarities(java.util.List<vn.datnguyen.recommender.AvroClasses.Item> value) {
+    this.similarities = value;
   }
 
   /**
@@ -140,7 +140,7 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
 
     private java.lang.String id;
     private java.lang.String timestamp;
-    private java.util.List<vn.datnguyen.recommender.AvroClasses.Item> SimilarItems;
+    private java.util.List<vn.datnguyen.recommender.AvroClasses.Item> similarities;
 
     /** Creates a new Builder */
     private Builder() {
@@ -161,8 +161,8 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
         this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.SimilarItems)) {
-        this.SimilarItems = data().deepCopy(fields()[2].schema(), other.SimilarItems);
+      if (isValidValue(fields()[2], other.similarities)) {
+        this.similarities = data().deepCopy(fields()[2].schema(), other.similarities);
         fieldSetFlags()[2] = true;
       }
     }
@@ -181,8 +181,8 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
         this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.SimilarItems)) {
-        this.SimilarItems = data().deepCopy(fields()[2].schema(), other.SimilarItems);
+      if (isValidValue(fields()[2], other.similarities)) {
+        this.similarities = data().deepCopy(fields()[2].schema(), other.similarities);
         fieldSetFlags()[2] = true;
       }
     }
@@ -266,40 +266,40 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
     }
 
     /**
-      * Gets the value of the 'SimilarItems' field.
+      * Gets the value of the 'similarities' field.
       * @return The value.
       */
-    public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> getSimilarItems() {
-      return SimilarItems;
+    public java.util.List<vn.datnguyen.recommender.AvroClasses.Item> getSimilarities() {
+      return similarities;
     }
 
     /**
-      * Sets the value of the 'SimilarItems' field.
-      * @param value The value of 'SimilarItems'.
+      * Sets the value of the 'similarities' field.
+      * @param value The value of 'similarities'.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult.Builder setSimilarItems(java.util.List<vn.datnguyen.recommender.AvroClasses.Item> value) {
+    public vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult.Builder setSimilarities(java.util.List<vn.datnguyen.recommender.AvroClasses.Item> value) {
       validate(fields()[2], value);
-      this.SimilarItems = value;
+      this.similarities = value;
       fieldSetFlags()[2] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'SimilarItems' field has been set.
-      * @return True if the 'SimilarItems' field has been set, false otherwise.
+      * Checks whether the 'similarities' field has been set.
+      * @return True if the 'similarities' field has been set, false otherwise.
       */
-    public boolean hasSimilarItems() {
+    public boolean hasSimilarities() {
       return fieldSetFlags()[2];
     }
 
 
     /**
-      * Clears the value of the 'SimilarItems' field.
+      * Clears the value of the 'similarities' field.
       * @return This builder.
       */
-    public vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult.Builder clearSimilarItems() {
-      SimilarItems = null;
+    public vn.datnguyen.recommender.AvroClasses.RecommendItemSimilaritesResult.Builder clearSimilarities() {
+      similarities = null;
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -310,7 +310,7 @@ public class RecommendItemSimilaritesResult extends org.apache.avro.specific.Spe
         RecommendItemSimilaritesResult record = new RecommendItemSimilaritesResult();
         record.id = fieldSetFlags()[0] ? this.id : (java.lang.String) defaultValue(fields()[0]);
         record.timestamp = fieldSetFlags()[1] ? this.timestamp : (java.lang.String) defaultValue(fields()[1]);
-        record.SimilarItems = fieldSetFlags()[2] ? this.SimilarItems : (java.util.List<vn.datnguyen.recommender.AvroClasses.Item>) defaultValue(fields()[2]);
+        record.similarities = fieldSetFlags()[2] ? this.similarities : (java.util.List<vn.datnguyen.recommender.AvroClasses.Item>) defaultValue(fields()[2]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

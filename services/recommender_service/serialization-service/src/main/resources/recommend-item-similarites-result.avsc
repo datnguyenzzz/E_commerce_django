@@ -10,7 +10,7 @@
             "name": "timestamp","type": "string"
         },
         {
-            "name": "SimilarItems", 
+            "name": "similarities", 
             "type": {
                 "type": "array",
                 "items": {

@@ -310,7 +310,7 @@ public class RingAggregationBolt extends BaseRichBolt {
             RecommendItemSimilaritesResult avroResult = RecommendItemSimilaritesResult.newBuilder()
                 .setId(result.getEventId())
                 .setTimestamp(Long.toString(System.currentTimeMillis()))
-                .setSimilarItems(similaritesItem)
+                .setSimilarities(similaritesItem)
                 .build();
 
             collector.emit(input, new Values(headers, avroResult));
