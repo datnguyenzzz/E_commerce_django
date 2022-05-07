@@ -4,7 +4,8 @@ Recommendation architecture:
 
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/real-time-compute/assets/recommender-service.png)
 
-Log aggregator 
+Log aggregator architecture
+
 ![alt text](https://raw.githubusercontent.com/datnguyenzzz/Microservices_architecture/real-time-compute/assets/ELK_multiple_DCs.png)
 
 Payment processor system architecture 

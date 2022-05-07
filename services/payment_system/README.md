@@ -14,3 +14,8 @@
 + Subjects - AS A PAYMENT SERVICE PROVIDER 
   . Create own payment processor: Stream payment info through VISA-card network to issuer bank
   . Create own payment gateway
+
+
+Payment processor system architecture 
+
+![alt text](https://raw.githubusercontent.com/datnguyenzzz/E_commerce_django/master/assets/payment_service_provider_architecture.png)
