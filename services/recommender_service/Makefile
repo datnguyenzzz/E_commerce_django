@@ -1,17 +1,19 @@
 DOCKER_NETWORK = recommender_service_default
 hadoop_branch = 2.0.0-hadoop2.7.4-java8
 hbase_branch = 1.0.0-hbase1.2.6
-
+#docker exec -it "container" bash
 init:
 	docker-compose up -d dynamodb kafka redis postgresql dynamodb serviceregistry
 
-testRecommender:
+buildMvn:
 	mvn -pl test-recommender-api -am clean install
 	mvn -pl recommender-real-time-service -am clean install
 	mvn -pl recommendation-queries-service -am clean install
-#	mvn clean 
-#	mvn install
 
+mimicPressure:
+	py mimicBulkRequest.py
+
+testRecommender:
 	docker-compose -f docker-compose-test-recommender.yml up -d --scale supervisor=1
 	docker-compose -f docker-compose-test-recommender.yml ps
 
